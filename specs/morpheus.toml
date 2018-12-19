@@ -1,0 +1,324 @@
+
+[env]
+headers = [
+    "<CoreFoundation/CoreFoundation.h>",
+    "<IOKit/IOKitLib.h>"
+]
+
+[[type]]
+name = "mach_port_t"
+
+[[type]]
+name = "io_connect_t"
+
+[[type]]
+name = "io_service_t"
+
+[[type]]
+name = "task_port_t"
+
+[[type]]
+name = "CFMutableDictionaryRef"
+
+[[type]]
+name = "_ServiceName"
+display = "const char*"
+domain = [
+'"AGDPClientControl"',
+'"AGPM"',
+'"AirPort_Brcm4360"',
+'"AirPort_Brcm4360_P2PInterface"',
+'"AppleACPIButton"',
+'"AppleACPICPU"',
+'"AppleACPICPUInterruptController"',
+'"AppleACPIPCI"',
+'"AppleACPIPlatformExpert"',
+'"AppleAHCIDiskDriver"',
+'"AppleAPICInterruptController"',
+'"AppleBroadcomBluetoothHostController"',
+'"AppleBusPowerControllerUSB"',
+'"AppleCredentialManager"',
+'"AppleDisplay"',
+'"AppleEFINVRAM"',
+'"AppleEFIRuntime"',
+'"AppleFDEKeyStore"',
+'"AppleGraphicsDeviceControlPlugin"',
+'"AppleHDACodecGeneric"',
+'"AppleHDAController"',
+'"AppleHDADriver"',
+'"AppleHDAEngineOutput"',
+'"AppleHDAStream"',
+'"AppleHV"',
+'"AppleIRController"',
+'"AppleIntelAzulController"',
+'"AppleIntelFramebuffer"',
+'"AppleIntelMEIDriver"',
+'"AppleIntelPchSeriesAHCI"',
+'"AppleIntelSlowAdaptiveClockingManager"',
+'"AppleKeyStore"',
+'"AppleLPC"',
+'"AppleMCCSControlModule"',
+'"AppleMCCSParameterHandler"',
+'"AppleMEClientController"',
+'"AppleMobileFileIntegrity"',
+'"AppleOSXWatchdog"',
+'"ApplePlatformEnabler"',
+'"AppleRTC"',
+'"AppleSCSISubsystemGlobals"',
+'"AppleSDXC"',
+'"AppleSDXCBlockStorageDevice"',
+'"AppleSDXCSlot"',
+'"AppleSMBIOS"',
+'"AppleSMC"',
+'"AppleSSE"',
+'"AppleThunderboltDPInAdapter"',
+'"AppleThunderboltHAL"',
+'"AppleThunderboltIPPort"',
+'"AppleThunderboltIPService"',
+'"AppleThunderboltNHIType2"',
+'"AppleThunderboltPCIDownAdapter"',
+'"AppleUSB20HubPort"',
+'"AppleUSB20InternalHub"',
+'"AppleUSBHostResources"',
+'"AppleUSBInterface"',
+'"AppleUSBLegacyRoot"',
+'"AppleUSBXHCI"',
+'"AppleUpstreamUserClientDriver"',
+'"AppleVTD"',
+'"AudioAUUCDriver"',
+'"BCM5701Enet"',
+'"BroadcomBluetoothHostControllerUSBTransport"',
+'"CCDataPipe"',
+'"CCDataStream"',
+'"CCIOReporterDataStream"',
+'"CCIOReporterLogStream"',
+'"CCLogPipe"',
+'"CCLogStream"',
+'"CoreStorage"',
+'"CoreStorageLogicalBSDClient"',
+'"IOAHCIBlockStorageDevice"',
+'"IOAHCIDevice"',
+'"IOBlockStorageDriver"',
+'"IOBluetoothHCIController"',
+'"IOBluetoothSerialClientSerialStreamSync"',
+'"IOBluetoothSerialManager"',
+'"IODisplayWrangler"',
+'"IOFramebufferI2CInterface"',
+'"IOHDACodecDevice"',
+'"IOHDACodecFunction"',
+'"IOHDIXController"',
+'"IOHIDEventDriver"',
+'"IOHIDInterface"',
+'"IOHIDResource"',
+'"IOHIDSystem"',
+'"IOMediaBSDClient"',
+'"IONetworkStack"',
+'"IOPCIMessagedInterruptController"',
+'"IOPMrootDomain"',
+'"IOReportHub"',
+'"IOResources"',
+'"IOSerialBSDClient"',
+'"IOSurfaceRoot"',
+'"IOThunderboltController"',
+'"IOThunderboltLocalNode"',
+'"IOThunderboltPort"',
+'"IOThunderboltSwitchType2"',
+'"IOUSBHIDDriver"',
+'"IOUSBHostHIDDevice"',
+'"IOUSBHostInterface"',
+'"IOUserEthernetResource"',
+'"IntelAccelerator"',
+'"IntelFBClientControl"',
+'"SMCWatchDogTimer"',
+'"X86PlatformPlugin"',
+'"com_apple_driver_pmtelemetry"'
+]
+
+[[type]]
+name = "_ServiceType"
+display = "int"
+domain = [
+    "0",
+    "1"
+]
+
+[[type]]
+name = "_Selector"
+display = "int"
+domain = [
+    "0", "1"
+]
+
+[[type]]
+name = "_IOConnectInContent"
+display = "uint64_t"
+domain = [
+    "0xf0"
+]
+
+[[type]]
+name = "_IOConnectInArray"
+arrayBase = "_IOConnectInContent"
+arrayMinLen = 4
+arrayMaxLen = 4
+
+[[type]]
+name = "_IOConnectInCnt"
+display = "uint32_t"
+domain = [
+    "0", "1", "2", "3"
+]
+
+[[type]]
+name = "_IOConnectInStructContent"
+display = "uint8_t"
+domain = [
+    "0"
+]
+
+[[type]]
+name = "_IOConnectInStructArray"
+arrayBase = "_IOConnectInStructContent"
+arrayMaxLen = 1
+arrayMinLen = 1
+
+
+[[type]]
+name = "_IOConnectInStructCnt"
+display = "size_t"
+domain = [
+    "0"
+]
+
+[[type]]
+name = "_IOConnectOutCnt"
+display = "uint32_t"
+domain = [
+    "0"
+]
+
+[[type]]
+name = "_IOConnectOutStructCnt"
+display = "size_t"
+domain = [
+    "1"
+]
+
+[[type]]
+# A placeholder type for IOConnectCallMethod
+name = "_Null"
+
+[[api]]
+name = "IOServiceMatching"
+
+    [api.return]
+    type = "CFMutableDictionaryRef"
+
+    [[api.param]]
+    direction = "in"
+    type = "_ServiceName"
+    name = "name"
+
+[[api]]
+name = "IOServiceGetMatchingService"
+
+    [api.return]
+    type = "io_service_t"
+
+    [[api.param]]
+    direction = "in"
+    type = "mach_port_t"
+    name = "masterPort"
+    fixedValue = "kIOMasterPortDefault"
+
+    [[api.param]]
+    direction = "in"
+    type = "CFMutableDictionaryRef"
+    name = "matching"
+
+[[api]]
+name = "IOServiceOpen"
+
+    [[api.param]]
+    direction = "in"
+    type = "io_service_t"
+    name = "service"
+
+    [[api.param]]
+    direction = "in"
+    type = "task_port_t"
+    name = "owningTask"
+    fixedValue = "mach_task_self()"
+
+    [[api.param]]
+    direction = "in"
+    type = "_ServiceType"
+    name = "type"
+
+    [[api.param]]
+    direction = "out"
+    type = "io_connect_t"
+    name = "connect"
+
+[[api]]
+name = "IOConnectCallMethod"
+
+    [[api.param]]
+    direction = "in"
+    type = "io_connect_t"
+    name = "connection"
+
+    [[api.param]]
+    direction = "in"
+    type = "_Selector"
+    name = "selector"
+
+    [[api.param]]
+    direction = "in"
+    type = "_IOConnectInArray"
+    name = "input"
+
+    [[api.param]]
+    direction = "in"
+    type = "_IOConnectInCnt"
+    name = "inputCnt"
+    # TODO: Add the array size constraint
+
+    [[api.param]]
+    direction = "in"
+    type = "_Null"
+    name = "inputStruct"
+    fixedValue = "NULL"
+
+    [[api.param]]
+    direction = "in"
+    type = "_Null"
+    name = "inputStructCnt"
+    fixedValue = "0"
+
+    [[api.param]]
+    direction = "out"
+    type = "_Null"
+    name = "output"
+    fixedValue = "NULL"
+
+    [[api.param]]
+    direction = "in_out"
+    type = "_IOConnectOutCnt"
+    name = "outputCnt"
+
+    [[api.param]]
+    direction = "out"
+    type = "_Null"
+    name = "outputStruct"
+    fixedValue = "NULL"
+
+    [[api.param]]
+    direction = "in_out"
+    type = "_IOConnectOutStructCnt"
+    name = "outputStructCnt"
+
+[[constraint]]
+type = "AtLeast"
+api = "IOConnectCallMethod"
+count = 1
