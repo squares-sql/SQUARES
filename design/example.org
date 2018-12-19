@@ -34,51 +34,49 @@ This document contains a motivating example solved by the Tyrell synthesizer.
 
 
 * Happens-before (Soft)
-    - hb(#3, #4): The invocation of IOServiceOpen happens before IOConnectCallMethod
+    - hb(#2, #3, score): The invocation of #2 happens before #3 with a confidence score of `score`
 
 * Value Dependence (hard)
-    - vd(#1, -1, #2, 2): the first return argument of method #1 is consumed by the second argument of method #2
+    - vd(#1, #2, score): the return value of method #1 is consumed by invocation #2 (confidence = score)
 
 * Value Consumption (hard)
-    - vc(#1): the return value of IOServiceMatching needs to be consumed at least once
-    - vc(#2): the return value of IOServiceGetMatchingService needs to be consumed at least once
+    - vc(#1, score): the return value of invocation #1 needs to be consumed at least once (confidence = score)
 
 * Value Constraint (hard)
-    - valCstParam(#2, 1) = 0: the first argument of method #2 is assigned 0 as the default value 
+    - valCstParam(#2, 1) \in  (0 4): the first argument of method #2 is between 0 and 4 
     - valCstParam(#4, 2) = 12: the 2nd argument of method #4 is assigned 12
-    - valCstParam(#4, array_size(3), 4, '==') : the 3rd argument of #4 is an array, and its size is equal to the value of the 4th argument in method #4. 
-
+    - valCstParam(#4, col(1), 3, '>=') : the 1st argument of #4 is table, and its size is greater or equal to the value of the 3rd argument in method #4. 
+    - valCstParam(#4, col(1), max(3), '>=') : the 1st argument of #4 is table, and its size is greater or equal to the max element of the 3rd argument of type ListType. 
+    
 * Value Choice (Soft)
-    - valCParam(#1, 1) \in ["AppleUSBTCButtons", "GoogleVideoButtons"]: for the first argument of IOServiceMatching, its values can be either "AppleXXX" or "Google"
-    - valCType(size_t) \in [0, 1, 2, 3]: for all arguments of type "size_t", its value can be 1, 2, or 3.
-    - valCType(const_int64_array) \in [0xe0000000, 0x00a90000, 0]: the element inside const_int64_array can only be chose from those three values.
-    - valCType(array_size) \in [1,2,3]: the array size can be 1, 2, or 3.
-    - valCArray(#4, 3, array_size, const_int64_array): the 3rd argument of #4, which has size, suppose its 3 (array_size==3), and the array has the following elements: [0, 0, 0]  (i.e., const_int64_array=[0, 0, 0])
-    - valCType(uint64_t* | task_port_t | uint32_t* | void* | size_t* | t uint64_t* | uint32_t | void*) \in [0]
+    - valCParam(#1, 1) \in [1, 2]: for the first argument of #1, its values can be either 1 or 2
 
 Now the goal is to synthesize the following program:
 
 #+BEGIN_SRC c
-    uint64_t inputScalar[16];
-    size_t inputScalarCnt = 3;
-    uint8_t inputStruct[4096];
-    size_t inputStructCnt = 0;
-    uint64_t outputScalar[16];
-    uint32_t outputScalarCnt = 0;
-    char outputStruct[4096];
-    size_t outputStructCnt = 0x1000;
-    inputScalar[0] =
-        0xe0000000; // cast to an enum (int) and no lower-bounds check
-    inputScalar[1] = 0x00a90000;
-    inputScalar[2] = 0;
 
-    CFDictionaryRef matching = IOServiceMatching("AppleUSBTCButtons");
-    io_service_t service = IOServiceGetMatchingService(
-        kIOMasterPortDefault, matching); // consume a ref on matching
-    io_connect_t conn = MACH_PORT_NULL;
-    IOServiceOpen(service, mach_task_self(), 0, &conn);
 
-    IOConnectCallMethod(conn, 12, inputScalar, inputScalarCnt, inputStruct,
-                        inputStructCnt, outputScalar, &outputScalarCnt,
-                        outputStruct, &outputStructCnt);
+--------------------------------------------------------------------------------
+| Input-Output Example                                                          |
+--------------------------------------------------------------------------------
+
+Input:
+
+   round var1 var2 nam        val
+1 round1   22   33 foo 0.16912201
+2 round2   11   44 foo 0.18570826
+3 round1   22   33 bar 0.12410581
+4 round2   11   44 bar 0.03258235
+
+Output:
+
+  nam val_round1 val_round2 var1_round1 var1_round2 var2_round1 var2_round2
+1 bar  0.1241058 0.03258235          22          11          33          44
+2 foo  0.1691220 0.18570826          22          11          33          44
+
+    R program:
+
+    TBL_3=gather(p1_input1, [1, 2, 4])
+    TBL_1=unite(TBL_3, [2, 0])
+    morpheus=spread(TBL_1, 0, 2)
 #+END_SRC
