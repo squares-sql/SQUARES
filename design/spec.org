@@ -1,9 +1,9 @@
-#+TITLE: Tyrell Spec File Format
+#+TITLE: DSL for data wrangling in R
 #+OPTIONS: toc:nil
 #+OPTIONS: html-postamble:nil
 #+LANGUAGE: en
 
-This document describes in detail the input file format which the Tyrell
+This document describes in detail the data wrangling DSL which the Tyrell
 synthesizer recognize. 
 
 A tyrell specification file is a text file in [[https://github.com/toml-lang/toml][TOML]] format. The file consists of
@@ -11,25 +11,6 @@ several sections whose usage will be explained in the rest of this
 document. Note that all sections are optional, and the orders of the sections as
 the appear in the input file does not affect how the synthesizer interprets
 them.
-
-* The ~[env]~ section
-
-This section contains information not directly related to the synthesis task but
-required for code generation. Currently the only interpreted field in this
-section is the =headers= field, which must be a list that contains all headers
-to include in the synthesized source code. The style of the include is
-determined by whether the specified header name is surrounded with angle
-bracket. For example:
-#+BEGIN_SRC toml
-[env]
-headers = [ "myheader.h", "<stdio.h>" ]
-#+END_SRC
-The above specification will cause the following two lines to be added to the
-beginning of the generated C code:
-#+BEGIN_SRC c
-#include "myheader.h"
-#include <stdio.h>
-#+END_SRC
 
 * The ~[[type]]~ section
   
