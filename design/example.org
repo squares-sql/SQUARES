@@ -1,31 +1,37 @@
-#+TITLE: Tyrell Motivating Example
+#+TITLE: Data Wrangling Motivating Example
 #+OPTIONS: toc:nil
 #+OPTIONS: html-postamble:nil
 #+LANGUAGE: en
 
-This document contains a motivating example (#774) solved by the Tyrell synthesizer.
+This document contains a motivating example solved by the Tyrell synthesizer.
 
 * Type list:
-
-CFMutableDictionaryRef, CFDictionaryRef, String, io_service_t, mac_port_t, CFDictionaryRef,
-io_connect_t, io_service_t, task_port_t,
-uint64_t*, uint32_t*, void*, size_t*, const uint64_t*, uint32_t, void*, size_t
-array_size
-
-* Alias:
-    - [String: const char*]
-    - [io_connect_t: io_connect_t*]
-    - [io_connect_t: mac_port_t]
-    - [io_connect_t: io_service_t]
-    - [const_int64_array: const uint64_t*]
-    - [CFMutableDictionaryRef: CFDictionaryRef]
+    - IntType
+    - TableType
+    - AggrType
+    - ListType
+    - ColIndexType
+    - ConstType
+    - BoolFunctionType
+    - NumFunctionType
 
 * DSL (Symbols on the left hand side denote return types):
+    - Rule #1: [AggrType] -> ["mean" | "min" | "sum" | "count" ]
+    - Rule #2: [BoolFunctionType] -> [ "!=" | "==" | ">" | "<" ]
+    - Rule #3: [NumFunctionType] -> [ "/" | "+" | "-" | "*" ]
+    - Rule #4: [TableType] -> (select) [TableType, ListType] 
+    - Rule #5: [TableType] -> (group_by) [TableType, ListType] 
+    - Rule #6: [TableType] -> (inner_join) [TableType, TableType] 
+    - Rule #7: [TableType] -> (gather) [TableType, ListType] 
+    - Rule #8: [TableType] -> (spread) [TableType, ColIndexType, ColIndexType] 
+    - Rule #9: [TableType] -> (unite) [TableType, ColIndexType, ColIndexType] 
+    - Rule #10: [TableType] -> (summarise) [TableType, AggrType, ColIndexType] 
+    - Rule #11: [TableType] -> (separate) [TableType, ColIndexType] 
+    - Rule #12: [TableType] -> (filter) [TableType, BoolFunctionType, ColIndexType, ConstType] 
+    - Rule #13: [TableType] -> (mutate) [TableType, NumFunctionType, ColIndexType, ColIndexType] 
+    - Rule #14: [ConstType] -> [ 0 | ... | 9 ]
+    - Rule #15: [ColIndexType] -> [ 0 | ... | 5 ] (Will be bounded by the size of the table)
 
-    - Rule #1: [CFMutableDictionaryRef] ->(IOServiceMatching) [String]
-    - Rule #2: [io_service_t] ->(IOServiceGetMatchingService) [mac_port_t, CFDictionaryRef]
-    - Rule #3: [io_connect_t] ->(IOServiceOpen) [io_service_t, task_port_t]
-    - Rule #4: [uint64_t*, uint32_t*, void*, size_t*] ->(IOConnectCallMethod) [mac_port_t, uint32_t, const uint64_t*, uint32_t, void*, size_t]
 
 * Happens-before (Soft)
     - hb(#3, #4): The invocation of IOServiceOpen happens before IOConnectCallMethod
