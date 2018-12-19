@@ -1,0 +1,78 @@
+#+TITLE: Tyrell Motivating Example
+#+OPTIONS: toc:nil
+#+OPTIONS: html-postamble:nil
+#+LANGUAGE: en
+
+This document contains a motivating example (#774) solved by the Tyrell synthesizer.
+
+* Type list:
+
+CFMutableDictionaryRef, CFDictionaryRef, String, io_service_t, mac_port_t, CFDictionaryRef,
+io_connect_t, io_service_t, task_port_t,
+uint64_t*, uint32_t*, void*, size_t*, const uint64_t*, uint32_t, void*, size_t
+array_size
+
+* Alias:
+    - [String: const char*]
+    - [io_connect_t: io_connect_t*]
+    - [io_connect_t: mac_port_t]
+    - [io_connect_t: io_service_t]
+    - [const_int64_array: const uint64_t*]
+    - [CFMutableDictionaryRef: CFDictionaryRef]
+
+* DSL (Symbols on the left hand side denote return types):
+
+    - Rule #1: [CFMutableDictionaryRef] ->(IOServiceMatching) [String]
+    - Rule #2: [io_service_t] ->(IOServiceGetMatchingService) [mac_port_t, CFDictionaryRef]
+    - Rule #3: [io_connect_t] ->(IOServiceOpen) [io_service_t, task_port_t]
+    - Rule #4: [uint64_t*, uint32_t*, void*, size_t*] ->(IOConnectCallMethod) [mac_port_t, uint32_t, const uint64_t*, uint32_t, void*, size_t]
+
+* Happens-before (Soft)
+    - hb(#3, #4): The invocation of IOServiceOpen happens before IOConnectCallMethod
+
+* Value Dependence (hard)
+    - vd(#1, -1, #2, 2): the first return argument of method #1 is consumed by the second argument of method #2
+
+* Value Consumption (hard)
+    - vc(#1): the return value of IOServiceMatching needs to be consumed at least once
+    - vc(#2): the return value of IOServiceGetMatchingService needs to be consumed at least once
+
+* Value Constraint (hard)
+    - valCstParam(#2, 1) = 0: the first argument of method #2 is assigned 0 as the default value 
+    - valCstParam(#4, 2) = 12: the 2nd argument of method #4 is assigned 12
+    - valCstParam(#4, array_size(3), 4, '==') : the 3rd argument of #4 is an array, and its size is equal to the value of the 4th argument in method #4. 
+
+* Value Choice (Soft)
+    - valCParam(#1, 1) \in ["AppleUSBTCButtons", "GoogleVideoButtons"]: for the first argument of IOServiceMatching, its values can be either "AppleXXX" or "Google"
+    - valCType(size_t) \in [0, 1, 2, 3]: for all arguments of type "size_t", its value can be 1, 2, or 3.
+    - valCType(const_int64_array) \in [0xe0000000, 0x00a90000, 0]: the element inside const_int64_array can only be chose from those three values.
+    - valCType(array_size) \in [1,2,3]: the array size can be 1, 2, or 3.
+    - valCArray(#4, 3, array_size, const_int64_array): the 3rd argument of #4, which has size, suppose its 3 (array_size==3), and the array has the following elements: [0, 0, 0]  (i.e., const_int64_array=[0, 0, 0])
+    - valCType(uint64_t* | task_port_t | uint32_t* | void* | size_t* | t uint64_t* | uint32_t | void*) \in [0]
+
+Now the goal is to synthesize the following program:
+
+#+BEGIN_SRC c
+    uint64_t inputScalar[16];
+    size_t inputScalarCnt = 3;
+    uint8_t inputStruct[4096];
+    size_t inputStructCnt = 0;
+    uint64_t outputScalar[16];
+    uint32_t outputScalarCnt = 0;
+    char outputStruct[4096];
+    size_t outputStructCnt = 0x1000;
+    inputScalar[0] =
+        0xe0000000; // cast to an enum (int) and no lower-bounds check
+    inputScalar[1] = 0x00a90000;
+    inputScalar[2] = 0;
+
+    CFDictionaryRef matching = IOServiceMatching("AppleUSBTCButtons");
+    io_service_t service = IOServiceGetMatchingService(
+        kIOMasterPortDefault, matching); // consume a ref on matching
+    io_connect_t conn = MACH_PORT_NULL;
+    IOServiceOpen(service, mach_task_self(), 0, &conn);
+
+    IOConnectCallMethod(conn, 12, inputScalar, inputScalarCnt, inputStruct,
+                        inputStructCnt, outputScalar, &outputScalarCnt,
+                        outputStruct, &outputStructCnt);
+#+END_SRC
