@@ -43,11 +43,12 @@ This document contains a motivating example solved by the Tyrell synthesizer.
     - vc(#1, score): the return value of invocation #1 needs to be consumed at least once (confidence = score)
 
 * Value Constraint (hard)
-    - valCstParam(#2, 1) \in  (0 4): the first argument of method #2 is between 0 and 4 
     - valCstParam(#4, 2) = 12: the 2nd argument of method #4 is assigned 12
-    - valCstParam(#4, col(1), 3, '>=') : the 1st argument of #4 is table, and its column number is greater or equal to the value of the 3rd argument of type ColIndexType. 
-    - valCstParam(#4, col(1), max(3), '>=') : the 1st argument of #4 is table, and its column number is greater or equal to the max element of the 3rd argument of type ListType. 
-    
+    - valCstParam(#4, col(1), 3, '>=') : the 1st argument of #4 is a table, and its column number is greater or equal to the value of the 3rd argument of type ColIndexType. 
+    - valCstParam(#4, col(1), max(3), '>=') : the 1st argument of #4 is a table, and its column number is greater or equal to the max element of the 3rd argument of type ListType. 
+    - valCstParam(#3, -1) = (3, 4)  : the return value of invocation #3 is a table of 3 rows and 4 columns
+    - valCstParam(#3, 1) = (5, 6)  : the first parameter of invocation #3 is a table of 5 rows and 6 columns
+
 * Value Choice (Soft)
     - valCParam(#1, 1) \in [1, 2]: for the first argument of #1, its values can be either 1 or 2
 
