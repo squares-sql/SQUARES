@@ -6,212 +6,224 @@ headers = [
 ]
 
 [[type]]
-name = "mach_port_t"
+name = "IntType"
 
 [[type]]
-name = "io_connect_t"
+name = "TableType"
 
 [[type]]
-name = "io_service_t"
+name = "AggrType"
 
 [[type]]
-name = "task_port_t"
+name = "ListType"
+domain = ["[0]", "[1]", "[2]", "[0, 1]", "[1, 2]"]
 
 [[type]]
-name = "CFMutableDictionaryRef"
+name = "ColIndexType"
+domain = ["0", "1", "2"]
 
 [[type]]
-name = "_ServiceName"
-display = "const char*"
+name = "ConstType"
+domain = ["0", "1", "2"]
+
+[[type]]
+name = "BoolFunctionType"
 domain = [
-'"AGDPClientControl"',
-'"X86PlatformPlugin"',
-'"com_apple_driver_pmtelemetry"'
+    "!=", "==", ">", "<"
 ]
 
 [[type]]
-name = "_ServiceType"
-display = "int"
+name = "NumFunctionType"
 domain = [
-    "0",
-    "1"
+    "/", "+", "-", "*"
 ]
-
-[[type]]
-name = "_Selector"
-display = "int"
-domain = [
-    "0", "1"
-]
-
-[[type]]
-name = "_IOConnectInContent"
-display = "uint64_t"
-domain = [
-    "0xf0"
-]
-
-[[type]]
-name = "_IOConnectInArray"
-arrayBase = "_IOConnectInContent"
-arrayMinLen = 4
-arrayMaxLen = 4
-
-[[type]]
-name = "_IOConnectInCnt"
-display = "uint32_t"
-domain = [
-    "0", "1", "2", "3"
-]
-
-[[type]]
-name = "_IOConnectInStructContent"
-display = "uint8_t"
-domain = [
-    "0"
-]
-
-[[type]]
-name = "_IOConnectInStructArray"
-arrayBase = "_IOConnectInStructContent"
-arrayMaxLen = 1
-arrayMinLen = 1
-
-
-[[type]]
-name = "_IOConnectInStructCnt"
-display = "size_t"
-domain = [
-    "0"
-]
-
-[[type]]
-name = "_IOConnectOutCnt"
-display = "uint32_t"
-domain = [
-    "0"
-]
-
-[[type]]
-name = "_IOConnectOutStructCnt"
-display = "size_t"
-domain = [
-    "1"
-]
-
-[[type]]
-# A placeholder type for IOConnectCallMethod
-name = "_Null"
 
 [[api]]
-name = "IOServiceMatching"
+name = "select"
 
     [api.return]
-    type = "CFMutableDictionaryRef"
+    type = "TableType"
+    name = "ret"
 
     [[api.param]]
-    direction = "in"
-    type = "_ServiceName"
-    name = "name"
+    type = "TableType"
+    name = "param1"
+
+    [[api.param]]
+    type = "ListType"
+    name = "param2"
+
+    [[constraint]]
+    type = "ValueCmp2"
+    lhs = param1.row
+    rhs = ret.row 
+    operator = "=="
+
+    [[constraint]]
+    type = "ValueCmp2"
+    lhs = param1.col
+    rhs = ret.col
+    operator = ">"
+
+    [[constraint]]
+    type = "ValueCmp2"
+    lhs = param1.col
+    rhs = param2.max
+    operator = ">="
 
 [[api]]
-name = "IOServiceGetMatchingService"
+name = "group_by"
 
     [api.return]
-    type = "io_service_t"
+    type = "TableType"
 
     [[api.param]]
-    direction = "in"
-    type = "mach_port_t"
-    name = "masterPort"
-    fixedValue = "kIOMasterPortDefault"
+    type = "TableType"
+    name = "param1"
 
     [[api.param]]
-    direction = "in"
-    type = "CFMutableDictionaryRef"
-    name = "matching"
+    type = "ListType"
+    name = "param2"
 
 [[api]]
-name = "IOServiceOpen"
+name = "inner_join"
+
+    [api.return]
+    type = "TableType"
 
     [[api.param]]
-    direction = "in"
-    type = "io_service_t"
-    name = "service"
+    type = "TableType"
+    name = "param1"
 
     [[api.param]]
-    type = "task_port_t"
-    name = "owningTask"
-    fixedValue = "mach_task_self()"
-
-    [[api.param]]
-    type = "_ServiceType"
-    name = "type"
-
-    [[api.param]]
-    direction = "out"
-    type = "io_connect_t"
-    name = "connect"
+    type = "TableType"
+    name = "param2"
 
 [[api]]
-name = "IOConnectCallMethod"
+name = "gather"
+
+    [api.return]
+    type = "TableType"
 
     [[api.param]]
-    direction = "in"
-    type = "io_connect_t"
-    name = "connection"
+    type = "TableType"
+    name = "param1"
 
     [[api.param]]
-    direction = "in"
-    type = "_Selector"
-    name = "selector"
+    type = "ListType"
+    name = "param2"
+
+
+[[api]]
+name = "spread"
+
+    [api.return]
+    type = "TableType"
 
     [[api.param]]
-    direction = "in"
-    type = "_IOConnectInArray"
-    name = "input"
+    type = "TableType"
+    name = "param1"
 
     [[api.param]]
-    direction = "in"
-    type = "_IOConnectInCnt"
-    name = "inputCnt"
-    # TODO: Add the array size constraint
+    type = "ColIndexType"
+    name = "param2"
 
     [[api.param]]
-    direction = "in"
-    type = "_Null"
-    name = "inputStruct"
-    fixedValue = "NULL"
+    type = "ColIndexType"
+    name = "param3"
+
+[[api]]
+name = "unite"
+
+    [api.return]
+    type = "TableType"
 
     [[api.param]]
-    direction = "in"
-    type = "_Null"
-    name = "inputStructCnt"
-    fixedValue = "0"
+    type = "TableType"
+    name = "param1"
 
     [[api.param]]
-    direction = "out"
-    type = "_Null"
-    name = "output"
-    fixedValue = "NULL"
+    type = "ColIndexType"
+    name = "param2"
 
     [[api.param]]
-    direction = "in_out"
-    type = "_IOConnectOutCnt"
-    name = "outputCnt"
+    type = "ColIndexType"
+    name = "param3"
+
+[[api]]
+name = "summarise"
+
+    [api.return]
+    type = "TableType"
 
     [[api.param]]
-    direction = "out"
-    type = "_Null"
-    name = "outputStruct"
-    fixedValue = "NULL"
+    type = "TableType"
+    name = "param1"
 
     [[api.param]]
-    direction = "in_out"
-    type = "_IOConnectOutStructCnt"
-    name = "outputStructCnt"
+    type = "AggrType"
+    name = "param2"
 
-[[constraint]]
-type = "AtLeast"
-api = "IOConnectCallMethod"
-count = 1
+    [[api.param]]
+    type = "ColIndexType"
+    name = "param3"
+
+[[api]]
+name = "separate"
+
+    [api.return]
+    type = "TableType"
+
+    [[api.param]]
+    type = "TableType"
+    name = "param1"
+
+    [[api.param]]
+    type = "ColIndexType"
+    name = "param2"
+
+[[api]]
+name = "filter"
+
+    [api.return]
+    type = "TableType"
+
+    [[api.param]]
+    type = "TableType"
+    name = "param1"
+
+    [[api.param]]
+    type = "BoolFunctionType"
+    name = "param2"
+
+    [[api.param]]
+    type = "ColIndexType"
+    name = "param3"
+
+    [[api.param]]
+    type = "ConstType"
+    name = "param4"
+
+
+[[api]]
+name = "mutate"
+
+    [api.return]
+    type = "TableType"
+
+    [[api.param]]
+    type = "TableType"
+    name = "param1"
+
+    [[api.param]]
+    type = "NumFunctionType"
+    name = "param2"
+
+    [[api.param]]
+    type = "ColIndexType"
+    name = "param3"
+
+    [[api.param]]
+    type = "ColIndexType"
+    name = "param4"
+
