@@ -55,20 +55,20 @@ name = "select"
 
     [[constraint]]
     type = "ValueCmp2"
-    lhs = param1.row
-    rhs = ret.row 
+    lhs = "param1.row"
+    rhs = "ret.row" 
     operator = "=="
 
     [[constraint]]
     type = "ValueCmp2"
     lhs = param1.col
-    rhs = ret.col
+    rhs = "ret.col"
     operator = ">"
 
     [[constraint]]
     type = "ValueCmp2"
-    lhs = param1.col
-    rhs = param2.max
+    lhs = "param1.col"
+    rhs = "param2.max"
     operator = ">="
 
 [[api]]
