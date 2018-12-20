@@ -7,6 +7,6 @@
         - tidyr: install.packages("tidyr")
         - devtools: install.packages("devtools")
     - rpy2: pip3 install rpy2
-    - Install MorpheusData for PLDI17: devtools::install_github("fredfeng/MorpheusData")
-    - Load MorpheusData for PLDI17 in R: library(MorpheusData)
+    - Install MorpheusData for PLDI17 (optional): devtools::install_github("fredfeng/MorpheusData")
+    - Load MorpheusData for PLDI17 in R (optional): library(MorpheusData)
 
