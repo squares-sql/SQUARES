@@ -61,7 +61,7 @@ name = "select"
 
     [[constraint]]
     type = "ValueCmp2"
-    lhs = param1.col
+    lhs = "param1.col"
     rhs = "ret.col"
     operator = ">"
 
