@@ -1,8 +1,8 @@
 
 [env]
 headers = [
-    "<CoreFoundation/CoreFoundation.h>",
-    "<IOKit/IOKitLib.h>"
+    "library(dplyr)",
+    "library(tidyr)"
 ]
 
 [[type]]
@@ -25,111 +25,6 @@ name = "_ServiceName"
 display = "const char*"
 domain = [
 '"AGDPClientControl"',
-'"AGPM"',
-'"AirPort_Brcm4360"',
-'"AirPort_Brcm4360_P2PInterface"',
-'"AppleACPIButton"',
-'"AppleACPICPU"',
-'"AppleACPICPUInterruptController"',
-'"AppleACPIPCI"',
-'"AppleACPIPlatformExpert"',
-'"AppleAHCIDiskDriver"',
-'"AppleAPICInterruptController"',
-'"AppleBroadcomBluetoothHostController"',
-'"AppleBusPowerControllerUSB"',
-'"AppleCredentialManager"',
-'"AppleDisplay"',
-'"AppleEFINVRAM"',
-'"AppleEFIRuntime"',
-'"AppleFDEKeyStore"',
-'"AppleGraphicsDeviceControlPlugin"',
-'"AppleHDACodecGeneric"',
-'"AppleHDAController"',
-'"AppleHDADriver"',
-'"AppleHDAEngineOutput"',
-'"AppleHDAStream"',
-'"AppleHV"',
-'"AppleIRController"',
-'"AppleIntelAzulController"',
-'"AppleIntelFramebuffer"',
-'"AppleIntelMEIDriver"',
-'"AppleIntelPchSeriesAHCI"',
-'"AppleIntelSlowAdaptiveClockingManager"',
-'"AppleKeyStore"',
-'"AppleLPC"',
-'"AppleMCCSControlModule"',
-'"AppleMCCSParameterHandler"',
-'"AppleMEClientController"',
-'"AppleMobileFileIntegrity"',
-'"AppleOSXWatchdog"',
-'"ApplePlatformEnabler"',
-'"AppleRTC"',
-'"AppleSCSISubsystemGlobals"',
-'"AppleSDXC"',
-'"AppleSDXCBlockStorageDevice"',
-'"AppleSDXCSlot"',
-'"AppleSMBIOS"',
-'"AppleSMC"',
-'"AppleSSE"',
-'"AppleThunderboltDPInAdapter"',
-'"AppleThunderboltHAL"',
-'"AppleThunderboltIPPort"',
-'"AppleThunderboltIPService"',
-'"AppleThunderboltNHIType2"',
-'"AppleThunderboltPCIDownAdapter"',
-'"AppleUSB20HubPort"',
-'"AppleUSB20InternalHub"',
-'"AppleUSBHostResources"',
-'"AppleUSBInterface"',
-'"AppleUSBLegacyRoot"',
-'"AppleUSBXHCI"',
-'"AppleUpstreamUserClientDriver"',
-'"AppleVTD"',
-'"AudioAUUCDriver"',
-'"BCM5701Enet"',
-'"BroadcomBluetoothHostControllerUSBTransport"',
-'"CCDataPipe"',
-'"CCDataStream"',
-'"CCIOReporterDataStream"',
-'"CCIOReporterLogStream"',
-'"CCLogPipe"',
-'"CCLogStream"',
-'"CoreStorage"',
-'"CoreStorageLogicalBSDClient"',
-'"IOAHCIBlockStorageDevice"',
-'"IOAHCIDevice"',
-'"IOBlockStorageDriver"',
-'"IOBluetoothHCIController"',
-'"IOBluetoothSerialClientSerialStreamSync"',
-'"IOBluetoothSerialManager"',
-'"IODisplayWrangler"',
-'"IOFramebufferI2CInterface"',
-'"IOHDACodecDevice"',
-'"IOHDACodecFunction"',
-'"IOHDIXController"',
-'"IOHIDEventDriver"',
-'"IOHIDInterface"',
-'"IOHIDResource"',
-'"IOHIDSystem"',
-'"IOMediaBSDClient"',
-'"IONetworkStack"',
-'"IOPCIMessagedInterruptController"',
-'"IOPMrootDomain"',
-'"IOReportHub"',
-'"IOResources"',
-'"IOSerialBSDClient"',
-'"IOSurfaceRoot"',
-'"IOThunderboltController"',
-'"IOThunderboltLocalNode"',
-'"IOThunderboltPort"',
-'"IOThunderboltSwitchType2"',
-'"IOUSBHIDDriver"',
-'"IOUSBHostHIDDevice"',
-'"IOUSBHostInterface"',
-'"IOUserEthernetResource"',
-'"IntelAccelerator"',
-'"IntelFBClientControl"',
-'"SMCWatchDogTimer"',
 '"X86PlatformPlugin"',
 '"com_apple_driver_pmtelemetry"'
 ]
@@ -245,13 +140,11 @@ name = "IOServiceOpen"
     name = "service"
 
     [[api.param]]
-    direction = "in"
     type = "task_port_t"
     name = "owningTask"
     fixedValue = "mach_task_self()"
 
     [[api.param]]
-    direction = "in"
     type = "_ServiceType"
     name = "type"
 
