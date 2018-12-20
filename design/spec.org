@@ -64,33 +64,21 @@ domain = [ '"x"', '"y"', '"z"' ]
 
 ** The ~arrayBase~, ~arrayMaxLen~, and ~arrayMinLen~ field
 
-Tyrell also supports array types. For an array type ~T[]~, the name of the base
-type ~T~ can be specified via the ~arrayBase~ field, and the maximum length of
-the array can be specified via the ~arrayMaxLen~ field. Those two fields must be
-specified simultaneously: the Tyrell parser will reject the specification if the
-user provide the value for only one of them. In addition, the mininum length of
-the array can also be specified via the ~arrayMinLen~ field. By default, the
-minimum length is set to zero. For an array type with base type ~T~, minimum
-length ~M~, and maximum length ~N~, its user-specified ~domain~ field will be
-automatically ignored, and instead the real domain becomes a list of constants
-of type ~T~, where the length of the list could vary from ~M~ to ~N~ (note the
-range is /inclusive/). Possible values of each element is determined by ~T~. For
-example,
+Tyrell also supports table types. For a table type ~Table[]~, the name of the base
+type ~Table~ can be specified via the ~tableBase~ field, and the number of columns and rows of
+the table can be specified via the ~tableRow~ and ~tableCol~ fields. For example,
 #+BEGIN_SRC toml
 [[type]]
 name = "Foo"
 domain = [ 0, 1 ]
 
 [[type]]
-name = "FooArray"
-arrayBase = "Foo"
-arrayMaxLen = 2
+name = "FooTable"
+tableBase = "Foo"
+tableRow = 2
+tableCol = 3
 #+END_SRC
-The domain for type ~FooArray~ will contain the following 7 elements: ~{0,
-0}~, ~{0, 1}~, ~{1, 0}~, ~{1, 1}~, ~{0}~, ~{1}~, ~{}~.
-
-The base type of an array type must come before the array type in the
-specification file. 
+It specifies a table with 2 rows and 3 columns
 
 * The ~[[api]]~ section
 
@@ -110,10 +98,8 @@ name = "bar"
   [[api.param]]
   type = "int"
   name = "x"
-  direction = "in"
   [[api.param]]
   type = "int"
-  direction = "out"
   name = "y"
 #+END_SRC
 This specification contains two functions with name "foo" and "bar"
@@ -154,34 +140,6 @@ table.
 
 This (mandantory) field specifies the type of the parameter. 
 
-*** The ~direction~ field
-
-This (mandantory) field specifies the direction (input or output) of the
-parameter. For input parameters, the value of this field should be "in". For
-output parameters, the value of this field should be "out". For parameters
-that both serves as input and output, the value of this field should be
-"in_out". Note that in C,
-output parameters need to have their address taken as arguments are
-passed by value. Tyrell can automatically handle the address taking part and
-therefore the user does not need to manually specify a pointer type. For
-example, a C function ~f~ that has one output parameter of type ~int~ will have the
-following signature in C:
-#+BEGIN_SRC c
-void f(int*);
-#+END_SRC
-Here is the same function translated into Tyrell specification:
-#+BEGIN_SRC toml
-[[api]]
-name = "f"
-  [[api.param]]
-  type = "int"
-  direction = "out"
-#+END_SRC
-Note that the type of the output parameter is ~int~, not ~int*~.
-
-/WARNING/: Currently we do not offer support for in_out array parameters due
-to aliasing considerations.
-
 *** The ~name~ field
 
 This (optional) field specifies the name of the parameter. If left blank, a
@@ -209,15 +167,12 @@ name = "f"
   [[api.param]]
   type = "int"
   name = "foo"
-  direction = "in"
   [[api.param]]
   type = "int"
   name = "bar"
-  direction = "out"
   [[api.param]]
   type = "string"
   name = "baz"
-  direction = "in"
 #+END_SRC
 Here we have three parameters. The first one ~foo~ will have index 0, the
 second one ~bar~ will have index 1, and the third one ~baz~ will have
