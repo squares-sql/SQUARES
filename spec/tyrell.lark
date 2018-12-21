@@ -1,0 +1,31 @@
+start: decl*
+
+?decl: enum_decl
+  | value_decl
+  | rule_decl
+
+enum_decl: "enum" NAME enum_body
+
+?enum_body: ";"
+  | "{" enum_items "}"
+
+enum_items: enum_item ("," enum_item)*
+
+value_decl: "value" NAME ";"
+
+rule_decl: "rule" NAME ":" rule_body ";"
+
+rule_body: rule_lhs "->" rule_rhss
+
+?rule_lhs: NAME
+
+rule_rhss: rule_rhs ("*" rule_rhs)*
+
+?rule_rhs: NAME
+
+?enum_item: STRLIT
+
+%import common.ESCAPED_STRING -> STRLIT
+%import common.CNAME -> NAME
+%import common.WS
+%ignore WS

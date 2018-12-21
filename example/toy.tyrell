@@ -1,0 +1,17 @@
+enum SMALL_INT {
+  "0", "1", "2", "3"
+}
+
+enum BINOP {
+  "+", "-", "*", "/"
+}
+
+value EXPR;
+
+rule ConstExpr:
+  EXPR -> SMALL_INT
+;
+
+rule BinaryExpr:
+  EXPR -> EXPR * BINOP * EXPR
+;

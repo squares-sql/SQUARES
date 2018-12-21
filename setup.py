@@ -6,12 +6,13 @@ setup(
     packages=find_packages(),
     install_requires=[
         'rpy2',
-        'toml',
-        'Click'
+        'lark-parser',
+        'Click',
+        'colorama'
     ],
     entry_points={
         'console_scripts': [
-            'run-tyrell=main:cli',
+            'parse-spec=parse_spec:cli',
         ],
     },
 )
