@@ -1,17 +1,15 @@
-enum SMALL_INT {
+# First, specify the types that will be used
+enum SmallInt {
   "0", "1", "2", "3"
 }
-
-enum BINOP {
+enum BinOp {
   "+", "-", "*", "/"
 }
+value Int;
 
-value EXPR;
+# Next, specify the input/output of the synthesized program
+program Toy(Int x, Int y) returns Int;
 
-rule ConstExpr:
-  EXPR -> SMALL_INT
-;
-
-rule BinaryExpr:
-  EXPR -> EXPR * BINOP * EXPR
-;
+# Finally, specify the production rules
+func const: Int -> SmallInt;
+func binary: Int -> Int, BinOp, Int;

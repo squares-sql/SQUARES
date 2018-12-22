@@ -1,31 +1,50 @@
-start: decl*
+start: type_decls program_decl func_decls
 
-?decl: enum_decl
+type_decls: type_decl*
+
+?type_decl: enum_decl
   | value_decl
-  | rule_decl
 
-enum_decl: "enum" NAME enum_body
+enum_decl: "enum" type_name enum_body
 
 ?enum_body: ";"
   | "{" enum_items "}"
 
 enum_items: enum_item ("," enum_item)*
 
-value_decl: "value" NAME ";"
+value_decl: "value" type_name ";"
 
-rule_decl: "rule" NAME ":" rule_body ";"
+program_decl: "program" func_name "(" args ")" "returns" type_name ";"
 
-rule_body: rule_lhs "->" rule_rhss
+func_decls: func_decl*
 
-?rule_lhs: NAME
+func_decl: "func" func_name ":" func_body ";"
 
-rule_rhss: rule_rhs ("*" rule_rhs)*
+func_body: func_lhs "->" func_rhss
 
-?rule_rhs: NAME
+?func_lhs: opt_arg
+
+func_rhss: func_rhs ("," func_rhs)*
+
+?func_rhs: opt_arg
+
+opt_arg: type_name [var_name]
+
+args: [arg ("," arg)*]
+
+arg: type_name var_name
 
 ?enum_item: STRLIT
+
+?type_name: NAME
+?var_name: NAME
+?func_name: NAME
+
+COMMENT: "#" /.*/ "\n"
+  | "(*" /(.|\n)+/ "*)"
 
 %import common.ESCAPED_STRING -> STRLIT
 %import common.CNAME -> NAME
 %import common.WS
 %ignore WS
+%ignore COMMENT
