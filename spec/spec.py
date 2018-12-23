@@ -1,6 +1,7 @@
-from typing import List, Dict, Optional
+from typing import List, Dict, DefaultDict, Optional, Union
 from .type import Type, EnumType, ValueType
 from .production import EnumProduction, ParamProduction, FunctionProduction, Production
+from collections import defaultdict
 
 
 class TypeSpec:
@@ -23,9 +24,9 @@ class TypeSpec:
         '''
         return self._types[name]
 
-    def define_type(self, ty: Type) -> None:
+    def define_type(self, ty: Type) -> Type:
         '''
-        Add the type `ty` to this spec.
+        Add the type `ty` to this spec. Return `ty` itself.
         Raise `ValueError` if another type with duplicated name is found.
         '''
         name = ty.name
@@ -35,6 +36,7 @@ class TypeSpec:
                 .format(ty))
         else:
             self._types[name] = ty
+        return ty
 
     def types(self):
         '''Return an iterator for all defined types'''
@@ -50,9 +52,11 @@ class TypeSpec:
 
 class ProductionSpec:
     _productions: List[Production]
+    _lhs_map: DefaultDict[str, List[Production]]
 
     def __init__(self):
         self._productions = list()
+        self._lhs_map = defaultdict(list)
 
     def get_production(self, id: int) -> Optional[Production]:
         '''
@@ -72,26 +76,57 @@ class ProductionSpec:
             msg = 'Cannot find production with given id: {}'.format(id)
             raise KeyError(msg)
 
-    def add_enum_production(self, lhs: EnumType, rhs: int) -> EnumProduction:
+    def _get_productions_with_lhs(self, lhs: str) -> List[Production]:
+        return self._lhs_map.get(lhs, [])
+
+    def get_productions_with_lhs(self, ty: Union[str, Type]) -> List[Production]:
+        '''
+        Return the productions whose LHS is `ty`, where `ty` can be a Type or a string representing the name of the type
+        If no production is found, or `ty` is not a string or a Type, return an empty list
+        '''
+        if isinstance(ty, Type):
+            return self._get_productions_with_lhs(ty.name)
+        elif isinstance(ty, str):
+            return self._get_productions_with_lhs(ty)
+        else:
+            return []
+
+    def get_productions_with_lhs_or_raise(self, ty: Union[str, Type]) -> List[Production]:
+        '''
+        Return the productions whose LHS is `ty`, where `ty` can be a Type or a string representing the name of the type
+        If no production is found, or `ty` is not a string or a Type, raise `KeyError`
+        '''
+        res = self.get_productions_with_lhs(ty)
+        if res == []:
+            raise KeyError(
+                'Cannot find productions with given type: {}'.format(ty))
+        return res
+
+    def _get_next_id(self) -> int:
+        return len(self._productions)
+
+    def _add_production(self, prod: Production) -> None:
+        self._productions.append(prod)
+        self._lhs_map[prod.lhs.name].append(prod)
+
+    def add_enum_production(self, lhs: EnumType, choice: int) -> EnumProduction:
         '''
         Create new enum production.
         This method guarantee that the newly created production will be different from every existing productions.
         Return the created production.
         '''
-        id = len(self._productions)
-        prod = EnumProduction(id, lhs, rhs)
-        self._productions.append(prod)
+        prod = EnumProduction(self._get_next_id(), lhs, choice)
+        self._add_production(prod)
         return prod
 
-    def add_param_production(self, lhs: EnumType, rhs: int) -> ParamProduction:
+    def add_param_production(self, lhs: ValueType, index: int) -> ParamProduction:
         '''
         Create new param production.
         This method guarantee that the newly created production will be different from every existing productions.
         Return the created production.
         '''
-        id = len(self._productions)
-        prod = ParamProduction(id, lhs, rhs)
-        self._productions.append(prod)
+        prod = ParamProduction(self._get_next_id(), lhs, index)
+        self._add_production(prod)
         return prod
 
     def add_func_production(self, name: str, lhs: ValueType, rhs: List[Type]) -> FunctionProduction:
@@ -100,9 +135,8 @@ class ProductionSpec:
         This method guarantee that the newly created production will be different from every existing productions.
         Return the created production.
         '''
-        id = len(self._productions)
-        prod = FunctionProduction(id, name, lhs, rhs)
-        self._productions.append(prod)
+        prod = FunctionProduction(self._get_next_id(), name, lhs, rhs)
+        self._add_production(prod)
         return prod
 
     def productions(self):
@@ -202,6 +236,12 @@ class TyrellSpec:
 
     def get_production_or_raise(self, id: int) -> Production:
         return self._prod_spec.get_production_or_raise(id)
+
+    def get_productions_with_lhs(self, ty: Union[str, Type]) -> List[Production]:
+        return self._prod_spec.get_productions_with_lhs(ty)
+
+    def get_productions_with_lhs_or_raise(self, ty: Union[str, Type]) -> List[Production]:
+        return self._prod_spec.get_productions_with_lhs_or_raise(ty)
 
     def productions(self):
         return self._prod_spec.productions()

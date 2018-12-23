@@ -82,18 +82,20 @@ class ProductionCollecotr(Visitor_Recursive):
 
 
 def desugar(parse_tree):
+    logger.debug('Building Tyrell spec from parse tree...')
     try:
-        # Process type definitions
+        logger.debug('Processing type definitions...')
         type_collector = TypeCollector()
         type_collector.visit(parse_tree)
         type_spec = type_collector.collect()
 
-        # Process input/output definitions
+        logger.debug('Processing input/output definitions...')
         prog_collector = ProgramCollector(type_spec)
         prog_collector.visit(parse_tree)
         prog_spec = prog_collector.collect()
 
         # Process function definitions
+        logger.debug('Processing function definitions...')
         prod_collector = ProductionCollecotr(type_spec)
         prod_collector.visit(parse_tree)
         prod_spec = prod_collector.collect()

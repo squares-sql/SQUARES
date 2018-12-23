@@ -36,6 +36,11 @@ class TestTyrellSpec(unittest.TestCase):
         with self.assertRaises(KeyError):
             spec.get_production_or_raise(fake_id)
 
+        prods = spec.get_productions_with_lhs(ty1)
+        self.assertListEqual(prods, [prod0, prod1])
+        with self.assertRaises(KeyError):
+            spec.get_productions_with_lhs_or_raise('NotAType')
+
         # TyrellSpec will *NOT* try to uniquify productions
         self.assertEqual(len(list(spec.productions())), 2)
         spec.add_func_production(name='base2', lhs=ty1, rhs=[ty0])

@@ -2,9 +2,6 @@
 enum SmallInt {
   "0", "1", "2", "3"
 }
-enum BinOp {
-  "+", "-", "*", "/"
-}
 value Int;
 
 # Next, specify the input/output of the synthesized program
@@ -12,4 +9,6 @@ program Toy(Int, Int) -> Int;
 
 # Finally, specify the production rules
 func const: Int -> SmallInt;
-func binary: Int -> Int lhs, BinOp op, Int rhs;
+func plus: Int -> Int, Int;
+func minus: Int -> Int, Int;
+func mult: Int -> Int, Int;

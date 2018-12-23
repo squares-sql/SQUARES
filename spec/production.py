@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Union
 from abc import ABC, abstractmethod
 from .type import Type, EnumType, ValueType
 
@@ -27,8 +27,12 @@ class Production(ABC):
 
     @property
     @abstractmethod
-    def rhs(self):
-        return []
+    def rhs(self) -> List[Union[str, int, Type]]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def is_function(self) -> bool:
+        raise NotImplementedError
 
 
 class EnumProduction(Production):
@@ -36,6 +40,10 @@ class EnumProduction(Production):
 
     def __init__(self, id: int, lhs: EnumType, choice: int):
         super().__init__(id, lhs)
+        if choice >= len(lhs.domain):
+            msg = 'Cannot create a EnumProduction with choice {} for a domain with {} elements.'.format(
+                choice, len(lhs.domain))
+            raise ValueError(msg)
         self._choice = choice
 
     def _get_rhs(self) -> str:
@@ -44,6 +52,9 @@ class EnumProduction(Production):
     @property
     def rhs(self) -> List[str]:
         return [self._get_rhs()]
+
+    def is_function(self) -> bool:
+        return False
 
     def __repr__(self) -> str:
         return 'EnumProduction(id={}, lhs={!r}, choice={})'.format(
@@ -59,11 +70,16 @@ class ParamProduction(Production):
 
     def __init__(self, id: int, lhs: ValueType, param_id: int):
         super().__init__(id, lhs)
+        if not isinstance(lhs, ValueType):
+            raise ValueError('LHS of ParamProduction must be a value type')
         self._param_id = param_id
 
     @property
-    def rhs(self):
+    def rhs(self) -> List[int]:
         return [self._param_id]
+
+    def is_function(self) -> bool:
+        return False
 
     def __repr__(self) -> str:
         return 'ParamProduction(id={}, lhs={!r}, param_id={})'.format(
@@ -80,6 +96,11 @@ class FunctionProduction(Production):
 
     def __init__(self, id: int, name: str, lhs: ValueType, rhs: List[Type]):
         super().__init__(id, lhs)
+        if not isinstance(lhs, ValueType):
+            raise ValueError('LHS of FunctionProduction must be a value type')
+        if len(rhs) == 0:
+            raise ValueError(
+                'Cannot construct a FunctionProduction with empty RHS')
         self._name = name
         self._rhs = rhs
 
@@ -90,6 +111,9 @@ class FunctionProduction(Production):
     @property
     def name(self):
         return self._name
+
+    def is_function(self) -> bool:
+        return True
 
     def __repr__(self) -> str:
         return 'FunctionProduction(id={}, lhs={!r}, name={}, rhs={})'.format(

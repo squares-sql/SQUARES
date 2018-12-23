@@ -17,6 +17,16 @@ class Type(ABC):
     def __str__(self) -> str:
         return self._name
 
+    def __eq__(self, other):
+        """Overrides the default implementation"""
+        if isinstance(other, Type):
+            return self._name == other._name
+        return NotImplemented
+
+    def __hash__(self):
+        """Overrides the default implementation"""
+        return hash(self._name)
+
 
 class EnumType(Type):
     '''A special kind of type whose domain is finite and specified up-front'''
