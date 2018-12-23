@@ -14,7 +14,7 @@ enum_items: enum_item ("," enum_item)*
 
 value_decl: "value" type_name ";"
 
-program_decl: "program" func_name "(" args ")" "returns" type_name ";"
+program_decl: "program" func_name "(" type_names ")" "->" type_name ";"
 
 func_decls: func_decl*
 
@@ -30,9 +30,7 @@ func_rhss: func_rhs ("," func_rhs)*
 
 opt_arg: type_name [var_name]
 
-args: [arg ("," arg)*]
-
-arg: type_name var_name
+type_names: [type_name ("," type_name)*]
 
 ?enum_item: STRLIT
 

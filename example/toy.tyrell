@@ -8,8 +8,8 @@ enum BinOp {
 value Int;
 
 # Next, specify the input/output of the synthesized program
-program Toy(Int x, Int y) returns Int;
+program Toy(Int, Int) -> Int;
 
 # Finally, specify the production rules
 func const: Int -> SmallInt;
-func binary: Int -> Int, BinOp, Int;
+func binary: Int -> Int lhs, BinOp op, Int rhs;

@@ -30,7 +30,10 @@ def cli(spec_file, verbosity):
     try:
         with open(spec_file, 'r') as f:
             spec_str = f.read()
-        ast = spec.parse(spec_str)
-        logger.info('{}'.format(ast.pretty()))
-    except spec.ParseError as e:
+        tyrell_spec = spec.parse(spec_str)
+        for ty in tyrell_spec.types():
+            logger.info(repr(ty))
+        for prod in tyrell_spec.productions():
+            logger.info(str(prod))
+    except (spec.ParseError, spec.ParseTreeProcessingError) as e:
         logger.error('Spec parsing error: {}'.format(e))

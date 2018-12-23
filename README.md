@@ -20,6 +20,10 @@ Dev Environment Setup
 ```
     $ parse-spec example/toy.tyrell
 ```
+- Run all unit tests
+```
+    $ python -m unittest discover tests
+```
     
 Morpheus prerequisite
 =====================
