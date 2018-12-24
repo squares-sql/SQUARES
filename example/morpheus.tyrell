@@ -15,7 +15,7 @@ enum NumFunc {
   "+", "-", "/"
 }
 enum BoolFunc {
-  "+", "-", "/"
+  "=", ">", "<"
 }
 
 value Table;
