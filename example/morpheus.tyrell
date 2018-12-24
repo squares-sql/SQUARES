@@ -1,0 +1,32 @@
+# First, specify the types that will be used
+enum SmallInt {
+  "0", "1", "2", "3"
+}
+
+enum ColInt {
+  "1", "2", "3"
+}
+
+enum Aggr {
+  "min", "max", "sum"
+}
+
+enum NumFunc {
+  "+", "-", "/"
+}
+enum BoolFunc {
+  "+", "-", "/"
+}
+
+value Table;
+
+# Next, specify the input/output of the synthesized program
+program Morpheus(Table) -> Table;
+
+# Finally, specify the production rules
+func spread: Table -> Table, ColInt, ColInt; 
+func unite: Table -> Table, ColInt, ColInt; 
+func separate: Table -> Table, ColInt; 
+func summarise: Table -> Table, Aggr, ColInt; 
+func filter: Table -> Table, BoolFunc, ColInt, SmallInt; 
+func mutate: Table -> Table, NumFunc, ColInt, ColInt; 
