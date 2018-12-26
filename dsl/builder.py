@@ -1,5 +1,5 @@
 from .node import *
-from spec import TyrellSpec, Production
+from spec import TyrellSpec, Production, EnumType
 from typing import Union
 from visitor import GenericVisitor
 
@@ -28,10 +28,10 @@ class Builder:
     def __init__(self, spec: TyrellSpec):
         self._spec = spec
 
-    def _make_node(self, prod: Production, children: List[Node] = []):
+    def _make_node(self, prod: Production, children: List[Node] = []) -> Node:
         return ProductionVisitor(children).visit(prod)
 
-    def make_node(self, src: Union[int, Production], children: List[Node] = []):
+    def make_node(self, src: Union[int, Production], children: List[Node] = []) -> Node:
         '''
         Create a node with the given production index and children.
         Raise `KeyError` or `ValueError` if an error occurs
@@ -48,6 +48,31 @@ class Builder:
         else:
             raise ValueError(
                 'make_node() only accepts int or production, but found {}'.format(src))
+
+    def make_enum(self, name: str, value: str) -> Node:
+        '''
+        Convenient method to create an enum node.
+        Raise `KeyError` or `ValueError` if an error occurs
+        '''
+        ty = self.get_type_or_raise(name)
+        prod = self.get_enum_production_or_raise(ty, value)
+        return self.make_node(prod.id)
+
+    def make_param(self, index: int) -> Node:
+        '''
+        Convenient method to create a param node.
+        Raise `KeyError` or `ValueError` if an error occurs
+        '''
+        prod = self.get_param_production_or_raise(index)
+        return self.make_node(prod.id)
+
+    def make_apply(self, name: str, args: List[Node]) -> Node:
+        '''
+        Convenient method to create an apply node.
+        Raise `KeyError` or `ValueError` if an error occurs
+        '''
+        prod = self.get_function_production_or_raise(name)
+        return self.make_node(prod.id, args)
 
     # For convenience, expose all methods in TyrellSpec so that the client do not need to keep a reference of it
     def __getattr__(self, attr):

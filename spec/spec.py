@@ -53,10 +53,14 @@ class TypeSpec:
 class ProductionSpec:
     _productions: List[Production]
     _lhs_map: DefaultDict[str, List[Production]]
+    _param_map: Dict[int, Production]
+    _func_map: Dict[str, Production]
 
     def __init__(self):
         self._productions = list()
         self._lhs_map = defaultdict(list)
+        self._param_map = dict()
+        self._func_map = dict()
 
     def get_production(self, id: int) -> Optional[Production]:
         '''
@@ -102,6 +106,62 @@ class ProductionSpec:
                 'Cannot find productions with given type: {}'.format(ty))
         return res
 
+    def get_function_production(self, name: str) -> Optional[Production]:
+        '''
+        Return the function production whose name is `name`.
+        If no production is found, return `None`
+        '''
+        return self._func_map.get(name)
+
+    def get_function_production_or_raise(self, name: str) -> Production:
+        '''
+        Return the function production whose name is `name`.
+        If no production is found, raise `KeyError`
+        '''
+        return self._func_map[name]
+
+    def get_param_production(self, index: int) -> Optional[Production]:
+        '''
+        Return the function production whose name is `name`.
+        If no production is found, return `None`
+        '''
+        return self._param_map.get(index)
+
+    def get_param_production_or_raise(self, index: int) -> Optional[Production]:
+        '''
+        Return the function production whose name is `name`.
+        If no production is found, raise `KeyError`
+        '''
+        return self._param_map[index]
+
+    def get_enum_production(self, ty: EnumType, value: str) -> Optional[Production]:
+        '''
+        Return the enum production whose type is `type` and value is `value`.
+        If no production is found, return `None`
+        '''
+        if not isinstance(ty, EnumType):
+            return None
+        prods = self.get_productions_with_lhs(ty)
+        for prod in prods:
+            if prod.rhs[0] == value:
+                return prod
+        return None
+
+    def get_enum_production_or_raise(self, ty: EnumType, value: str) -> Optional[Production]:
+        '''
+        Return the enum production whose type is `type` and value is `value`.
+        If no production is found, raise `KeyError`
+        '''
+        if not isinstance(ty, EnumType):
+            raise KeyError(
+                'The given type is not a enum type: {}'.format(ty))
+        prods = self.get_productions_with_lhs_or_raise(ty)
+        for prod in prods:
+            if prod.rhs[0] == value:
+                return prod
+        raise KeyError(
+            'Value "{}" is not in the domain of type {}'.format(value, ty))
+
     def _get_next_id(self) -> int:
         return len(self._productions)
 
@@ -111,9 +171,8 @@ class ProductionSpec:
 
     def add_enum_production(self, lhs: EnumType, choice: int) -> EnumProduction:
         '''
-        Create new enum production.
-        This method guarantee that the newly created production will be different from every existing productions.
-        Return the created production.
+        Create a new enum production. Return the created production.
+        Raise `ValueError` if `choice` is out of bound.
         '''
         prod = EnumProduction(self._get_next_id(), lhs, choice)
         self._add_production(prod)
@@ -121,21 +180,27 @@ class ProductionSpec:
 
     def add_param_production(self, lhs: ValueType, index: int) -> ParamProduction:
         '''
-        Create new param production.
-        This method guarantee that the newly created production will be different from every existing productions.
-        Return the created production.
+        Create new param production. Return the created production.
+        Raise `ValueError` if a production with the same `index` has already been created.
         '''
+        if index in self._param_map:
+            raise ValueError(
+                'Parameter Production with index {} has already been created'.format(index))
         prod = ParamProduction(self._get_next_id(), lhs, index)
+        self._param_map[index] = prod
         self._add_production(prod)
         return prod
 
     def add_func_production(self, name: str, lhs: ValueType, rhs: List[Type]) -> FunctionProduction:
         '''
-        Create a new function production with the given `name`, `lhs`, and `rhs`.
-        This method guarantee that the newly created production will be different from every existing productions.
-        Return the created production.
+        Create a new function production with the given `name`, `lhs`, and `rhs`. Return the created production.
+        Raise `ValueError` if a production with the same `name` has already been created
         '''
+        if name in self._func_map:
+            raise ValueError(
+                'Function Production with name {} has already been created'.format(name))
         prod = FunctionProduction(self._get_next_id(), name, lhs, rhs)
+        self._func_map[name] = prod
         self._add_production(prod)
         return prod
 
@@ -242,6 +307,24 @@ class TyrellSpec:
 
     def get_productions_with_lhs_or_raise(self, ty: Union[str, Type]) -> List[Production]:
         return self._prod_spec.get_productions_with_lhs_or_raise(ty)
+
+    def get_function_production(self, name: str) -> Optional[Production]:
+        return self._prod_spec.get_function_production(name)
+
+    def get_function_production_or_raise(self, name: str) -> Production:
+        return self._prod_spec.get_function_production_or_raise(name)
+
+    def get_param_production(self, index: int) -> Optional[Production]:
+        return self._prod_spec.get_param_production(index)
+
+    def get_param_production_or_raise(self, index: int) -> Optional[Production]:
+        return self._prod_spec.get_param_production_or_raise(index)
+
+    def get_enum_production(self, ty: EnumType, value: str) -> Optional[Production]:
+        return self._prod_spec.get_enum_production(ty, value)
+
+    def get_enum_production_or_raise(self, ty: EnumType, value: str) -> Optional[Production]:
+        return self._prod_spec.get_enum_production_or_raise(ty, value)
 
     def productions(self):
         return self._prod_spec.productions()

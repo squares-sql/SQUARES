@@ -39,7 +39,6 @@ class ProgramCollector(Visitor_Recursive):
 
     def __init__(self, type_spec):
         self._type_spec = type_spec
-        self._input_tys = list()
 
     def program_decl(self, tree):
         self._name = str(tree.children[0])
