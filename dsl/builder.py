@@ -84,7 +84,7 @@ class Builder:
 
         # First check for param node
         if sym == '@param':
-            index = int(sexp[1].value())
+            index = int(sexp[1])
             return self.make_param(index)
 
         # Next, check for atom node
