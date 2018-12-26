@@ -1,5 +1,6 @@
 from typing import List
 from abc import ABC, abstractmethod
+from sexpdata import Symbol
 from spec import Type, Production
 
 
@@ -22,6 +23,10 @@ class Node(ABC):
 
     @abstractmethod
     def is_leaf(self) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def to_sexp(self):
         raise NotImplementedError
 
 
@@ -49,6 +54,9 @@ class AtomNode(LeafNode):
     def data(self) -> str:
         return self._prod.rhs[0]
 
+    def to_sexp(self):
+        return [Symbol(self.type.name), self.data]
+
     def __repr__(self) -> str:
         return 'AtomNode({})'.format(self.data)
 
@@ -66,6 +74,9 @@ class ParamNode(LeafNode):
     @property
     def index(self) -> int:
         return self._prod.rhs[0]
+
+    def to_sexp(self):
+        return [Symbol('@param'), self.index]
 
     def __repr__(self) -> str:
         return 'ParamNode({})'.format(self.index)
@@ -105,6 +116,9 @@ class ApplyNode(Node):
 
     def is_leaf(self) -> bool:
         return False
+
+    def to_sexp(self):
+        return [Symbol(self.name)] + [x.to_sexp() for x in self.args]
 
     def __repr__(self) -> str:
         return 'ApplyNode({}, {})'.format(self.name, self._args)

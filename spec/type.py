@@ -14,6 +14,14 @@ class Type(ABC):
     def name(self) -> str:
         return self._name
 
+    @abstractmethod
+    def is_enum(self) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def is_value(self) -> bool:
+        raise NotImplementedError
+
     def __str__(self) -> str:
         return self._name
 
@@ -41,6 +49,12 @@ class EnumType(Type):
     def domain(self) -> List[str]:
         return self._domain
 
+    def is_enum(self) -> bool:
+        return True
+
+    def is_value(self) -> bool:
+        return False
+
     def __repr__(self) -> str:
         return 'EnumType({}, domain={})'.format(self._name, self._domain)
 
@@ -49,6 +63,12 @@ class ValueType(Type):
 
     def __init__(self, name: str):
         super().__init__(name)
+
+    def is_enum(self) -> bool:
+        return False
+
+    def is_value(self) -> bool:
+        return True
 
     def __repr__(self) -> str:
         return 'ValueType({})'.format(self._name)

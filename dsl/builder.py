@@ -2,6 +2,7 @@ from .node import *
 from spec import TyrellSpec, Production, EnumType
 from typing import Union
 from visitor import GenericVisitor
+import sexpdata
 
 
 class ProductionVisitor(GenericVisitor):
@@ -73,6 +74,40 @@ class Builder:
         '''
         prod = self.get_function_production_or_raise(name)
         return self.make_node(prod.id, args)
+
+    def _from_sexp(self, sexp) -> Node:
+        if not isinstance(sexp, list) or len(sexp) < 2 or not isinstance(sexp[0].value(), str):
+            # None of our nodes serializes to atom
+            msg = 'Cannot parse sexp into dsl.Node: {}'.format(sexp)
+            raise ValueError(msg)
+        sym = sexp[0].value()
+
+        # First check for param node
+        if sym == '@param':
+            index = int(sexp[1].value())
+            return self.make_param(index)
+
+        # Next, check for atom node
+        ty = self.get_type(sym)
+        if ty is not None and ty.is_enum():
+            value = str(sexp[1])
+            return self.make_enum(ty.name, value)
+
+        # Finally, check for apply node
+        args = [self._from_sexp(x) for x in sexp[1:]]
+        return self.make_apply(sym, args)
+
+    def from_sexp_string(self, sexp_str: str) -> Node:
+        '''
+        Convenient method to create an AST from an sexp string.
+        Raise `KeyError` or `ValueError` if an error occurs
+        '''
+        try:
+            sexp = sexpdata.loads(sexp_str)
+        # This library is liberal on its exception raising...
+        except Exception as e:
+            raise ValueError('Sexp parsing error: {}'.format(e))
+        return self._from_sexp(sexp)
 
     # For convenience, expose all methods in TyrellSpec so that the client do not need to keep a reference of it
     def __getattr__(self, attr):

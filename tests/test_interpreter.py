@@ -83,7 +83,7 @@ class TestSimpleInterpreter(unittest.TestCase):
 
     def test_interpreter1(self):
         b = self._builder
-        p = b.make_apply('const', [b.make_enum('BoolLit', 'false')])
+        p = b.from_sexp_string('(and (const (BoolLit "true")) (const (BoolLit "false")))')
 
         for x, y in itertools.product(self._domain, self._domain):
             out_value = self._interp.eval(p, [x, y])

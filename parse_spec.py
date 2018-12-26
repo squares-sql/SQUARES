@@ -1,6 +1,7 @@
 import click
 import spec as S
 import dsl as D
+from sexpdata import dumps
 import random
 import logger
 
@@ -53,6 +54,8 @@ def generate_ast(spec: S.TyrellSpec, depth: int):
     ast = RandomASTGenerator(spec, depth).generate()
     logger.info('Generated AST:')
     logger.info('  {}'.format(ast))
+    logger.info('Generated AST in sexp format:')
+    logger.info('  {}'.format(dumps(ast.to_sexp())))
 
 
 def print_spec(spec: S.TyrellSpec):

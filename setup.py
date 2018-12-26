@@ -9,7 +9,8 @@ setup(
         'rpy2',
         'lark-parser',
         'Click',
-        'colorama'
+        'colorama',
+        'sexpdata'
     ],
     entry_points={
         'console_scripts': [
