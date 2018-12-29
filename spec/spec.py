@@ -120,12 +120,35 @@ class ProductionSpec:
         '''
         return self._func_map[name]
 
+    def get_function_productions(self) -> List[Production]:
+        '''
+        Return all function productions.
+        '''
+        return list(self._func_map.values())
+
     def get_param_production(self, index: int) -> Optional[Production]:
         '''
-        Return the function production whose name is `name`.
+        Return the param production whose index is `index`.
         If no production is found, return `None`
         '''
         return self._param_map.get(index)
+
+    def get_param_productions(self) -> List[Production]:
+        '''
+        Return all param productions
+        If no production is found, return an empty list
+        '''
+        return list(self._param_map.values())
+
+    def get_param_productions_or_raise(self) -> List[Production]:
+        '''
+        Return all param productions
+        If no production is found, raise `ValueError`
+        '''
+        ret = self.get_param_productions()
+        if len(ret) == 0:
+            raise ValueError('Cannot find any param production')
+        return ret
 
     def get_param_production_or_raise(self, index: int) -> Optional[Production]:
         '''
@@ -314,11 +337,20 @@ class TyrellSpec:
     def get_function_production_or_raise(self, name: str) -> Production:
         return self._prod_spec.get_function_production_or_raise(name)
 
+    def get_function_productions(self) -> List[Production]:
+        return self._prod_spec.get_function_productions()
+
     def get_param_production(self, index: int) -> Optional[Production]:
         return self._prod_spec.get_param_production(index)
 
-    def get_param_production_or_raise(self, index: int) -> Optional[Production]:
+    def get_param_production_or_raise(self, index: int) -> Production:
         return self._prod_spec.get_param_production_or_raise(index)
+
+    def get_param_productions(self) -> List[Production]:
+        return self._prod_spec.get_param_productions()
+
+    def get_param_productions_or_raise(self) -> List[Production]:
+        return self._prod_spec.get_param_productions_or_raise()
 
     def get_enum_production(self, ty: EnumType, value: str) -> Optional[Production]:
         return self._prod_spec.get_enum_production(ty, value)

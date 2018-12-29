@@ -25,44 +25,17 @@ class Enumerator:
     # productions that are leaf
     leaf_productions = []
 
-    # productions that are input
-    input_productions = []
-
     # z3 variables for each production node
     variables = []
 
     # z3 variables to denote if a node is a function or not
     variables_fun = []
 
-    # productions of a given type
-    type_productions = {}
-
-    # maps the id to the corresponding production
-    id2production = {}
-
-    def initProduction(self):
-        for p in self.spec.productions():
-            self.id2production[p.id] = p
-
-    def initTypeProductions(self):
-        for t in self.spec.types():
-            self.type_productions[str(t)] = []
-            for p in self.spec.productions():
-                if p.lhs == t:
-                    self.type_productions[str(t)].append(p)
-
     def initLeafProductions(self):
         for p in self.spec.productions():
             # FIXME: improve empty integration
             if not p.is_function() or str(p).find('Empty') != -1:
                 self.leaf_productions.append(p)
-
-    def initInputProductions(self):
-        for p in self.spec.productions():
-            # FIXME: improve the check to see if a production is an input
-            if len(p.rhs) == 1 and str(p).find('param') != -1:
-                # if isinstance(p, ParamProduction):
-                self.input_productions.append(p)
 
     def createVariables(self, solver):
         for x in range(0, len(self.nodes)):
@@ -80,13 +53,12 @@ class Enumerator:
     def createOutputConstraints(self, solver):
         '''The output production matches the output type'''
         ctr = None
-        for p in self.spec.productions():
-            if p.lhs == self.output:
-                if ctr == None:
-                    # variables[0] is the root of the tree
-                    ctr = self.variables[0] == p.id
-                else:
-                    ctr = Or(ctr, self.variables[0] == p.id)
+        for p in self.spec.get_productions_with_lhs_or_raise(self.spec.output):
+            if ctr is None:
+                # variables[0] is the root of the tree
+                ctr = self.variables[0] == p.id
+            else:
+                ctr = Or(ctr, self.variables[0] == p.id)
         solver.add(ctr)
 
     def createLocConstraints(self, solver):
@@ -99,14 +71,14 @@ class Enumerator:
 
     def createInputConstraints(self, solver):
         '''Each input will appear at least once in the program'''
-        for x in range(0, len(self.input_productions)):
+        input_productions = self.spec.get_param_productions_or_raise()
+        for x in range(0, len(input_productions)):
             ctr = None
             for y in range(0, len(self.nodes)):
                 if ctr is None:
-                    ctr = self.variables[y] == self.input_productions[x].id
+                    ctr = self.variables[y] == input_productions[x].id
                 else:
-                    ctr = Or(self.variables[y] ==
-                             self.input_productions[x].id, ctr)
+                    ctr = Or(self.variables[y] == input_productions[x].id, ctr)
             solver.add(ctr)
 
     def createFunctionConstraints(self, solver):
@@ -145,7 +117,7 @@ class Enumerator:
                         child_type = 'Empty'
                         if p.is_function() and y < len(p.rhs):
                             child_type = str(p.rhs[y])
-                        for t in self.type_productions[child_type]:
+                        for t in self.spec.get_productions_with_lhs(child_type):
                             if ctr is None:
                                 ctr = self.variables[n.children[y].id - 1] == t.id
                             else:
@@ -188,13 +160,9 @@ class Enumerator:
         self.spec = spec
         self.depth = depth
         self.loc = loc
-        self.output = spec.output
         self.max_children = self.maxChildren()
         self.tree, self.nodes = self.buildKTree(self.max_children, self.depth)
-        self.initProduction()
-        self.initTypeProductions()
         self.initLeafProductions()
-        self.initInputProductions()
         self.createVariables(self.z3_solver)
         self.createOutputConstraints(self.z3_solver)
         self.createLocConstraints(self.z3_solver)
@@ -222,7 +190,7 @@ class Enumerator:
 
         code = []
         for n in self.nodes:
-            prod = self.id2production[result[n.id - 1]]
+            prod = self.spec.get_production_or_raise(result[n.id - 1])
             code.append(prod)
 
         builder = D.Builder(self.spec)

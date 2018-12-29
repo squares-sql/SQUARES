@@ -31,6 +31,14 @@ class Production(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def is_enum(self) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def is_param(self) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
     def is_function(self) -> bool:
         raise NotImplementedError
 
@@ -56,6 +64,12 @@ class EnumProduction(Production):
     def is_function(self) -> bool:
         return False
 
+    def is_enum(self) -> bool:
+        return True
+
+    def is_param(self) -> bool:
+        return False
+
     def __repr__(self) -> str:
         return 'EnumProduction(id={}, lhs={!r}, choice={})'.format(
             self._id, self._lhs, self._choice)
@@ -79,6 +93,12 @@ class ParamProduction(Production):
         return [self._param_id]
 
     def is_function(self) -> bool:
+        return False
+
+    def is_param(self) -> bool:
+        return True
+
+    def is_enum(self) -> bool:
         return False
 
     def __repr__(self) -> str:
@@ -114,6 +134,12 @@ class FunctionProduction(Production):
 
     def is_function(self) -> bool:
         return True
+
+    def is_param(self) -> bool:
+        return False
+
+    def is_enum(self) -> bool:
+        return False
 
     def __repr__(self) -> str:
         return 'FunctionProduction(id={}, lhs={!r}, name={}, rhs={})'.format(
