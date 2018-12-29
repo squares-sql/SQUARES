@@ -12,7 +12,7 @@ Dev Environment Setup
     $ python3 -m venv venv
     $ source venv/bin/activate
 ```
-- Make an editable install with `pip`. This would automatically handles package dependencies.
+- Make an editable install with `pip`. This would automatically handles package dependencies. One of our dependency, `z3-solver`, takes a long time to build. Please be patient.
 ```
     $ pip install -e .
 ```

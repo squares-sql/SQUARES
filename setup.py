@@ -10,7 +10,8 @@ setup(
         'lark-parser',
         'Click',
         'colorama',
-        'sexpdata'
+        'sexpdata',
+        'z3-solver'
     ],
     entry_points={
         'console_scripts': [
