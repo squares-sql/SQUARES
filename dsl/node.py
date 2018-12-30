@@ -63,6 +63,14 @@ class AtomNode(LeafNode):
     def __str__(self) -> str:
         return self.data
 
+    def __eq__(self, other):
+        if isinstance(other, AtomNode):
+            return self.type == other.type and self.data == other.data
+        return NotImplemented
+
+    def __hash__(self):
+        return hash((self.type, self.data))
+
 
 class ParamNode(LeafNode):
     '''Leaf AST node that holds a param'''
@@ -83,6 +91,14 @@ class ParamNode(LeafNode):
 
     def __str__(self) -> str:
         return '@param{}'.format(self.index)
+
+    def __eq__(self, other):
+        if isinstance(other, ParamNode):
+            return self.index == other.index
+        return NotImplemented
+
+    def __hash__(self):
+        return hash(self.index)
 
 
 class ApplyNode(Node):
@@ -125,3 +141,11 @@ class ApplyNode(Node):
 
     def __str__(self) -> str:
         return '{}({})'.format(self.name, ', '.join([str(x) for x in self._args]))
+
+    def __eq__(self, other):
+        if isinstance(other, ApplyNode):
+            return self.name == other.name and self.args == other.args
+        return NotImplemented
+
+    def __hash__(self):
+        return hash((self.name, tuple(self.args)))

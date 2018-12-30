@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-from z3 import *
+from sys import argv
 import spec as S
 from interpreter import PostOrderInterpreter
+from enumerator import RandomEnumerator
 import logger
-import enumerator as E
 
-logger = logger.get('demo')
+logger = logger.get('tyrell')
 
 toy_spec_str = '''
 enum SmallInt {
@@ -20,7 +20,6 @@ func const: Int -> SmallInt;
 func plus: Int -> Int, Int;
 func minus: Int -> Int, Int;
 func mult: Int -> Int, Int;
-func empty: Empty -> Empty;
 '''
 
 
@@ -52,13 +51,13 @@ def test_all(interpreter, prog, inputs, outputs):
     )
 
 
-def main():
+def main(seed=None):
     logger.info('Parsing Spec...')
     spec = S.parse(toy_spec_str)
     logger.info('Parsing succeeded')
 
     logger.info('Building Sketcher...')
-    sketcher = E.Enumerator(spec, 3, 2)
+    sketcher = RandomEnumerator(spec, max_depth=4, max_trial=1000, seed=seed)
     logger.info('Enumerating programs...')
 
     interpreter = ToyInterpreter()
@@ -68,23 +67,20 @@ def main():
     inputs = [[4, 3], [6, 3], [1, 2], [1, 1]]
     outputs = [3, 9, -2, 0]
 
-    res = sat
     programs = 0
     found = False
-    while res == sat:
-        res = sketcher.solve()
-        if res == sat:
-            prog = sketcher.buildProgram()
-            logger.info('Build program = {}'.format(prog))
-            programs += 1
+    prog = sketcher.next()
+    while prog is not None:
+        logger.info('Build program = {}'.format(prog))
+        programs += 1
 
-            # testing the program
-            found = test_all(interpreter, prog, inputs, outputs)
-            if found:
-                break
-            sketcher.blockModel()
-        else:
+        # testing the program
+        found = test_all(interpreter, prog, inputs, outputs)
+        if found:
             break
+        sketcher.update()
+        prog = sketcher.next()
+
     if found:
         logger.info('Solution found!')
     else:
@@ -94,4 +90,10 @@ def main():
 
 if __name__ == '__main__':
     logger.setLevel('DEBUG')
-    main()
+    seed = None
+    if len(argv) > 1:
+        try:
+            seed = int(argv[1])
+        except ValueError:
+            pass
+    main(seed)

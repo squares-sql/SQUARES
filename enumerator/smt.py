@@ -1,7 +1,6 @@
-#!/usr/bin/env python
-
 from z3 import *
 from collections import deque
+from .enumerator import Enumerator
 import dsl as D
 
 
@@ -18,7 +17,8 @@ class ASTNode:
         self.production = None
 
 
-class Enumerator:
+# FIXME: Currently this enumerator requires an "Empty" production to function properly
+class SmtEnumerator(Enumerator):
     # z3 solver
     z3_solver = Solver()
 
@@ -179,6 +179,10 @@ class Enumerator:
             block.append(c != m[d])
         self.z3_solver.add(Or(block))
 
+    def update(self, info=None):
+        # TODO: block more than one model
+        self.blockModel()
+
     def buildProgram(self):
         m = self.z3_solver.model()
         result = [0] * len(m)
@@ -210,5 +214,9 @@ class Enumerator:
         assert(builder_nodes[0] is not None)
         return builder_nodes[0]
 
-    def solve(self):
-        return self.z3_solver.check()
+    def next(self):
+        res = self.z3_solver.check()
+        if res == sat:
+            return self.buildProgram()
+        else:
+            return None
