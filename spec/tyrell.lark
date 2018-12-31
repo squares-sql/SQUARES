@@ -3,9 +3,12 @@ start: type_decls program_decl func_decls
 type_decls: type_decl*
 
 ?type_decl: enum_decl
+  | enum_set_decl
   | value_decl
 
 enum_decl: "enum" type_name enum_body
+
+enum_set_decl: "enumset" type_name "[" INT "]" enum_body
 
 ?enum_body: ";"
   | "{" enum_items "}"
@@ -43,6 +46,7 @@ COMMENT: "#" /.*/ "\n"
 
 %import common.ESCAPED_STRING -> STRLIT
 %import common.CNAME -> NAME
+%import common.INT -> INT
 %import common.WS
 %ignore WS
 %ignore COMMENT

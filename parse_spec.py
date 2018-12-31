@@ -33,7 +33,7 @@ def print_spec(spec: S.TyrellSpec):
               help='Set the verbosity of the logger',
               default='INFO'
               )
-def cli(spec_file, gen_depth, verbosity):
+def cli(spec_file, verbosity):
     '''
     Next-generation Synthesizer for Data Science
     '''

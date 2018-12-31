@@ -2,6 +2,9 @@
 enum SmallInt {
   "0", "1", "2", "3"
 }
+enumset SmallSet[3] {
+	"a", "b", "c", "d"
+}
 value Int;
 
 # Next, specify the input/output of the synthesized program

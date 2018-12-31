@@ -95,17 +95,6 @@ class ProductionSpec:
         else:
             return []
 
-    def get_productions_with_lhs_or_raise(self, ty: Union[str, Type]) -> List[Production]:
-        '''
-        Return the productions whose LHS is `ty`, where `ty` can be a Type or a string representing the name of the type
-        If no production is found, or `ty` is not a string or a Type, raise `KeyError`
-        '''
-        res = self.get_productions_with_lhs(ty)
-        if res == []:
-            raise KeyError(
-                'Cannot find productions with given type: {}'.format(ty))
-        return res
-
     def get_function_production(self, name: str) -> Optional[Production]:
         '''
         Return the function production whose name is `name`.
@@ -140,17 +129,7 @@ class ProductionSpec:
         '''
         return list(self._param_map.values())
 
-    def get_param_productions_or_raise(self) -> List[Production]:
-        '''
-        Return all param productions
-        If no production is found, raise `ValueError`
-        '''
-        ret = self.get_param_productions()
-        if len(ret) == 0:
-            raise ValueError('Cannot find any param production')
-        return ret
-
-    def get_param_production_or_raise(self, index: int) -> Optional[Production]:
+    def get_param_production_or_raise(self, index: int) -> Production:
         '''
         Return the function production whose name is `name`.
         If no production is found, raise `KeyError`
@@ -178,8 +157,7 @@ class ProductionSpec:
         if not isinstance(ty, EnumType):
             raise KeyError(
                 'The given type is not a enum type: {}'.format(ty))
-        prods = self.get_productions_with_lhs_or_raise(ty)
-        for prod in prods:
+        for prod in self.get_productions_with_lhs(ty):
             if prod.rhs[0] == value:
                 return prod
         raise KeyError(
@@ -328,9 +306,6 @@ class TyrellSpec:
     def get_productions_with_lhs(self, ty: Union[str, Type]) -> List[Production]:
         return self._prod_spec.get_productions_with_lhs(ty)
 
-    def get_productions_with_lhs_or_raise(self, ty: Union[str, Type]) -> List[Production]:
-        return self._prod_spec.get_productions_with_lhs_or_raise(ty)
-
     def get_function_production(self, name: str) -> Optional[Production]:
         return self._prod_spec.get_function_production(name)
 
@@ -348,9 +323,6 @@ class TyrellSpec:
 
     def get_param_productions(self) -> List[Production]:
         return self._prod_spec.get_param_productions()
-
-    def get_param_productions_or_raise(self) -> List[Production]:
-        return self._prod_spec.get_param_productions_or_raise()
 
     def get_enum_production(self, ty: EnumType, value: str) -> Optional[Production]:
         return self._prod_spec.get_enum_production(ty, value)

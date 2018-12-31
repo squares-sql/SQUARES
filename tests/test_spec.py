@@ -38,8 +38,7 @@ class TestTyrellSpec(unittest.TestCase):
 
         prods = spec.get_productions_with_lhs(ty1)
         self.assertListEqual(prods, [prod0, prod1])
-        with self.assertRaises(KeyError):
-            spec.get_productions_with_lhs_or_raise('NotAType')
+        self.assertListEqual(spec.get_productions_with_lhs('NotAType'), [])
 
         # TyrellSpec will *NOT* try to uniquify productions
         self.assertEqual(len(list(spec.productions())), 2)

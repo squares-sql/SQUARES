@@ -1,9 +1,10 @@
-from .spec import TypeSpec, ProductionSpec, ProgramSpec, TyrellSpec
-from .type import Type, EnumType, ValueType
-import logger
-from .parser import Visitor_Recursive
 from ast import literal_eval
 from typing import List
+from .spec import TypeSpec, ProductionSpec, ProgramSpec, TyrellSpec
+from .type import Type, EnumType, ValueType
+from .parser import Visitor_Recursive
+from .util import enum_set_domain
+import logger
 
 logger = logger.get('tyrell.desugar')
 
@@ -22,6 +23,13 @@ class TypeCollector(Visitor_Recursive):
         name = str(tree.children[0])
         domain = [literal_eval(str(x)) for x in tree.children[1].children]
         self._spec.define_type(EnumType(name, domain))
+
+    def enum_set_decl(self, tree):
+        name = str(tree.children[0])
+        max_len = int(tree.children[1])
+        domain = [literal_eval(str(x)) for x in tree.children[2].children]
+        self._spec.define_type(
+            EnumType(name, enum_set_domain(domain, max_len)))
 
     def value_decl(self, tree):
         name = tree.children[0]

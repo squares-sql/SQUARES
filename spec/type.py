@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Any
 
 
 class Type(ABC):
@@ -39,14 +39,14 @@ class Type(ABC):
 class EnumType(Type):
     '''A special kind of type whose domain is finite and specified up-front'''
 
-    _domain: List[str]
+    _domain: List[Any]
 
-    def __init__(self, name: str, domain: List[str] = []):
+    def __init__(self, name: str, domain: List[Any] = []):
         super().__init__(name)
         self._domain = domain
 
     @property
-    def domain(self) -> List[str]:
+    def domain(self) -> List[Any]:
         return self._domain
 
     def is_enum(self) -> bool:

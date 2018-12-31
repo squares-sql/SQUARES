@@ -17,7 +17,7 @@ class Result(ABC):
         raise NotImplementedError
 
     def is_bad(self) -> bool:
-        return not is_ok()
+        return not self.is_ok()
 
 
 class OkResult(Result):

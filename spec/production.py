@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Any, cast
 from abc import ABC, abstractmethod
 from .type import Type, EnumType, ValueType
 
@@ -27,7 +27,7 @@ class Production(ABC):
 
     @property
     @abstractmethod
-    def rhs(self) -> List[Union[str, int, Type]]:
+    def rhs(self) -> List[Any]:
         raise NotImplementedError
 
     @abstractmethod
@@ -54,11 +54,12 @@ class EnumProduction(Production):
             raise ValueError(msg)
         self._choice = choice
 
-    def _get_rhs(self) -> str:
-        return self._lhs.domain[self._choice]
+    def _get_rhs(self) -> Any:
+        lhs_ty = cast(EnumType, self._lhs)
+        return lhs_ty.domain[self._choice]
 
     @property
-    def rhs(self) -> List[str]:
+    def rhs(self) -> List[Any]:
         return [self._get_rhs()]
 
     def is_function(self) -> bool:

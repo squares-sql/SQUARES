@@ -47,7 +47,9 @@ class AtomNode(LeafNode):
     '''Leaf AST node that holds string data'''
 
     def __init__(self, prod: Production):
-        assert len(prod.rhs) == 1
+        if not prod.is_enum():
+            raise ValueError(
+                'Cannot construct an AST atom node from a non-enum production')
         super().__init__(prod)
 
     @property
@@ -76,7 +78,9 @@ class ParamNode(LeafNode):
     '''Leaf AST node that holds a param'''
 
     def __init__(self, prod: Production):
-        assert len(prod.rhs) == 1
+        if not prod.is_param():
+            raise ValueError(
+                'Cannot construct an AST param node from a non-param production')
         super().__init__(prod)
 
     @property
