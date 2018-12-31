@@ -4,6 +4,7 @@ from sys import argv
 import spec as S
 from interpreter import PostOrderInterpreter
 from enumerator import RandomEnumerator
+from synthesizer import ExampleSynthesizer, Example
 import logger
 
 logger = logger.get('tyrell')
@@ -56,36 +57,27 @@ def main(seed=None):
     spec = S.parse(toy_spec_str)
     logger.info('Parsing succeeded')
 
-    logger.info('Building Sketcher...')
-    sketcher = RandomEnumerator(spec, max_depth=4, max_trial=1000, seed=seed)
-    logger.info('Enumerating programs...')
+    logger.info('Building synthesizer...')
+    synthesizer = ExampleSynthesizer(
+        enumerator=RandomEnumerator(
+            spec, max_depth=4, max_trial=1000, seed=seed),
+        interpreter=ToyInterpreter(),
+        examples=[
+            # we want to synthesize the program (x-y)*y (depth=3, loc=2)
+            # which is also equivalent to x*y-y*y (depth=3, loc=3)
+            Example(input=[4, 3], output=3),
+            Example(input=[6, 3], output=9),
+            Example(input=[1, 2], output=-2),
+            Example(input=[1, 1], output=0),
+        ]
+    )
+    logger.info('Synthesizing programs...')
 
-    interpreter = ToyInterpreter()
-
-    # we want to synthesize the program (x-y)*y (depth=3, loc=2)
-    # which is also equivalent to x*y-y*y (depth=3, loc=3)
-    inputs = [[4, 3], [6, 3], [1, 2], [1, 1]]
-    outputs = [3, 9, -2, 0]
-
-    programs = 0
-    found = False
-    prog = sketcher.next()
-    while prog is not None:
-        logger.info('Build program = {}'.format(prog))
-        programs += 1
-
-        # testing the program
-        found = test_all(interpreter, prog, inputs, outputs)
-        if found:
-            break
-        sketcher.update()
-        prog = sketcher.next()
-
-    if found:
-        logger.info('Solution found!')
+    prog = synthesizer.synthesize()
+    if prog is not None:
+        logger.info('Solution found: {}'.format(prog))
     else:
         logger.info('Solution not found!')
-    logger.info('Programs explored = {}'.format(programs))
 
 
 if __name__ == '__main__':
