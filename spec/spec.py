@@ -1,6 +1,7 @@
 from typing import List, Dict, DefaultDict, Optional, Union
 from .type import Type, EnumType, ValueType
 from .production import EnumProduction, ParamProduction, FunctionProduction, Production
+from .expr import Expr
 from collections import defaultdict
 
 
@@ -192,7 +193,7 @@ class ProductionSpec:
         self._add_production(prod)
         return prod
 
-    def add_func_production(self, name: str, lhs: ValueType, rhs: List[Type]) -> FunctionProduction:
+    def add_func_production(self, name: str, lhs: ValueType, rhs: List[Type], constraints: List[Expr]=[]) -> FunctionProduction:
         '''
         Create a new function production with the given `name`, `lhs`, and `rhs`. Return the created production.
         Raise `ValueError` if a production with the same `name` has already been created
@@ -200,7 +201,8 @@ class ProductionSpec:
         if name in self._func_map:
             raise ValueError(
                 'Function Production with name {} has already been created'.format(name))
-        prod = FunctionProduction(self._get_next_id(), name, lhs, rhs)
+        prod = FunctionProduction(
+            self._get_next_id(), name, lhs, rhs, constraints)
         self._func_map[name] = prod
         self._add_production(prod)
         return prod

@@ -13,6 +13,9 @@ def print_spec(spec: S.TyrellSpec):
     logger.info('Defined productions:')
     for prod in spec.productions():
         logger.info('  {}'.format(prod))
+        if prod.is_function():
+            for expr in prod.constraints:
+                logger.info('    Constraint: {}'.format(expr))
 
 
 @click.command()

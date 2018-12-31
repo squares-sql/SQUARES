@@ -5,7 +5,9 @@ enum SmallInt {
 enumset SmallSet[3] {
 	"a", "b", "c", "d"
 }
-value Int;
+value Int {
+	is_positive: bool;
+}
 
 # Next, specify the input/output of the synthesized program
 program Toy(Int, Int) -> Int;
@@ -14,4 +16,7 @@ program Toy(Int, Int) -> Int;
 func const: Int -> SmallInt;
 func plus: Int -> Int, Int;
 func minus: Int -> Int, Int;
-func mult: Int -> Int, Int;
+func mult: Int r -> Int a, Int b {
+	is_positive(a) && is_positive(b) ==> is_positive(r);
+	!is_positive(a) && !is_positive(b) ==> !is_positive(r);
+}

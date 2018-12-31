@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import List, Any
+from typing import List, Dict, Tuple, Optional, Any
+from .expr import ExprType
 
 
 class Type(ABC):
@@ -60,9 +61,15 @@ class EnumType(Type):
 
 
 class ValueType(Type):
+    _properties: Dict[str, ExprType]
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, properties: List[Tuple[str, ExprType]] = []):
         super().__init__(name)
+        self._properties = dict()
+        for name, ty in properties:
+            if name in self._properties:
+                raise ValueError('Duplicate property name: {}'.format(name))
+            self._properties[name] = ty
 
     def is_enum(self) -> bool:
         return False
@@ -70,5 +77,15 @@ class ValueType(Type):
     def is_value(self) -> bool:
         return True
 
+    def get_property(self, name: str) -> Optional[ExprType]:
+        return self._properties.get(name, None)
+
+    def get_property_or_raise(self, name: str) -> ExprType:
+        return self._properties[name]
+
+    @property
+    def properties(self):
+        return list(self._properties.value())
+
     def __repr__(self) -> str:
-        return 'ValueType({})'.format(self._name)
+        return 'ValueType({}, properties={})'.format(self._name, self._properties)

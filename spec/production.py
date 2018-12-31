@@ -1,6 +1,7 @@
 from typing import List, Any, cast
 from abc import ABC, abstractmethod
 from .type import Type, EnumType, ValueType
+from .expr import Expr, ExprType
 
 
 class Production(ABC):
@@ -114,16 +115,22 @@ class ParamProduction(Production):
 class FunctionProduction(Production):
     _name: str
     _rhs: List[Type]
+    _constraints: List[Expr]
 
-    def __init__(self, id: int, name: str, lhs: ValueType, rhs: List[Type]):
+    def __init__(self, id: int, name: str, lhs: ValueType, rhs: List[Type], constraints: List[Expr] = []):
         super().__init__(id, lhs)
         if not isinstance(lhs, ValueType):
             raise ValueError('LHS of FunctionProduction must be a value type')
         if len(rhs) == 0:
             raise ValueError(
                 'Cannot construct a FunctionProduction with empty RHS')
+        for constraint in constraints:
+            if constraint.type is not ExprType.BOOL:
+                raise ValueError(
+                    'Constraint does not have bool type: "{}"'.format(constraint))
         self._name = name
         self._rhs = rhs
+        self._constraints = constraints
 
     @property
     def rhs(self):
@@ -132,6 +139,10 @@ class FunctionProduction(Production):
     @property
     def name(self):
         return self._name
+
+    @property
+    def constraints(self):
+        return self._constraints
 
     def is_function(self) -> bool:
         return True
