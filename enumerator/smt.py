@@ -53,7 +53,7 @@ class SmtEnumerator(Enumerator):
     def createOutputConstraints(self, solver):
         '''The output production matches the output type'''
         ctr = None
-        for p in self.spec.get_productions_with_lhs_or_raise(self.spec.output):
+        for p in self.spec.get_productions_with_lhs(self.spec.output):
             if ctr is None:
                 # variables[0] is the root of the tree
                 ctr = self.variables[0] == p.id
@@ -71,7 +71,7 @@ class SmtEnumerator(Enumerator):
 
     def createInputConstraints(self, solver):
         '''Each input will appear at least once in the program'''
-        input_productions = self.spec.get_param_productions_or_raise()
+        input_productions = self.spec.get_param_productions()
         for x in range(0, len(input_productions)):
             ctr = None
             for y in range(0, len(self.nodes)):
