@@ -31,10 +31,6 @@ input0 = [4, 3]
 input1 = [6, 5]
 
 
-def toy_dsl_func(params):
-    return (params[0] + params[1]) * (params[0] - params[1]) + 1
-
-
 class ToyInterpreter(PostOrderInterpreter):
     def eval_SmallInt(self, v):
         return int(v)
@@ -52,7 +48,20 @@ class ToyInterpreter(PostOrderInterpreter):
         return args[0] * args[1]
 
 
-def execute(interpreter, prog, args):
+def execute_step(interpreter, prog, args):
+    step = 0
+    for node, in_values, out_value in interpreter.eval_step(prog, args):
+        if node.is_leaf():
+            logger.debug('[Step {}] leaf node {} = {}'.format(
+                step, node, out_value))
+        else:
+            logger.debug('[Step {}] {}({}) = {}'.format(
+                step, node.name, ', '.join([str(x) for x in in_values]), out_value))
+        step += 1
+    return out_value
+
+
+def execute_all(interpreter, prog, args):
     return interpreter.eval(prog, args)
 
 
@@ -66,15 +75,13 @@ def main():
     logger.info('Build program = {}'.format(prog))
 
     interpreter = ToyInterpreter()
-    logger.info('Executing program on inputs {}...'.format(input0))
-    out_value = execute(interpreter, prog, input0)
+    logger.info('Executing program on inputs {} step-by-step...'.format(input0))
+    out_value = execute_step(interpreter, prog, input0)
     logger.info('Execution finished with output = {}'.format(out_value))
-    assert out_value == toy_dsl_func(input0)
 
-    logger.info('Executing program on inputs {}...'.format(input1))
-    out_value = execute(interpreter, prog, input1)
+    logger.info('Executing program on inputs {} all at once...'.format(input1))
+    out_value = execute_all(interpreter, prog, input1)
     logger.info('Execution finished with output = {}'.format(out_value))
-    assert out_value == toy_dsl_func(input1)
 
 
 if __name__ == '__main__':

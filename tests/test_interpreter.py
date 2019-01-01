@@ -57,6 +57,25 @@ class TestSimpleInterpreter(unittest.TestCase):
         p1 = b.make_param(1)
         p = b.make_apply('and', [p0, p1])
 
+        interpreter = self._interp.eval_step(p, [True, False])
+        node, in_values, out_value = next(interpreter)
+        self.assertEqual(node, p0)
+        self.assertListEqual(in_values, [])
+        self.assertEqual(out_value, True)
+
+        node, in_values, out_value = next(interpreter)
+        self.assertEqual(node, p1)
+        self.assertListEqual(in_values, [])
+        self.assertEqual(out_value, False)
+
+        node, in_values, out_value = next(interpreter)
+        self.assertEqual(node, p)
+        self.assertListEqual(in_values, [True, False])
+        self.assertEqual(out_value, False)
+
+        with self.assertRaises(StopIteration):
+            next(interpreter)
+
         for x, y in itertools.product(self._domain, self._domain):
             out_value = self._interp.eval(p, [x, y])
             expect_value = x and y
@@ -64,8 +83,7 @@ class TestSimpleInterpreter(unittest.TestCase):
 
     def test_interpreter1(self):
         b = self._builder
-        p = b.from_sexp_string(
-            '(and (const (BoolLit "true")) (const (BoolLit "false")))')
+        p = b.from_sexp_string('(and (const (BoolLit "true")) (const (BoolLit "false")))')
 
         for x, y in itertools.product(self._domain, self._domain):
             out_value = self._interp.eval(p, [x, y])
@@ -78,6 +96,27 @@ class TestSimpleInterpreter(unittest.TestCase):
         p1 = b.make_param(1)
         np0 = b.make_apply('not', [p0])
         p = b.make_apply('or', [np0, p1])
+
+        interpreter = self._interp.eval_step(p, [False, False])
+        node, in_values, out_value = next(interpreter)
+        self.assertEqual(node, p0)
+        self.assertListEqual(in_values, [])
+        self.assertEqual(out_value, False)
+
+        node, in_values, out_value = next(interpreter)
+        self.assertEqual(node, np0)
+        self.assertListEqual(in_values, [False])
+        self.assertEqual(out_value, True)
+
+        node, in_values, out_value = next(interpreter)
+        self.assertEqual(node, p1)
+        self.assertListEqual(in_values, [])
+        self.assertEqual(out_value, False)
+
+        node, in_values, out_value = next(interpreter)
+        self.assertEqual(node, p)
+        self.assertListEqual(in_values, [True, False])
+        self.assertEqual(out_value, True)
 
         for x, y in itertools.product(self._domain, self._domain):
             out_value = self._interp.eval(p, [x, y])

@@ -41,15 +41,34 @@ class ToyInterpreter(PostOrderInterpreter):
         return args[0] * args[1]
 
 
-def execute(interpreter, prog, args):
+def execute_step(interpreter, prog, args):
+    step = 0
+    for node, in_values, out_value in interpreter.eval_step(prog, args):
+        if node.is_leaf():
+            logger.debug('[Step {}] leaf node {} = {}'.format(
+                step, node, out_value))
+        else:
+            logger.debug('[Step {}] {}({}) = {}'.format(
+                step, node.name, ', '.join([str(x) for x in in_values]), out_value))
+        step += 1
+    return out_value
+
+
+def execute_all(interpreter, prog, args):
     return interpreter.eval(prog, args)
 
 
 def test_all(interpreter, prog, inputs, outputs):
-    return all(
-        execute(interpreter, prog, inputs[x]) == outputs[x]
-        for x in range(0, len(inputs))
-    )
+    nb_solved = 0
+    for x in range(0, len(inputs)):
+        inp = inputs[x]
+        out_value = execute_all(interpreter, prog, inp)
+        if out_value == outputs[x]:
+            nb_solved += 1
+    if nb_solved == len(outputs):
+        return True
+    else:
+        return False
 
 
 def main(seed=None):
