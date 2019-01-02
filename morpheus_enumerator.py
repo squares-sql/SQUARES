@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import spec as S
-from interpreter import PostOrderInterpreter
+from interpreter import PostOrderInterpreter, InterpreterError
 from enumerator import SmtEnumerator
 from synthesizer import ExampleConstraintSynthesizer, Example
 import rpy2.robjects as robjects
@@ -32,13 +32,21 @@ class MorpheusInterpreter(PostOrderInterpreter):
 
     def eval_select(self, node, args):
         _script = "select(" + args[0] + ", " + get_collist(args[1]) + ")"
-        ret_val = robjects.r(_script)
-        return ret_val
+        try:
+            ret_val = robjects.r(_script)
+            return ret_val
+        except:
+            raise InterpreterError(
+                'Position must be between 0 and n: {}'.format(node))
 
     def eval_unite(self, node, args):
-        # logger.info('    unite=======: {} '.format(node))
         _script = "unite(" + args[0] + ", TT, " + str(args[1]) + "," + str(args[2]) + ")"
-        return robjects.r(_script)
+        try:
+            ret_val = robjects.r(_script)
+            return robjects.r(_script)
+        except:
+            raise InterpreterError(
+                'Position must be between 0 and n: {}'.format(node))
 
     ## Abstract interpreter
     def apply_row(self, val):
