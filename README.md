@@ -22,7 +22,7 @@ Dev Environment Setup
 ```
 - Run all unit tests
 ```
-    $ python -m unittest discover tests
+    $ python -m unittest discover .
 ```
     
 Morpheus prerequisite

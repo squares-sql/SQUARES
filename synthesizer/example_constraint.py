@@ -24,6 +24,7 @@ class ExprVisitor(GenericVisitor):
         BinaryOperator.ADD: lambda x, y: x + y,
         BinaryOperator.SUB: lambda x, y: x - y,
         BinaryOperator.MUL: lambda x, y: x * y,
+        # FIXME: Semantics of the following two operators may diverge in Python and Z3
         BinaryOperator.DIV: lambda x, y: x / y,
         BinaryOperator.MOD: lambda x, y: x % y,
         BinaryOperator.EQ: lambda x, y: x == y,

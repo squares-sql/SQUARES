@@ -1,42 +1,7 @@
+from typing import Tuple, List, Iterator, Any
+from .interpreter import Interpreter
 from dsl import Node, AtomNode, ParamNode, ApplyNode
 from visitor import GenericVisitor
-from abc import ABC, abstractmethod
-from typing import Tuple, List, Iterator, Any
-
-
-class InterpreterError(RuntimeError):
-    _why: Any
-
-    def __init__(self, why: Any = None):
-        super().__init__()
-        self._why = why
-
-    @property
-    def why(self):
-        return self._why
-
-
-class Interpreter(ABC):
-
-    @abstractmethod
-    def eval_step(self, prog: Node, inputs: List[Any]) -> Iterator[Tuple[Node, List[Any], Any]]:
-        '''
-        This is the main API for the interpreter module.
-        This method is expected to evaluate a DSL `prog` on input `inputs` for one step.
-        It is expected that subclasses implement this function as a generator,  where after each step the evaluated AST node, the inputs, and the output are yielded.
-        It is also expected that this method would raise `InterpreterError` when error occurs during the interpretation.
-        '''
-        raise NotImplementedError
-
-    def eval(self, prog: Node, inputs: List[Any]) -> Any:
-        '''
-        Evaluate a DSL `prog` on input `inputs`. The output is returned.
-        This is a covenient wrapper over `eval_step` that repeatedly invoke the generator until we get the final result.
-        '''
-        for _, _, out in self.eval_step(prog, inputs):
-            pass
-        # We only care about the final output
-        return out
 
 
 class PostOrderInterpreter(Interpreter):
@@ -82,7 +47,7 @@ class PostOrderInterpreter(Interpreter):
             def _method_not_found(self, apply_node: ApplyNode, arg_values: List[Any]):
                 msg = 'Cannot find required eval method: "{}"'.format(
                     self._eval_method_name(apply_node.name))
-                raise InterpreterError(msg)
+                raise NotImplementedError(msg)
 
             @staticmethod
             def _eval_method_name(name):
