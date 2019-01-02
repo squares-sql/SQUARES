@@ -60,6 +60,7 @@ class Synthesizer(ABC):
                 info = e.why()
                 logger.debug('Interpreter failed. Reason: {}'.format(info))
                 self._enumerator.update(info)
+                prog = self._enumerator.next()
         logger.debug(
             'Enumerator is exhausted after {} attempts'.format(num_attempts))
         return None
