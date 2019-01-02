@@ -80,7 +80,7 @@ class AtomNode(LeafNode):
         return NotImplemented
 
     def __hash__(self):
-        return hash((self.type, self.data))
+        return hash((self.type, str(self.data)))
 
 
 class ParamNode(LeafNode):
