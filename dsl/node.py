@@ -72,7 +72,7 @@ class AtomNode(LeafNode):
         return 'AtomNode({})'.format(self.data)
 
     def __str__(self) -> str:
-        return self.data
+        return '{}'.format(self.data)
 
     def __eq__(self, other):
         if isinstance(other, AtomNode):
