@@ -28,7 +28,6 @@ class BoolInterpreter(PostOrderInterpreter):
         return args[0] or args[1]
 
 
-# It seems that the generated Lark parser is not reentrant...
 spec_str = '''
     enum BoolLit {
       "false", "true"
@@ -83,7 +82,8 @@ class TestSimpleInterpreter(unittest.TestCase):
 
     def test_interpreter1(self):
         b = self._builder
-        p = b.from_sexp_string('(and (const (BoolLit "true")) (const (BoolLit "false")))')
+        p = b.from_sexp_string(
+            '(and (const (BoolLit "true")) (const (BoolLit "false")))')
 
         for x, y in itertools.product(self._domain, self._domain):
             out_value = self._interp.eval(p, [x, y])

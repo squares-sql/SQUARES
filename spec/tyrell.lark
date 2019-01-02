@@ -99,7 +99,7 @@ opt_arg: type_name [var_name]
 
 ?var_expr: var_name -> expr_var
 
-?cond_expr: "if" expr "then" expr "else" expr
+?cond_expr: "if" imply_expr "then" imply_expr "else" imply_expr
 
 ?property_expr: func_name "(" var_expr ")"
 
