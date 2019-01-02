@@ -22,17 +22,22 @@ class ExampleSynthesizer(Synthesizer):
                 'ExampleSynthesizer cannot take an empty list of examples')
         self._examples = examples
 
-    def _test_all_examples(self, prog):
-        return all(
-            self.interpreter.eval(prog, example_in) == example_out
-            for example_in, example_out in self._examples)
+    def get_failed_examples(self, prog):
+        '''
+        Test the program on all examples provided.
+        Return a list of failed examples.
+        '''
+        return list(filter(
+            lambda x: self.interpreter.eval(prog, x.input) != x.output,
+            self._examples
+        ))
 
     def analyze(self, prog):
         '''
         This basic version of analyze() merely interpret the AST and see if it conforms to our examples
         '''
-        if self._test_all_examples(prog):
+        failed_examples = self.get_failed_examples(prog)
+        if len(failed_examples) == 0:
             return ok()
         else:
-            # TODO: return a more useful reason
             return bad(why=None)

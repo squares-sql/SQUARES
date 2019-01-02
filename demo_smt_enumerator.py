@@ -3,7 +3,7 @@
 import spec as S
 from interpreter import PostOrderInterpreter
 from enumerator import SmtEnumerator
-from synthesizer import ExampleSynthesizer, Example
+from synthesizer import ExampleConstraintSynthesizer, Example
 import logger
 
 logger = logger.get('tyrell')
@@ -12,14 +12,18 @@ toy_spec_str = '''
 enum SmallInt {
   "0", "1", "2", "3"
 }
-value Int;
+value Int {
+    is_positive: bool;
+}
 value Empty;
 
 program Toy(Int, Int) -> Int;
 func const: Int -> SmallInt;
 func plus: Int -> Int, Int;
 func minus: Int -> Int, Int;
-func mult: Int -> Int, Int;
+func mult: Int r -> Int a, Int b {
+    is_positive(r) == (is_positive(a) && is_positive(b)) || (!is_positive(a) && !is_positive(b));
+}
 func empty: Empty -> Empty;
 '''
 
@@ -40,6 +44,9 @@ class ToyInterpreter(PostOrderInterpreter):
     def eval_mult(self, node, args):
         return args[0] * args[1]
 
+    def apply_is_positive(self, val):
+        return val > 0
+
 
 def main():
     logger.info('Parsing Spec...')
@@ -47,7 +54,7 @@ def main():
     logger.info('Parsing succeeded')
 
     logger.info('Building synthesizer...')
-    synthesizer = ExampleSynthesizer(
+    synthesizer = ExampleConstraintSynthesizer(
         enumerator=SmtEnumerator(spec, depth=3, loc=2),
         interpreter=ToyInterpreter(),
         examples=[

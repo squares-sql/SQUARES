@@ -15,7 +15,7 @@ class Node(ABC):
 
     @property
     def production(self):
-        return self._production
+        return self._prod
 
     @property
     def type(self) -> Type:
@@ -23,6 +23,11 @@ class Node(ABC):
 
     @abstractmethod
     def is_leaf(self) -> bool:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def children(self) -> List['Node']:
         raise NotImplementedError
 
     @abstractmethod
@@ -56,6 +61,10 @@ class AtomNode(LeafNode):
     def data(self) -> str:
         return self._prod.rhs[0]
 
+    @property
+    def children(self) -> List[Node]:
+        return []
+
     def to_sexp(self):
         return [Symbol(self.type.name), self.data]
 
@@ -86,6 +95,10 @@ class ParamNode(LeafNode):
     @property
     def index(self) -> int:
         return self._prod.rhs[0]
+
+    @property
+    def children(self) -> List[Node]:
+        return []
 
     def to_sexp(self):
         return [Symbol('@param'), self.index]
@@ -132,6 +145,10 @@ class ApplyNode(Node):
 
     @property
     def args(self) -> List[Node]:
+        return self._args
+
+    @property
+    def children(self) -> List[Node]:
         return self._args
 
     def is_leaf(self) -> bool:
