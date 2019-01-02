@@ -27,7 +27,7 @@ Dev Environment Setup
     
 Morpheus prerequisite
 =====================
-- R 3.3+
+- R 3.3+ （https://cran.r-project.org/bin/macosx/R-3.5.2.pkg）
     - dplyr: install.packages("dplyr")
     - tidyr: install.packages("tidyr")
     - devtools: install.packages("devtools")
