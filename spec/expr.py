@@ -76,6 +76,8 @@ binary_return_sig: Dict[BinaryOperator, ExprType] = {
     BinaryOperator.MUL: ExprType.INT,
     BinaryOperator.DIV: ExprType.INT,
     BinaryOperator.MOD: ExprType.INT,
+    BinaryOperator.EQ: ExprType.BOOL,
+    BinaryOperator.NE: ExprType.BOOL,
     BinaryOperator.LT: ExprType.BOOL,
     BinaryOperator.LE: ExprType.BOOL,
     BinaryOperator.GT: ExprType.BOOL,
@@ -252,11 +254,7 @@ class BinaryExpr(Expr):
 
     @property
     def type(self):
-        if self._operator is BinaryOperator.EQ or self._operator is BinaryOperator.NE:
-            # These two operators are polymorphic
-            return self._lhs.type
-        else:
-            return binary_return_type(self._operator)
+        return binary_return_type(self._operator)
 
     def __str__(self) -> str:
         return '({} {} {})'.format(self._lhs, self._operator.value, self._rhs)

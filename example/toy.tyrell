@@ -7,6 +7,7 @@ enumset SmallSet[3] {
 }
 value Int {
 	is_positive: bool;
+	test: int;
 }
 
 # Next, specify the input/output of the synthesized program
@@ -17,6 +18,7 @@ func const: Int -> SmallInt;
 func plus: Int -> Int, Int;
 func minus: Int -> Int, Int;
 func mult: Int r -> Int a, Int b {
+  test(r) == test(a);
 	is_positive(a) && is_positive(b) ==> is_positive(r);
 	!is_positive(a) && !is_positive(b) ==> !is_positive(r);
 }
