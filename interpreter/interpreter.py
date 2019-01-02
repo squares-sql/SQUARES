@@ -10,8 +10,7 @@ class InterpreterError(RuntimeError):
         super().__init__()
         self._why = why
 
-    @property
-    def why(self):
+    def why(self) -> Any:
         return self._why
 
 
