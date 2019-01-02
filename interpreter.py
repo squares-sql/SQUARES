@@ -5,7 +5,15 @@ from typing import Tuple, List, Iterator, Any
 
 
 class InterpreterError(RuntimeError):
-    pass
+    _why: Any
+
+    def __init__(self, why: Any = None):
+        super().__init__()
+        self._why = why
+
+    @property
+    def why(self):
+        return self._why
 
 
 class Interpreter(ABC):

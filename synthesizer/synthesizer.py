@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 from .result import Result
-from interpreter import Interpreter
+from interpreter import Interpreter, InterpreterError
 from enumerator import Enumerator
 from dsl import Node
 import logger
@@ -45,16 +45,21 @@ class Synthesizer(ABC):
         while prog is not None:
             num_attempts += 1
             logger.debug('Enumerator generated: {}'.format(prog))
-            res = self.analyze(prog)
-            if res.is_ok():
-                logger.debug(
-                    'Program accepted after {} attempts'.format(num_attempts))
-                return prog
-            else:
-                info = res.why()
-                logger.debug('Program rejected. Reason: {}'.format(info))
+            try:
+                res = self.analyze(prog)
+                if res.is_ok():
+                    logger.debug(
+                        'Program accepted after {} attempts'.format(num_attempts))
+                    return prog
+                else:
+                    info = res.why()
+                    logger.debug('Program rejected. Reason: {}'.format(info))
+                    self._enumerator.update(info)
+                    prog = self._enumerator.next()
+            except InterpreterError as e:
+                info = e.why()
+                logger.debug('Interpreter failed. Reason: {}'.format(info))
                 self._enumerator.update(info)
-                prog = self._enumerator.next()
         logger.debug(
             'Enumerator is exhausted after {} attempts'.format(num_attempts))
         return None
