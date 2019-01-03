@@ -1,7 +1,7 @@
-from typing import List
+from typing import cast, List
 from abc import ABC, abstractmethod
 from sexpdata import Symbol
-from spec import Type, Production
+from spec import Type, Production, FunctionProduction
 
 
 class Node(ABC):
@@ -141,7 +141,8 @@ class ApplyNode(Node):
 
     @property
     def name(self) -> str:
-        return self._prod.name
+        prod = cast(FunctionProduction, self._prod)
+        return prod.name
 
     @property
     def args(self) -> List[Node]:

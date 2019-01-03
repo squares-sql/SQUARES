@@ -1,5 +1,5 @@
 from typing import Tuple, List, Iterator, Any
-from .interpreter import Interpreter
+from .interpreter import Interpreter, InterpreterError
 from dsl import Node, AtomNode, ParamNode, ApplyNode
 from visitor import GenericVisitor
 

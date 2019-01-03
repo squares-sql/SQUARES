@@ -1,6 +1,8 @@
 import unittest
 import spec as S
-import dsl as D
+from .node import AtomNode, ParamNode, ApplyNode
+from .builder import Builder
+from .indexer import NodeIndexer
 
 
 class TestDSL(unittest.TestCase):
@@ -24,18 +26,18 @@ class TestDSL(unittest.TestCase):
         self._prod1 = self._spec.get_param_production_or_raise(0)
 
     def test_node(self):
-        node0 = D.AtomNode(self._prod0)
+        node0 = AtomNode(self._prod0)
         self.assertEqual(node0.data, 'e0')
         self.assertEqual(node0.type, self._ety0)
-        node1 = D.ParamNode(self._prod1)
+        node1 = ParamNode(self._prod1)
         self.assertEqual(node1.index, 0)
         self.assertEqual(node1.type, self._vty0)
-        node2 = D.ApplyNode(self._prod2, [node0, node1])
+        node2 = ApplyNode(self._prod2, [node0, node1])
         self.assertEqual(node2.name, 'f')
         self.assertEqual(node2.type, self._vty1)
 
     def test_builder_low_level_apis(self):
-        builder = D.Builder(self._spec)
+        builder = Builder(self._spec)
 
         node0 = builder.make_node(self._prod0.id)
         self.assertEqual(node0.data, 'e0')
@@ -50,7 +52,7 @@ class TestDSL(unittest.TestCase):
         self.assertEqual(node2.type, self._vty1)
 
     def test_builder_high_level_apis(self):
-        builder = D.Builder(self._spec)
+        builder = Builder(self._spec)
 
         node0 = builder.make_enum('EType0', 'e0')
         self.assertEqual(node0.type, self._ety0)
@@ -75,6 +77,36 @@ class TestDSL(unittest.TestCase):
             builder.make_apply('g', [])
         with self.assertRaises(ValueError):
             builder.make_apply('f', [])
+
+    def test_node_indexer(self):
+        builder = Builder(self._spec)
+        node0 = builder.make_enum('EType0', 'e0')
+        node1 = builder.make_param(0)
+        node2 = builder.make_apply('f', [node0, node1])
+
+        indexer = NodeIndexer(node2)
+        self.assertEqual(indexer.num_nodes, 3)
+        self.assertSetEqual(set(indexer.nodes), set([node0, node1, node2]))
+        self.assertSetEqual(set(indexer.indices), set([x for x in range(3)]))
+
+        id0 = indexer.get_id(node0)
+        self.assertIsNotNone(id0)
+        id1 = indexer.get_id(node1)
+        self.assertIsNotNone(id1)
+        id2 = indexer.get_id(node2)
+        self.assertIsNotNone(id2)
+        extra_node = builder.make_enum('EType0', 'e1')
+        self.assertIsNone(indexer.get_id(extra_node))
+        with self.assertRaises(KeyError):
+            indexer.get_id_or_raise(extra_node)
+
+        self.assertIs(indexer.get_node(id0), node0)
+        self.assertIs(indexer.get_node(id1), node1)
+        self.assertIs(indexer.get_node(id2), node2)
+        invalid_id = 1 + id0 + id1 + id2
+        self.assertIsNone(indexer.get_node(invalid_id))
+        with self.assertRaises(KeyError):
+            indexer.get_node_or_raise(invalid_id)
 
 
 if __name__ == '__main__':

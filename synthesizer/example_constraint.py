@@ -1,9 +1,8 @@
-from typing import cast, NamedTuple, List, Set, FrozenSet, Dict, Any, ClassVar, Callable
-from collections import deque
+from typing import cast, NamedTuple, Optional, List, Set, FrozenSet, Dict, Any, ClassVar, Callable
 import z3
 from interpreter import Interpreter
 from enumerator import Enumerator
-from dsl import Node, AtomNode, ParamNode, ApplyNode
+from dsl import Node, AtomNode, ParamNode, ApplyNode, NodeIndexer
 from spec import Production, ValueType
 from spec.expr import *
 import logger
@@ -13,31 +12,22 @@ from .eval_expr import eval_expr
 from .result import ok, bad
 
 logger = logger.get('tyrell.synthesizer.constraint')
+
 Blame = NamedTuple('Blame', [('node', Node), ('production', Production)])
 
 
-class NodeIndexer:
-    _index_map: Dict[Node, int]
+# The default printer for Blame is too verbose. We use a simplified version here.
+def print_blame(blame: Blame) -> str:
+    return 'Blame(node={}, production={})'.format(blame.node, blame.production.id)
 
-    def __init__(self, prog: Node):
-        self._index_map = dict()
-        # Assign ID to nodes in BFS order
-        queue = deque([prog])
-        counter = 0
-        while len(queue) > 0:
-            node = queue.popleft()
-            self._index_map[node] = counter
-            counter += 1
-            for child in node.children:
-                queue.append(child)
 
-    def get(self, node: Node) -> int:
-        return self._index_map[node]
+Blame.__str__ = print_blame  # type: ignore
+Blame.__repr__ = print_blame  # type: ignore
 
 
 class ConstraintVisitor(GenericVisitor):
     _encoder: 'Z3Encoder'
-    _nodes: List[Node]
+    _apply_node: ApplyNode
 
     _unary_dispatch_table: ClassVar[Dict[UnaryOperator, Callable[[Any], Any]]] = {
         UnaryOperator.NOT: lambda x: z3.Not(x),
@@ -60,15 +50,19 @@ class ConstraintVisitor(GenericVisitor):
         BinaryOperator.IMPLY: lambda x, y: z3.Implies(x, y)
     }
 
-    def __init__(self, encoder: 'Z3Encoder', nodes: List[Node]):
+    def __init__(self, encoder: 'Z3Encoder', apply_node: ApplyNode):
         self._encoder = encoder
-        self._nodes = nodes
+        self._apply_node = apply_node
 
     def visit_const_expr(self, const_expr: ConstExpr):
         return const_expr.value
 
     def visit_param_expr(self, param_expr: ParamExpr):
-        return self._nodes[param_expr.index]
+        index = param_expr.index
+        if index == 0:
+            return self._apply_node
+        else:
+            return self._apply_node.args[index - 1]
 
     def visit_property_expr(self, prop_expr: PropertyExpr):
         node = self.visit(prop_expr.operand)
@@ -107,7 +101,7 @@ class Z3Encoder(GenericVisitor):
         self._solver = z3.Solver()
 
     def get_z3_var(self, node: Node, pname: str, ptype: ExprType):
-        node_id = self._indexer.get(node)
+        node_id = self._indexer.get_id(node)
         var_name = '{}_n{}'.format(pname, node_id)
         if ptype is ExprType.INT:
             return z3.Int(var_name)
@@ -117,7 +111,7 @@ class Z3Encoder(GenericVisitor):
             raise RuntimeError('Unrecognized ExprType: {}'.format(ptype))
 
     def _get_constraint_var(self, node: Node, index: int):
-        node_id = self._indexer.get(node)
+        node_id = self._indexer.get_id(node)
         var_name = '@n{}_c{}'.format(node_id, index)
         return var_name
 
@@ -133,18 +127,19 @@ class Z3Encoder(GenericVisitor):
             self._solver.add(actual == expected)
 
     def encode_output_alignment(self, prog: Node):
-        self.encode_param_alignment(prog, prog.type, 0)
+        out_ty = cast(ValueType, prog.type)
+        self.encode_param_alignment(prog, out_ty, 0)
 
     def visit_param_node(self, param_node: ParamNode):
+        param_ty = cast(ValueType, param_node.type)
         self.encode_param_alignment(
-            param_node, param_node.type, param_node.index + 1)
+            param_node, param_ty, param_node.index + 1)
 
     def visit_atom_node(self, atom_node: AtomNode):
         pass
 
     def visit_apply_node(self, apply_node: ApplyNode):
-        nodes = [apply_node] + apply_node.args
-        constraint_visitor = ConstraintVisitor(self, nodes)
+        constraint_visitor = ConstraintVisitor(self, apply_node)
         for index, constraint in enumerate(apply_node.production.constraints):
             cname = self._get_constraint_var(apply_node, index)
             z3_clause = constraint_visitor.visit(constraint)
@@ -176,7 +171,7 @@ class BlameFinder:
         self._indexer = NodeIndexer(prog)
         self._blames_collection = set()
 
-    def get_blames(self) -> Set[Blame]:
+    def get_blames(self) -> Optional[List[List[Blame]]]:
         num_blames = len(self._blames_collection)
         if num_blames == 0:
             return None
@@ -193,8 +188,8 @@ class BlameFinder:
         z3_encoder.visit(self._prog)
         blame_nodes = z3_encoder.get_blame_nodes()
         if blame_nodes is not None:
-            blames = tuple(Blame(node=n, production=n.production)
-                           for n in blame_nodes)
+            blames = frozenset(Blame(node=n, production=n.production)
+                               for n in blame_nodes)
             self._blames_collection.add(blames)
 
 
