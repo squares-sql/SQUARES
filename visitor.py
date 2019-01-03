@@ -5,7 +5,7 @@ first_cap_re = re.compile('(.)([A-Z][a-z]+)')
 all_cap_re = re.compile('([a-z0-9])([A-Z])')
 
 
-def camel_to_snake_case(name):
+def camel_to_snake_case(name: str) -> str:
     s1 = first_cap_re.sub(r'\1_\2', name)
     return all_cap_re.sub(r'\1_\2', s1).lower()
 
@@ -28,5 +28,5 @@ class GenericVisitor(ABC):
                 self._visit_method_name(node)))
 
     @staticmethod
-    def _visit_method_name(node):
+    def _visit_method_name(node) -> str:
         return 'visit_' + camel_to_snake_case(type(node).__name__)

@@ -19,11 +19,11 @@ class Production(ABC):
         self._lhs = lhs
 
     @property
-    def id(self):
+    def id(self) -> int:
         return self._id
 
     @property
-    def lhs(self):
+    def lhs(self) -> Type:
         return self._lhs
 
     @property
@@ -133,15 +133,15 @@ class FunctionProduction(Production):
         self._constraints = constraints
 
     @property
-    def rhs(self):
+    def rhs(self) -> List[Type]:
         return self._rhs
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def constraints(self):
+    def constraints(self) -> List[Expr]:
         return self._constraints
 
     def is_function(self) -> bool:

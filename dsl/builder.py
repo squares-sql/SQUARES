@@ -11,13 +11,13 @@ class ProductionVisitor(GenericVisitor):
     def __init__(self, children: List[Node]):
         self._children = children
 
-    def visit_enum_production(self, prod):
+    def visit_enum_production(self, prod) -> Node:
         return AtomNode(prod)
 
-    def visit_param_production(self, prod):
+    def visit_param_production(self, prod) -> Node:
         return ParamNode(prod)
 
-    def visit_function_production(self, prod):
+    def visit_function_production(self, prod) -> Node:
         return ApplyNode(prod, self._children)
 
 

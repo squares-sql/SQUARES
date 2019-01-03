@@ -1,7 +1,7 @@
-from typing import cast, List
+from typing import cast, List, Any
 from abc import ABC, abstractmethod
 from sexpdata import Symbol
-from spec import Type, Production, FunctionProduction
+from spec import Type, Production, EnumProduction, ParamProduction, FunctionProduction
 
 
 class Node(ABC):
@@ -58,8 +58,9 @@ class AtomNode(LeafNode):
         super().__init__(prod)
 
     @property
-    def data(self) -> str:
-        return self._prod.rhs[0]
+    def data(self) -> Any:
+        prod = cast(EnumProduction, self._prod)
+        return prod.rhs[0]
 
     @property
     def children(self) -> List[Node]:
@@ -94,7 +95,8 @@ class ParamNode(LeafNode):
 
     @property
     def index(self) -> int:
-        return self._prod.rhs[0]
+        prod = cast(ParamProduction, self._prod)
+        return prod.rhs[0]
 
     @property
     def children(self) -> List[Node]:
