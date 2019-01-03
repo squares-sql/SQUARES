@@ -5,9 +5,9 @@ from .type import Type, EnumType, ValueType
 from .expr import *
 from .parser import Visitor_Recursive
 from .util import enum_set_domain
-import logger
+from logger import get_logger
 
-logger = logger.get('tyrell.desugar')
+logger = get_logger('tyrell.desugar')
 
 
 class ParseTreeProcessingError(RuntimeError):

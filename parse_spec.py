@@ -1,8 +1,8 @@
 import click
 import spec as S
-import logger
+from logger import get_logger
 
-logger = logger.get('tyrell')
+logger = get_logger('tyrell')
 
 
 def print_spec(spec: S.TyrellSpec):

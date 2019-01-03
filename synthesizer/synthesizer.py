@@ -4,9 +4,9 @@ from .result import Result
 from interpreter import Interpreter, InterpreterError
 from enumerator import Enumerator
 from dsl import Node
-import logger
+from logger import get_logger
 
-logger = logger.get('tyrell.synthesizer')
+logger = get_logger('tyrell.synthesizer')
 
 
 class Synthesizer(ABC):

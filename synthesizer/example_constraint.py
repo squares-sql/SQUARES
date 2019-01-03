@@ -5,13 +5,13 @@ from enumerator import Enumerator
 from dsl import Node, AtomNode, ParamNode, ApplyNode, NodeIndexer
 from spec import Production, ValueType
 from spec.expr import *
-import logger
+from logger import get_logger
 from visitor import GenericVisitor
 from .example_base import Example, ExampleSynthesizer
 from .eval_expr import eval_expr
 from .result import ok, bad
 
-logger = logger.get('tyrell.synthesizer.constraint')
+logger = get_logger('tyrell.synthesizer.constraint')
 
 Blame = NamedTuple('Blame', [('node', Node), ('production', Production)])
 

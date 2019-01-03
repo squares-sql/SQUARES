@@ -5,9 +5,9 @@ from interpreter import PostOrderInterpreter, InterpreterError
 from enumerator import SmtEnumerator
 from synthesizer import ExampleConstraintSynthesizer, Example
 import rpy2.robjects as robjects
-import logger
+from logger import get_logger
 
-logger = logger.get('tyrell')
+logger = get_logger('tyrell')
 
 robjects.r('''
     library(dplyr)

@@ -4,9 +4,9 @@ import spec as S
 from interpreter import PostOrderInterpreter
 from enumerator import SmtEnumerator
 from synthesizer import ExampleConstraintSynthesizer, Example
-import logger
+from logger import get_logger
 
-logger = logger.get('tyrell')
+logger = get_logger('tyrell')
 
 toy_spec_str = '''
 enum SmallInt {

@@ -3,9 +3,9 @@ from random import Random
 from .enumerator import Enumerator
 import dsl as D
 import spec as S
-import logger
+from logger import get_logger
 
-logger = logger.get('tyrell.enumerator.random')
+logger = get_logger('tyrell.enumerator.random')
 
 
 class RandomEnumerator(Enumerator):

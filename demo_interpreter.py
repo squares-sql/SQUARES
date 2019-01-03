@@ -1,9 +1,9 @@
 import spec as S
 import dsl as D
 from interpreter import PostOrderInterpreter
-import logger
+from logger import get_logger
 
-logger = logger.get('tyrell')
+logger = get_logger('tyrell')
 
 toy_spec_str = '''
 enum SmallInt {

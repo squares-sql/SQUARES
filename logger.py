@@ -39,7 +39,7 @@ _click_handler = _ClickHandler()
 _click_handler.formatter = _ColorFormatter()
 
 
-def get(name):
+def get_logger(name):
     '''Return a colorful logger with the given name'''
     logger = logging.getLogger(name)
     logger.handlers = [_click_handler]
