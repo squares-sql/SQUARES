@@ -3,7 +3,7 @@ from spec import parse
 from dsl import Builder
 from enumerator import make_empty_enumerator
 from interpreter import PostOrderInterpreter
-from .example_base import Example
+from .example_base import Example, ExampleSynthesizer
 from .example_constraint import ExampleConstraintSynthesizer
 
 
@@ -31,6 +31,24 @@ class FooInterpreter(PostOrderInterpreter):
 
     def apply_neg(self, arg):
         return arg < 0
+
+
+class TestExample(unittest.TestCase):
+
+    def test_custom_equal(self):
+        def my_equal(x, y):
+            return abs(x - y) <= 1
+        synthesizer = ExampleSynthesizer(
+            enumerator=make_empty_enumerator(),
+            interpreter=FooInterpreter(),
+            examples=[
+                Example(input=[2, 3], output=5)
+            ],
+            equal_output=my_equal
+        )
+        prog = builder.from_sexp_string('(mult (@param 0) (@param 1))')
+        failed_examples = synthesizer.get_failed_examples(prog)
+        self.assertEqual(len(failed_examples), 0)
 
 
 class TestExampleConstraint(unittest.TestCase):

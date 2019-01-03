@@ -198,8 +198,9 @@ class ExampleConstraintSynthesizer(ExampleSynthesizer):
     def __init__(self,
                  enumerator: Enumerator,
                  interpreter: Interpreter,
-                 examples: List[Example]):
-        super().__init__(enumerator, interpreter, examples)
+                 examples: List[Example],
+                 equal_output: Callable[[Any, Any], bool] = lambda x, y: x == y):
+        super().__init__(enumerator, interpreter, examples, equal_output)
 
     def analyze(self, prog):
         '''
