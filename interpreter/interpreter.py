@@ -7,7 +7,6 @@ class InterpreterError(RuntimeError):
     _why: Any
 
     def __init__(self, why: Any = None):
-        super().__init__()
         self._why = why
 
     def why(self) -> Any:

@@ -9,14 +9,14 @@ from .example_constraint import ExampleConstraintSynthesizer
 
 spec_str = r'''
     value IntExpr {
-      pos: bool;
-      neg: bool;
+        pos: bool;
+        neg: bool;
     }
 
     program Foo(IntExpr, IntExpr) -> IntExpr;
     func mult: IntExpr r -> IntExpr a, IntExpr b {
-      pos(a) && neg(b) ==> neg(r);
-      pos(b) && neg(a) ==> neg(r);
+        pos(a) && neg(b) ==> neg(r);
+        pos(b) && neg(a) ==> neg(r);
     }
 '''
 builder = Builder(parse(spec_str))
@@ -35,23 +35,43 @@ class FooInterpreter(PostOrderInterpreter):
 
 class TestExampleConstraint(unittest.TestCase):
 
-    def test_example_violated(self):
-        examples = [Example(input=[1, -1], output=2)]
+    @staticmethod
+    def do_analyze(prog, examples):
         synthesizer = ExampleConstraintSynthesizer(
             enumerator=make_empty_enumerator(),
             interpreter=FooInterpreter(),
             examples=examples
         )
+        return synthesizer.analyze(prog)
+
+    def test_satisfied_concrete(self):
         prog = builder.from_sexp_string('(mult (@param 0) (@param 1))')
+        res = self.do_analyze(
+            prog,
+            [Example(input=[1, -1], output=-1)]
+        )
+        self.assertTrue(res.is_ok())
 
-        # The given program should fail the example test
-        self.assertListEqual(
-            synthesizer.get_failed_examples(prog), examples)
-
-        res = synthesizer.analyze(prog)
+    def test_satisfied_abstract(self):
+        prog = builder.from_sexp_string('(mult (@param 0) (@param 1))')
+        res = self.do_analyze(
+            prog,
+            [Example(input=[1, -1], output=-2)]
+        )
         self.assertTrue(res.is_bad())
         reason = res.why()
-        # TODO: check that the reason matches our expectation
+        self.assertIsNone(reason)
+
+    def test_violated_abstract(self):
+        prog = builder.from_sexp_string('(mult (@param 0) (@param 1))')
+        res = self.do_analyze(
+            prog,
+            [Example(input=[1, -1], output=2)]
+        )
+        self.assertTrue(res.is_bad())
+        reason = res.why()
+        self.assertIsNotNone(reason)
+        self.assertIn([(prog, prog.production)], reason)
 
 
 if __name__ == '__main__':

@@ -22,7 +22,9 @@ func const: Int -> SmallInt;
 func plus: Int -> Int, Int;
 func minus: Int -> Int, Int;
 func mult: Int r -> Int a, Int b {
-    is_positive(r) == (is_positive(a) && is_positive(b)) || (!is_positive(a) && !is_positive(b));
+    is_positive(a) && is_positive(b) ==> is_positive(r);
+    is_positive(a) && !is_positive(b) ==> !is_positive(r);
+    !is_positive(a) && is_positive(b) ==> !is_positive(r);
 }
 func empty: Empty -> Empty;
 '''

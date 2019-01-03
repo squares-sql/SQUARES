@@ -85,7 +85,7 @@ class ValueType(Type):
 
     @property
     def properties(self):
-        return list(self._properties.value())
+        return list(self._properties.items())
 
     def __repr__(self) -> str:
         return 'ValueType({}, properties={})'.format(self._name, self._properties)
