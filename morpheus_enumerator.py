@@ -31,7 +31,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
         return args[0]
 
     def eval_select(self, node, args):
-        _script = "select(" + args[0] + ", " + get_collist(args[1]) + ")"
+        _script = 'select({table}, {cols})'.format(
+                   table=args[0], cols=get_collist(args[1]))
         try:
             ret_val = robjects.r(_script)
             return ret_val
@@ -40,13 +41,94 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 'Position must be between 0 and n: {}'.format(node))
 
     def eval_unite(self, node, args):
-        _script = "unite(" + args[0] + ", TT, " + str(args[1]) + "," + str(args[2]) + ")"
+        _script = 'unite({table}, TMP, {col1}, {col2})'.format(
+                  table=args[0], col1=str(args[1]), col2=str(args[2]))
         try:
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
             raise InterpreterError(
                 'Position must be between 0 and n: {}'.format(node))
+
+    def eval_filter(self, node, args):
+        _script = '{table} %>% filter(.[[{col}]] {op} {const})'.format(
+                  table=args[0], op=args[1], col=str(args[2]), const=str(args[3]))
+        try:
+            ret_val = robjects.r(_script)
+            return robjects.r(_script)
+        except:
+            raise InterpreterError(
+                'filter is not type-checked: {}'.format(_script))
+
+    def eval_separate(self, node, args):
+        _script = 'separate({table}, {col1}, c("TMP1", "TMP2"))'.format(
+                  table=args[0], col1=str(args[1])) 
+        try:
+            ret_val = robjects.r(_script)
+            return robjects.r(_script)
+        except:
+            raise InterpreterError(
+                'separate is not type-checked: {}'.format(node))
+
+    def eval_spread(self, node, args):
+        _script = 'spread({table}, {col1}, {col2})'.format(
+                  table=args[0], col1=str(args[1]), col2=str(args[2]))
+        try:
+            ret_val = robjects.r(_script)
+            return robjects.r(_script)
+        except:
+            raise InterpreterError(
+                'spread is not type-checked: {}'.format(node))
+
+    def eval_gather(self, node, args):
+        _script = 'gather({table}, KEY, VALUE, {cols})'.format(
+                   table=args[0], cols=get_collist(args[1]))
+        try:
+            ret_val = robjects.r(_script)
+            return robjects.r(_script)
+        except:
+            raise InterpreterError(
+                'gather is not type-checked: {}'.format(node))
+
+    def eval_group_by(self, node, args):
+        _script = 'group_by({table}, {cols})'.format(
+                   table=args[0], cols=get_collist(args[1]))
+        try:
+            ret_val = robjects.r(_script)
+            return robjects.r(_script)
+        except:
+            raise InterpreterError(
+                'group_by is not type-checked: {}'.format(node))
+
+    def eval_summarise(self, node, args):
+        _script = '{table} %>% summarise(TMP = {aggr} (.[[{col}]]))'.format(
+                  table=args[0], aggr=str(args[1]), col=str(args[2]))
+        try:
+            ret_val = robjects.r(_script)
+            return robjects.r(_script)
+        except:
+            raise InterpreterError(
+                'summarise is not type-checked: {}'.format(_script))
+
+    def eval_mutate(self, node, args):
+        _script = '{table} %>% mutate(TMP=.[[{col1}]] {op} .[[{col2}]])'.format(
+                  table=args[0], op=args[1], col1=str(args[2]), col2=str(args[3]))
+        try:
+            ret_val = robjects.r(_script)
+            return robjects.r(_script)
+        except:
+            raise InterpreterError(
+                'mutate is not type-checked: {}'.format(_script))
+
+    def eval_inner_join(self, node, args):
+        _script = 'inner_join({t1}, {t2})'.format(
+                  t1=args[0], t2=args[1])
+        try:
+            ret_val = robjects.r(_script)
+            return robjects.r(_script)
+        except:
+            raise InterpreterError(
+                'inner_join is not type-checked: {}'.format(_script))
 
     ## Abstract interpreter
     def apply_row(self, val):
@@ -99,6 +181,7 @@ def main():
     synthesizer = ExampleConstraintSynthesizer(
         #loc: # of function productions
         enumerator=SmtEnumerator(spec, depth=2, loc=1),
+        # enumerator=SmtEnumerator(spec, depth=3, loc=2),
         interpreter=MorpheusInterpreter(),
         examples=[
             Example(input=['dat'], output=benchmark1_output),
