@@ -987,8 +987,12 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[3] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n|\\(\\*(.|\n)+\\*\\)))|(?P<WS>(?:[ \t\x0c\r\n])+)',
-  {1: 'COMMENT', 3: 'WS'})]
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
+  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -999,12 +1003,12 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[4] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<PROGRAM>program)',
-  {1: 'COMMENT', 3: 'WS', 4: 'PROGRAM'})]
+  '])+)',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1015,12 +1019,12 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[5] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
-  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
+  '])+)',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1051,8 +1055,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
-  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
+  '])+)|(?P<PROGRAM>program)',
+  {1: 'COMMENT', 3: 'WS', 4: 'PROGRAM'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1063,12 +1067,8 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[8] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
+[('(?P<COMMENT>(?:\\#.*\\\n|\\(\\*(.|\n)+\\*\\)))|(?P<WS>(?:[ \t\x0c\r\n])+)',
+  {1: 'COMMENT', 3: 'WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1079,12 +1079,12 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[9] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
+  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
+  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1099,8 +1099,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
-  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
+  '])+)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'LBRACE', 5: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1139,8 +1139,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<LSQB>\\[)',
-  {1: 'COMMENT', 3: 'WS', 4: 'LSQB'})]
+  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
+  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1151,8 +1151,12 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[13] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n|\\(\\*(.|\n)+\\*\\)))|(?P<WS>(?:[ \t\x0c\r\n])+)',
-  {1: 'COMMENT', 3: 'WS'})]
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<LSQB>\\[)',
+  {1: 'COMMENT', 3: 'WS', 4: 'LSQB'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1167,8 +1171,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<FUNC>func)',
-  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
+  '])+)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'LBRACE', 5: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1179,70 +1183,6 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[15] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[16] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'LBRACE', 5: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[17] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'LBRACE', 5: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[18] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)',
-  {1: 'COMMENT', 3: 'WS', 4: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[19] = (lexer_regexps)
-MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
@@ -1257,7 +1197,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[20] = (lexer_regexps)
+LEXERS[16] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1273,7 +1213,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[21] = (lexer_regexps)
+LEXERS[17] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n|\\(\\*(.|\n)+\\*\\)))|(?P<WS>(?:[ \t\x0c\r\n])+)',
   {1: 'COMMENT', 3: 'WS'})]
@@ -1285,71 +1225,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[22] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<FUNC>func)',
-  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[23] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<LPAR>\\()',
-  {1: 'COMMENT', 3: 'WS', 4: 'LPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[24] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<COLON>:)|(?P<LPAR>\\()',
-  {1: 'COMMENT', 3: 'WS', 4: 'COLON', 5: 'LPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[25] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
-  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[26] = (lexer_regexps)
+LEXERS[18] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1365,7 +1241,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[27] = (lexer_regexps)
+LEXERS[19] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1381,7 +1257,55 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[28] = (lexer_regexps)
+LEXERS[20] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
+  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[21] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<INT>(?:[0-9])+)',
+  {1: 'COMMENT', 3: 'WS', 4: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[22] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
+  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[23] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1397,7 +1321,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[29] = (lexer_regexps)
+LEXERS[24] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1413,14 +1337,14 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[30] = (lexer_regexps)
+LEXERS[25] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
-  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
+  '])+)',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1429,14 +1353,10 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[31] = (lexer_regexps)
+LEXERS[26] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<RSQB>\\])',
-  {1: 'COMMENT', 3: 'WS', 4: 'RSQB'})]
+[('(?P<COMMENT>(?:\\#.*\\\n|\\(\\*(.|\n)+\\*\\)))|(?P<WS>(?:[ \t\x0c\r\n])+)',
+  {1: 'COMMENT', 3: 'WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1445,7 +1365,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[32] = (lexer_regexps)
+LEXERS[27] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1461,7 +1381,119 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
+LEXERS[28] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<FUNC>func)',
+  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[29] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<COLON>:)|(?P<LPAR>\\()',
+  {1: 'COMMENT', 3: 'WS', 4: 'COLON', 5: 'LPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[30] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<LPAR>\\()',
+  {1: 'COMMENT', 3: 'WS', 4: 'LPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[31] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<COMMA>,)|(?P<RBRACE>\\})',
+  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RBRACE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[32] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<COMMA>,)|(?P<RBRACE>\\})',
+  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RBRACE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[33] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<RBRACE>\\})',
+  {1: 'COMMENT', 3: 'WS', 4: 'RBRACE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[34] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<RSQB>\\])',
+  {1: 'COMMENT', 3: 'WS', 4: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[35] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1477,46 +1509,14 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[34] = (lexer_regexps)
+LEXERS[36] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<RPAR>\\))',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[35] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<COMMA>,)|(?P<RBRACE>\\})',
-  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RBRACE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[36] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<COMMA>,)|(?P<RBRACE>\\})',
-  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RBRACE'})]
+  '])+)|(?P<RBRACE>\\})',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RBRACE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1563,8 +1563,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<RBRACE>\\})',
-  {1: 'COMMENT', 3: 'WS', 4: 'RBRACE'})]
+  '])+)|(?P<FUNC>func)',
+  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1579,8 +1579,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<RBRACE>\\})',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RBRACE'})]
+  '])+)|(?P<RPAR>\\))',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RPAR'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1590,70 +1590,6 @@ lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[41] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'LBRACE', 5: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[42] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[43] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<RPAR>\\))',
-  {1: 'COMMENT', 3: 'WS', 4: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[44] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<COMMA>,)|(?P<RPAR>\\))',
-  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[45] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1669,7 +1605,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[46] = (lexer_regexps)
+LEXERS[42] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1685,7 +1621,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[47] = (lexer_regexps)
+LEXERS[43] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1701,87 +1637,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[48] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<BOOL>bool)|(?P<__ANON_8>int)',
-  {1: 'COMMENT', 3: 'WS', 4: 'BOOL', 5: '__ANON_8'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[49] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
-  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[50] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<RBRACE>\\})',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RBRACE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[51] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<RBRACE>\\})',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RBRACE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[52] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
-  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[53] = (lexer_regexps)
+LEXERS[44] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1797,7 +1653,263 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
+LEXERS[45] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<BOOL>bool)|(?P<__ANON_8>int)',
+  {1: 'COMMENT', 3: 'WS', 4: 'BOOL', 5: '__ANON_8'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[46] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<RBRACE>\\})',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RBRACE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[47] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<RBRACE>\\})',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RBRACE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[48] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
+  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[49] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[50] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<COMMA>,)|(?P<RPAR>\\))',
+  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[51] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<RPAR>\\))',
+  {1: 'COMMENT', 3: 'WS', 4: 'RPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[52] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<STRLIT>"(?:(?:\\\\"|[^"]))*")|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)',
+  {1: 'COMMENT', 3: 'STRLIT', 4: 'WS'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[53] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<COMMA>,)|(?P<RBRACE>\\})',
+  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RBRACE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[54] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ENUMSET>enumset)|(?P<PROGRAM>program)|(?P<VALUE>value)|(?P<ENUM>enum)',
+  {1: 'COMMENT', 3: 'WS', 4: 'ENUMSET', 5: 'PROGRAM', 6: 'VALUE', 7: 'ENUM'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[55] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[56] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[57] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[58] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<RBRACE>\\})',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RBRACE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[59] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<__ANON_0>\\->)',
+  {1: 'COMMENT', 3: 'WS', 4: '__ANON_0'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[60] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<__ANON_0>\\->)',
+  {1: 'COMMENT', 3: 'WS', 4: '__ANON_0'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[61] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1819,14 +1931,14 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[55] = (lexer_regexps)
+LEXERS[62] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<__ANON_0>\\->)',
-  {1: 'COMMENT', 3: 'WS', 4: '__ANON_0'})]
+  '])+)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'LBRACE', 5: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1835,55 +1947,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[56] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<__ANON_0>\\->)',
-  {1: 'COMMENT', 3: 'WS', 4: '__ANON_0'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[57] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<__ANON_0>\\->)',
-  {1: 'COMMENT', 3: 'WS', 4: '__ANON_0'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[58] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<COMMA>,)|(?P<RPAR>\\))',
-  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[59] = (lexer_regexps)
+LEXERS[63] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1899,14 +1963,14 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[60] = (lexer_regexps)
+LEXERS[64] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<STRLIT>"(?:(?:\\\\"|[^"]))*")|(?P<WS>(?:[ \t\x0c'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)',
-  {1: 'COMMENT', 3: 'STRLIT', 4: 'WS'})]
+  '])+)|(?P<COMMA>,)|(?P<RPAR>\\))',
+  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RPAR'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1915,7 +1979,23 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[61] = (lexer_regexps)
+LEXERS[65] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<__ANON_0>\\->)',
+  {1: 'COMMENT', 3: 'WS', 4: '__ANON_0'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[66] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1931,55 +2011,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[62] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[63] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[64] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[65] = (lexer_regexps)
+LEXERS[67] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -1995,53 +2027,14 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[66] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<FUNC>func)',
-  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[67] = (lexer_regexps)
+LEXERS[68] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS'})]
-)
-LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
-           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[68] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<FUNC>func)',
-  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
+  '])+)',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2051,27 +2044,6 @@ lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[69] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<__ANON_0>\\->)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: '__ANON_0',
-   5: 'COMMA',
-   6: 'LBRACE',
-   7: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[70] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -2109,14 +2081,35 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[71] = (lexer_regexps)
+LEXERS[70] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
+  '])+)|(?P<__ANON_0>\\->)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: '__ANON_0',
+   5: 'COMMA',
+   6: 'LBRACE',
+   7: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[71] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<FUNC>func)',
+  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2131,11 +2124,18 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS'})]
 )
 LEXER_CALLBACK = (
-{}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
+           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2143,12 +2143,12 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[73] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
+  '])+)|(?P<FUNC>func)',
+  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2175,12 +2175,12 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[75] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<COMMA>,)|(?P<RBRACE>\\})',
-  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'RBRACE'})]
+  '])+)',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2195,8 +2195,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<RBRACE>\\})',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'RBRACE'})]
+  '])+)',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2211,22 +2211,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MORETHAN>>)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_2',
-   8: '__ANON_3',
-   9: '__ANON_4',
-   10: '__ANON_5',
-   11: '__ANON_6',
-   12: '__ANON_7',
-   13: 'LESSTHAN',
-   14: 'MORETHAN',
-   15: 'RPAR',
-   16: 'SEMICOLON'})]
+  '])+)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'LBRACE', 6: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2241,7 +2227,39 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
+  '])+)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'LBRACE', 5: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[79] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'LBRACE', 6: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[80] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
   {1: 'COMMENT',
    3: 'WS',
    4: 'ELSE',
@@ -2256,9 +2274,12 @@ MRES = (
    13: 'LESSTHAN',
    14: 'MINUS',
    15: 'MORETHAN',
-   16: 'PLUS',
-   17: 'RPAR',
-   18: 'SEMICOLON'})]
+   16: 'PERCENT',
+   17: 'PLUS',
+   18: 'RPAR',
+   19: 'SEMICOLON',
+   20: 'SLASH',
+   21: 'STAR'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2267,30 +2288,42 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[79] = (lexer_regexps)
+LEXERS[81] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS'})]
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_2',
+   8: '__ANON_3',
+   9: '__ANON_4',
+   10: '__ANON_5',
+   11: '__ANON_6',
+   12: '__ANON_7',
+   13: 'LESSTHAN',
+   14: 'MINUS',
+   15: 'MORETHAN',
+   16: 'PERCENT',
+   17: 'PLUS',
+   18: 'RPAR',
+   19: 'SEMICOLON',
+   20: 'SLASH',
+   21: 'STAR'})]
 )
 LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
-           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[80] = (lexer_regexps)
+LEXERS[82] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -2306,56 +2339,25 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[81] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[82] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_2',
-   8: 'RPAR',
-   9: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[83] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<LPAR>\\()',
-  {1: 'COMMENT', 3: 'WS', 4: 'LPAR'})]
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS',
+   9: 'RBRACE'})]
 )
 LEXER_CALLBACK = (
-{}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
+           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2461,6 +2463,76 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_0>\\->)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<COLON>:)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<LESSTHAN><)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_0',
+   8: '__ANON_2',
+   9: '__ANON_3',
+   10: '__ANON_4',
+   11: '__ANON_5',
+   12: '__ANON_6',
+   13: '__ANON_7',
+   14: 'COLON',
+   15: 'COMMA',
+   16: 'LBRACE',
+   17: 'LESSTHAN',
+   18: 'LPAR',
+   19: 'MINUS',
+   20: 'MORETHAN',
+   21: 'PERCENT',
+   22: 'PLUS',
+   23: 'RPAR',
+   24: 'SEMICOLON',
+   25: 'SLASH',
+   26: 'STAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[88] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MORETHAN>>)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_2',
+   8: '__ANON_3',
+   9: '__ANON_4',
+   10: '__ANON_5',
+   11: '__ANON_6',
+   12: '__ANON_7',
+   13: 'LESSTHAN',
+   14: 'MORETHAN',
+   15: 'RPAR',
+   16: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[89] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
   '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
   {1: 'COMMENT',
    3: 'WS',
@@ -2490,73 +2562,21 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[88] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS',
-   9: 'RBRACE'})]
-)
-LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
-           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[89] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<LPAR>\\()',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'INT', 6: 'LPAR'})]
-)
-LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[90] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
   {1: 'COMMENT',
    3: 'WS',
    4: 'ELSE',
    5: 'THEN',
    6: '__ANON_1',
    7: '__ANON_2',
-   8: '__ANON_3',
-   9: '__ANON_4',
-   10: '__ANON_5',
-   11: '__ANON_6',
-   12: '__ANON_7',
-   13: 'LESSTHAN',
-   14: 'MINUS',
-   15: 'MORETHAN',
-   16: 'PERCENT',
-   17: 'PLUS',
-   18: 'RPAR',
-   19: 'SEMICOLON',
-   20: 'SLASH',
-   21: 'STAR'})]
+   8: 'RPAR',
+   9: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2571,27 +2591,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_2',
-   8: '__ANON_3',
-   9: '__ANON_4',
-   10: '__ANON_5',
-   11: '__ANON_6',
-   12: '__ANON_7',
-   13: 'LESSTHAN',
-   14: 'MINUS',
-   15: 'MORETHAN',
-   16: 'PERCENT',
-   17: 'PLUS',
-   18: 'RPAR',
-   19: 'SEMICOLON',
-   20: 'SLASH',
-   21: 'STAR'})]
+  '])+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'RPAR', 5: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2637,39 +2638,22 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[93] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_0>\\->)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<COLON>:)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<LESSTHAN><)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_0',
-   8: '__ANON_2',
-   9: '__ANON_3',
-   10: '__ANON_4',
-   11: '__ANON_5',
-   12: '__ANON_6',
-   13: '__ANON_7',
-   14: 'COLON',
-   15: 'COMMA',
-   16: 'LBRACE',
-   17: 'LESSTHAN',
-   18: 'LPAR',
-   19: 'MINUS',
-   20: 'MORETHAN',
-   21: 'PERCENT',
-   22: 'PLUS',
-   23: 'RPAR',
-   24: 'SEMICOLON',
-   25: 'SLASH',
-   26: 'STAR'})]
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS'})]
 )
 LEXER_CALLBACK = (
-{}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
+           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2681,8 +2665,27 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'RPAR', 5: 'SEMICOLON'})]
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_2',
+   8: '__ANON_3',
+   9: '__ANON_4',
+   10: '__ANON_5',
+   11: '__ANON_6',
+   12: '__ANON_7',
+   13: 'LESSTHAN',
+   14: 'MINUS',
+   15: 'MORETHAN',
+   16: 'PERCENT',
+   17: 'PLUS',
+   18: 'RPAR',
+   19: 'SEMICOLON',
+   20: 'SLASH',
+   21: 'STAR'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2697,27 +2700,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_2',
-   8: '__ANON_3',
-   9: '__ANON_4',
-   10: '__ANON_5',
-   11: '__ANON_6',
-   12: '__ANON_7',
-   13: 'LESSTHAN',
-   14: 'MINUS',
-   15: 'MORETHAN',
-   16: 'PERCENT',
-   17: 'PLUS',
-   18: 'RPAR',
-   19: 'SEMICOLON',
-   20: 'SLASH',
-   21: 'STAR'})]
+  '])+)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2732,27 +2716,8 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_2',
-   8: '__ANON_3',
-   9: '__ANON_4',
-   10: '__ANON_5',
-   11: '__ANON_6',
-   12: '__ANON_7',
-   13: 'LESSTHAN',
-   14: 'MINUS',
-   15: 'MORETHAN',
-   16: 'PERCENT',
-   17: 'PLUS',
-   18: 'RPAR',
-   19: 'SEMICOLON',
-   20: 'SLASH',
-   21: 'STAR'})]
+  '])+)|(?P<LPAR>\\()',
+  {1: 'COMMENT', 3: 'WS', 4: 'LPAR'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2762,6 +2727,22 @@ lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[97] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<RBRACE>\\})',
+  {1: 'COMMENT', 3: 'WS', 4: 'RBRACE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[98] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -2796,7 +2777,39 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[98] = (lexer_regexps)
+LEXERS[99] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_2',
+   8: '__ANON_3',
+   9: '__ANON_4',
+   10: '__ANON_5',
+   11: '__ANON_6',
+   12: '__ANON_7',
+   13: 'LESSTHAN',
+   14: 'MINUS',
+   15: 'MORETHAN',
+   16: 'PLUS',
+   17: 'RPAR',
+   18: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[100] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -2818,42 +2831,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[99] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_2',
-   8: '__ANON_3',
-   9: '__ANON_4',
-   10: '__ANON_5',
-   11: '__ANON_6',
-   12: '__ANON_7',
-   13: 'LESSTHAN',
-   14: 'MINUS',
-   15: 'MORETHAN',
-   16: 'PERCENT',
-   17: 'PLUS',
-   18: 'RPAR',
-   19: 'SEMICOLON',
-   20: 'SLASH',
-   21: 'STAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[100] = (lexer_regexps)
+LEXERS[101] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -2864,22 +2842,6 @@ MRES = (
 )
 LEXER_CALLBACK = (
 {'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[101] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<RBRACE>\\})',
-  {1: 'COMMENT', 3: 'WS', 4: 'RBRACE'})]
-)
-LEXER_CALLBACK = (
-{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2907,8 +2869,27 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'LBRACE', 6: 'SEMICOLON'})]
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_2',
+   8: '__ANON_3',
+   9: '__ANON_4',
+   10: '__ANON_5',
+   11: '__ANON_6',
+   12: '__ANON_7',
+   13: 'LESSTHAN',
+   14: 'MINUS',
+   15: 'MORETHAN',
+   16: 'PERCENT',
+   17: 'PLUS',
+   18: 'RPAR',
+   19: 'SEMICOLON',
+   20: 'SLASH',
+   21: 'STAR'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2919,15 +2900,15 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[104] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'LBRACE', 6: 'SEMICOLON'})]
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<LPAR>\\()',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS', 5: 'INT', 6: 'LPAR'})]
 )
 LEXER_CALLBACK = (
-{}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2939,8 +2920,27 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'LBRACE', 5: 'SEMICOLON'})]
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_2',
+   8: '__ANON_3',
+   9: '__ANON_4',
+   10: '__ANON_5',
+   11: '__ANON_6',
+   12: '__ANON_7',
+   13: 'LESSTHAN',
+   14: 'MINUS',
+   15: 'MORETHAN',
+   16: 'PERCENT',
+   17: 'PLUS',
+   18: 'RPAR',
+   19: 'SEMICOLON',
+   20: 'SLASH',
+   21: 'STAR'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2950,22 +2950,6 @@ lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[106] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[107] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -2981,23 +2965,33 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[108] = (lexer_regexps)
+LEXERS[107] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS'})]
+  '])+)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[108] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'LBRACE', 6: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3009,17 +3003,11 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS'})]
+  '])+)',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
 )
 LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3119,17 +3107,19 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
   {1: 'NAME',
    2: 'COMMENT',
    4: 'WS',
    5: 'INT',
    6: 'BANG',
    7: 'LPAR',
-   8: 'MINUS'})]
+   8: 'MINUS',
+   9: 'RBRACE'})]
 )
 LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
+           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3141,17 +3131,19 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
   {1: 'NAME',
    2: 'COMMENT',
    4: 'WS',
    5: 'INT',
    6: 'BANG',
    7: 'LPAR',
-   8: 'MINUS'})]
+   8: 'MINUS',
+   9: 'RBRACE'})]
 )
 LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
+           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3203,15 +3195,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[118] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<RPAR>\\))',
-  {1: 'COMMENT', 3: 'WS', 4: 'RPAR'})]
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS'})]
 )
 LEXER_CALLBACK = (
-{}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3219,34 +3217,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[119] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_2',
-   8: '__ANON_3',
-   9: '__ANON_4',
-   10: '__ANON_5',
-   11: '__ANON_6',
-   12: '__ANON_7',
-   13: 'LESSTHAN',
-   14: 'MINUS',
-   15: 'MORETHAN',
-   16: 'PERCENT',
-   17: 'PLUS',
-   18: 'RPAR',
-   19: 'SEMICOLON',
-   20: 'SLASH',
-   21: 'STAR'})]
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS'})]
 )
 LEXER_CALLBACK = (
-{}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3258,19 +3243,17 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
   {1: 'NAME',
    2: 'COMMENT',
    4: 'WS',
    5: 'INT',
    6: 'BANG',
    7: 'LPAR',
-   8: 'MINUS',
-   9: 'RBRACE'})]
+   8: 'MINUS'})]
 )
 LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
-           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3326,11 +3309,17 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS'})]
 )
 LEXER_CALLBACK = (
-{}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3382,21 +3371,15 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[126] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS'})]
+  '])+)|(?P<RPAR>\\))',
+  {1: 'COMMENT', 3: 'WS', 4: 'RPAR'})]
 )
 LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3408,141 +3391,25 @@ MRES = (
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
   {1: 'NAME',
    2: 'COMMENT',
    4: 'WS',
    5: 'INT',
    6: 'BANG',
    7: 'LPAR',
-   8: 'MINUS'})]
+   8: 'MINUS',
+   9: 'RBRACE'})]
 )
 LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
+           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[128] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS'})]
-)
-LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[129] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS',
-   9: 'RBRACE'})]
-)
-LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
-           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[130] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS',
-   9: 'RBRACE'})]
-)
-LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
-           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[131] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<THEN>then)',
-  {1: 'COMMENT', 3: 'WS', 4: 'THEN'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[132] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<FUNC>func)',
-  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[133] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'LBRACE', 6: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[134] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -3558,7 +3425,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[135] = (lexer_regexps)
+LEXERS[129] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -3574,30 +3441,80 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[136] = (lexer_regexps)
+LEXERS[130] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS'})]
+)
+LEXER_CALLBACK = (
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[131] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS'})]
+)
+LEXER_CALLBACK = (
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[132] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS'})]
+)
+LEXER_CALLBACK = (
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)', {1: 'FALSE', 2: 'TRUE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[133] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_2',
-   8: '__ANON_3',
-   9: '__ANON_4',
-   10: '__ANON_5',
-   11: '__ANON_6',
-   12: '__ANON_7',
-   13: 'LESSTHAN',
-   14: 'MINUS',
-   15: 'MORETHAN',
-   16: 'PLUS',
-   17: 'RPAR',
-   18: 'SEMICOLON'})]
+  '])+)|(?P<THEN>then)',
+  {1: 'COMMENT', 3: 'WS', 4: 'THEN'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -3606,7 +3523,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[137] = (lexer_regexps)
+LEXERS[134] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -3633,6 +3550,54 @@ MRES = (
    19: 'SEMICOLON',
    20: 'SLASH',
    21: 'STAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[135] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<FUNC>func)',
+  {1: 'COMMENT', 3: 'WS', 4: 'FUNC'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[136] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)',
+  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[137] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'LBRACE', 6: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -3678,61 +3643,29 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[139] = (lexer_regexps)
 MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
-  {1: 'COMMENT',
-   3: 'WS',
-   4: 'ELSE',
-   5: 'THEN',
-   6: '__ANON_1',
-   7: '__ANON_2',
-   8: '__ANON_3',
-   9: 'RPAR',
-   10: 'SEMICOLON'})]
+  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
+  {1: 'NAME',
+   2: 'COMMENT',
+   4: 'WS',
+   5: 'INT',
+   6: 'BANG',
+   7: 'LPAR',
+   8: 'MINUS',
+   9: 'RBRACE'})]
 )
 LEXER_CALLBACK = (
-{}
+{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
+           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[140] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'ELSE', 5: 'THEN', 6: 'RPAR', 7: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[141] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<RPAR>\\))',
-  {1: 'COMMENT', 3: 'WS', 4: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[142] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -3762,7 +3695,79 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
+LEXERS[141] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_2',
+   8: '__ANON_3',
+   9: '__ANON_4',
+   10: '__ANON_5',
+   11: '__ANON_6',
+   12: '__ANON_7',
+   13: 'LESSTHAN',
+   14: 'MINUS',
+   15: 'MORETHAN',
+   16: 'PLUS',
+   17: 'RPAR',
+   18: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[142] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_2',
+   8: '__ANON_3',
+   9: 'RPAR',
+   10: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[143] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<RPAR>\\))|(?P<SEMICOLON>;)',
+  {1: 'COMMENT', 3: 'WS', 4: 'ELSE', 5: 'THEN', 6: 'RPAR', 7: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[144] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -3797,31 +3802,58 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[144] = (lexer_regexps)
+LEXERS[145] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
+[('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
   ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
   '\r\n'
-  '])+)|(?P<INT>(?:[0-9])+)|(?P<BANG>!)|(?P<LPAR>\\()|(?P<MINUS>\\-)|(?P<RBRACE>\\})',
-  {1: 'NAME',
-   2: 'COMMENT',
-   4: 'WS',
-   5: 'INT',
-   6: 'BANG',
-   7: 'LPAR',
-   8: 'MINUS',
-   9: 'RBRACE'})]
+  '])+)|(?P<RPAR>\\))',
+  {1: 'COMMENT', 3: 'WS', 4: 'RPAR'})]
 )
 LEXER_CALLBACK = (
-{'NAME': [('(?P<FALSE>false$)|(?P<TRUE>true$)|(?P<IF>if$)',
-           {1: 'FALSE', 2: 'TRUE', 3: 'IF'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[145] = (lexer_regexps)
+LEXERS[146] = (lexer_regexps)
+MRES = (
+[('(?P<COMMENT>(?:\\#.*\\\n'
+  '|\\(\\*(.|\n'
+  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
+  '\r\n'
+  '])+)|(?P<ELSE>else)|(?P<THEN>then)|(?P<__ANON_1>==>)|(?P<__ANON_2>\\|\\|)|(?P<__ANON_3>\\&\\&)|(?P<__ANON_4>==)|(?P<__ANON_5>!=)|(?P<__ANON_6><=)|(?P<__ANON_7>>=)|(?P<LESSTHAN><)|(?P<MINUS>\\-)|(?P<MORETHAN>>)|(?P<PERCENT>%)|(?P<PLUS>\\+)|(?P<RPAR>\\))|(?P<SEMICOLON>;)|(?P<SLASH>/)|(?P<STAR>\\*)',
+  {1: 'COMMENT',
+   3: 'WS',
+   4: 'ELSE',
+   5: 'THEN',
+   6: '__ANON_1',
+   7: '__ANON_2',
+   8: '__ANON_3',
+   9: '__ANON_4',
+   10: '__ANON_5',
+   11: '__ANON_6',
+   12: '__ANON_7',
+   13: 'LESSTHAN',
+   14: 'MINUS',
+   15: 'MORETHAN',
+   16: 'PERCENT',
+   17: 'PLUS',
+   18: 'RPAR',
+   19: 'SEMICOLON',
+   20: 'SLASH',
+   21: 'STAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[147] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -3843,23 +3875,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[146] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?:_|(?:[A-Z]|[a-z]))(?:(?:(?:_|(?:[A-Z]|[a-z]))|[0-9]))*)|(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)',
-  {1: 'NAME', 2: 'COMMENT', 4: 'WS'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[147] = (lexer_regexps)
+LEXERS[148] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -3875,7 +3891,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[148] = (lexer_regexps)
+LEXERS[149] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -3910,7 +3926,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[149] = (lexer_regexps)
+LEXERS[150] = (lexer_regexps)
 MRES = (
 [('(?P<COMMENT>(?:\\#.*\\\n'
   '|\\(\\*(.|\n'
@@ -3918,22 +3934,6 @@ MRES = (
   '\r\n'
   '])+)|(?P<ELSE>else)',
   {1: 'COMMENT', 3: 'WS', 4: 'ELSE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[150] = (lexer_regexps)
-MRES = (
-[('(?P<COMMENT>(?:\\#.*\\\n'
-  '|\\(\\*(.|\n'
-  ')+\\*\\)))|(?P<WS>(?:[ \t\x0c'
-  '\r\n'
-  '])+)|(?P<COMMA>,)|(?P<LBRACE>\\{)|(?P<SEMICOLON>;)',
-  {1: 'COMMENT', 3: 'WS', 4: 'COMMA', 5: 'LBRACE', 6: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -4001,22 +4001,22 @@ def lex(stream):
     return CON_LEXER.lex(stream)
 RULES = {
   0: Rule(NonTerminal('start'), [NonTerminal('type_decls'), NonTerminal('program_decl'), NonTerminal('func_decls')], None, RuleOptions(False, False, None)),
-  1: Rule(NonTerminal('type_decls'), [], None, RuleOptions(False, False, None)),
-  2: Rule(NonTerminal('type_decls'), [NonTerminal('__anon_star_0')], None, RuleOptions(False, False, None)),
-  3: Rule(NonTerminal('type_decl'), [NonTerminal('value_decl')], None, RuleOptions(False, True, None)),
-  4: Rule(NonTerminal('type_decl'), [NonTerminal('enum_decl')], None, RuleOptions(False, True, None)),
-  5: Rule(NonTerminal('type_decl'), [NonTerminal('enum_set_decl')], None, RuleOptions(False, True, None)),
+  1: Rule(NonTerminal('type_decls'), [NonTerminal('__anon_star_0')], None, RuleOptions(False, False, None)),
+  2: Rule(NonTerminal('type_decls'), [], None, RuleOptions(False, False, None)),
+  3: Rule(NonTerminal('type_decl'), [NonTerminal('enum_decl')], None, RuleOptions(False, True, None)),
+  4: Rule(NonTerminal('type_decl'), [NonTerminal('enum_set_decl')], None, RuleOptions(False, True, None)),
+  5: Rule(NonTerminal('type_decl'), [NonTerminal('value_decl')], None, RuleOptions(False, True, None)),
   6: Rule(NonTerminal('enum_decl'), [Terminal('ENUM', True), NonTerminal('type_name'), NonTerminal('enum_body')], None, RuleOptions(False, False, None)),
   7: Rule(NonTerminal('enum_set_decl'), [Terminal('ENUMSET', True), NonTerminal('type_name'), Terminal('LSQB', True), Terminal('INT', False), Terminal('RSQB', True), NonTerminal('enum_body')], None, RuleOptions(False, False, None)),
   8: Rule(NonTerminal('enum_body'), [Terminal('LBRACE', True), NonTerminal('enum_items'), Terminal('RBRACE', True)], None, RuleOptions(False, True, None)),
   9: Rule(NonTerminal('enum_body'), [Terminal('SEMICOLON', True)], None, RuleOptions(False, True, None)),
-  10: Rule(NonTerminal('enum_items'), [NonTerminal('enum_item')], None, RuleOptions(False, False, None)),
-  11: Rule(NonTerminal('enum_items'), [NonTerminal('enum_item'), NonTerminal('__anon_star_1')], None, RuleOptions(False, False, None)),
+  10: Rule(NonTerminal('enum_items'), [NonTerminal('enum_item'), NonTerminal('__anon_star_1')], None, RuleOptions(False, False, None)),
+  11: Rule(NonTerminal('enum_items'), [NonTerminal('enum_item')], None, RuleOptions(False, False, None)),
   12: Rule(NonTerminal('value_decl'), [Terminal('VALUE', True), NonTerminal('type_name'), NonTerminal('value_body')], None, RuleOptions(False, False, None)),
   13: Rule(NonTerminal('value_body'), [Terminal('LBRACE', True), NonTerminal('value_items'), Terminal('RBRACE', True)], None, RuleOptions(False, True, None)),
   14: Rule(NonTerminal('value_body'), [Terminal('SEMICOLON', True)], None, RuleOptions(False, True, None)),
-  15: Rule(NonTerminal('value_items'), [NonTerminal('value_item')], None, RuleOptions(False, False, None)),
-  16: Rule(NonTerminal('value_items'), [NonTerminal('value_item'), NonTerminal('__anon_star_2')], None, RuleOptions(False, False, None)),
+  15: Rule(NonTerminal('value_items'), [NonTerminal('value_item'), NonTerminal('__anon_star_2')], None, RuleOptions(False, False, None)),
+  16: Rule(NonTerminal('value_items'), [NonTerminal('value_item')], None, RuleOptions(False, False, None)),
   17: Rule(NonTerminal('value_item'), [NonTerminal('func_name'), Terminal('COLON', True), NonTerminal('expr_type_name'), Terminal('SEMICOLON', True)], None, RuleOptions(False, False, None)),
   18: Rule(NonTerminal('program_decl'), [Terminal('PROGRAM', True), NonTerminal('func_name'), Terminal('LPAR', True), NonTerminal('type_names'), Terminal('RPAR', True), Terminal('__ANON_0', True), NonTerminal('type_name'), Terminal('SEMICOLON', True)], None, RuleOptions(False, False, None)),
   19: Rule(NonTerminal('func_decls'), [], None, RuleOptions(False, False, None)),
@@ -4031,42 +4031,42 @@ RULES = {
   28: Rule(NonTerminal('opt_arg'), [NonTerminal('type_name'), NonTerminal('var_name')], None, RuleOptions(False, False, None)),
   29: Rule(NonTerminal('func_constraints'), [Terminal('LBRACE', True), NonTerminal('func_constraint_items'), Terminal('RBRACE', True)], None, RuleOptions(False, True, None)),
   30: Rule(NonTerminal('func_constraints'), [Terminal('SEMICOLON', True)], None, RuleOptions(False, True, None)),
-  31: Rule(NonTerminal('func_constraint_items'), [NonTerminal('func_constraint_item')], None, RuleOptions(False, True, None)),
-  32: Rule(NonTerminal('func_constraint_items'), [NonTerminal('func_constraint_item'), NonTerminal('__anon_star_5')], None, RuleOptions(False, True, None)),
+  31: Rule(NonTerminal('func_constraint_items'), [NonTerminal('func_constraint_item'), NonTerminal('__anon_star_5')], None, RuleOptions(False, False, None)),
+  32: Rule(NonTerminal('func_constraint_items'), [NonTerminal('func_constraint_item')], None, RuleOptions(False, False, None)),
   33: Rule(NonTerminal('func_constraint_item'), [NonTerminal('expr'), Terminal('SEMICOLON', True)], None, RuleOptions(False, True, None)),
-  34: Rule(NonTerminal('expr'), [NonTerminal('imply_expr')], None, RuleOptions(False, True, None)),
-  35: Rule(NonTerminal('expr'), [NonTerminal('cond_expr')], None, RuleOptions(False, True, None)),
-  36: Rule(NonTerminal('imply_expr'), [NonTerminal('or_expr')], None, RuleOptions(False, True, None)),
-  37: Rule(NonTerminal('imply_expr'), [NonTerminal('or_expr'), Terminal('__ANON_1', True), NonTerminal('imply_expr')], None, RuleOptions(False, True, None)),
-  38: Rule(NonTerminal('or_expr'), [NonTerminal('or_expr'), Terminal('__ANON_2', True), NonTerminal('and_expr')], None, RuleOptions(False, True, None)),
-  39: Rule(NonTerminal('or_expr'), [NonTerminal('and_expr')], None, RuleOptions(False, True, None)),
+  34: Rule(NonTerminal('expr'), [NonTerminal('cond_expr')], None, RuleOptions(False, True, None)),
+  35: Rule(NonTerminal('expr'), [NonTerminal('imply_expr')], None, RuleOptions(False, True, None)),
+  36: Rule(NonTerminal('imply_expr'), [NonTerminal('or_expr'), Terminal('__ANON_1', True), NonTerminal('imply_expr')], None, RuleOptions(False, True, None)),
+  37: Rule(NonTerminal('imply_expr'), [NonTerminal('or_expr')], None, RuleOptions(False, True, None)),
+  38: Rule(NonTerminal('or_expr'), [NonTerminal('and_expr')], None, RuleOptions(False, True, None)),
+  39: Rule(NonTerminal('or_expr'), [NonTerminal('or_expr'), Terminal('__ANON_2', True), NonTerminal('and_expr')], None, RuleOptions(False, True, None)),
   40: Rule(NonTerminal('and_expr'), [NonTerminal('and_expr'), Terminal('__ANON_3', True), NonTerminal('cmp_expr')], None, RuleOptions(False, True, None)),
   41: Rule(NonTerminal('and_expr'), [NonTerminal('cmp_expr')], None, RuleOptions(False, True, None)),
-  42: Rule(NonTerminal('cmp_expr'), [NonTerminal('term_expr')], None, RuleOptions(False, True, None)),
-  43: Rule(NonTerminal('cmp_expr'), [NonTerminal('cmp_expr'), NonTerminal('cmp_op'), NonTerminal('term_expr')], None, RuleOptions(False, True, None)),
-  44: Rule(NonTerminal('cmp_op'), [Terminal('MORETHAN', True)], 'expr_gt', RuleOptions(False, True, None)),
-  45: Rule(NonTerminal('cmp_op'), [Terminal('__ANON_7', True)], 'expr_ge', RuleOptions(False, True, None)),
-  46: Rule(NonTerminal('cmp_op'), [Terminal('__ANON_6', True)], 'expr_le', RuleOptions(False, True, None)),
-  47: Rule(NonTerminal('cmp_op'), [Terminal('LESSTHAN', True)], 'expr_lt', RuleOptions(False, True, None)),
-  48: Rule(NonTerminal('cmp_op'), [Terminal('__ANON_4', True)], 'expr_eq', RuleOptions(False, True, None)),
-  49: Rule(NonTerminal('cmp_op'), [Terminal('__ANON_5', True)], 'expr_ne', RuleOptions(False, True, None)),
+  42: Rule(NonTerminal('cmp_expr'), [NonTerminal('cmp_expr'), NonTerminal('cmp_op'), NonTerminal('term_expr')], None, RuleOptions(False, True, None)),
+  43: Rule(NonTerminal('cmp_expr'), [NonTerminal('term_expr')], None, RuleOptions(False, True, None)),
+  44: Rule(NonTerminal('cmp_op'), [Terminal('__ANON_5', True)], 'expr_ne', RuleOptions(False, True, None)),
+  45: Rule(NonTerminal('cmp_op'), [Terminal('__ANON_6', True)], 'expr_le', RuleOptions(False, True, None)),
+  46: Rule(NonTerminal('cmp_op'), [Terminal('__ANON_7', True)], 'expr_ge', RuleOptions(False, True, None)),
+  47: Rule(NonTerminal('cmp_op'), [Terminal('__ANON_4', True)], 'expr_eq', RuleOptions(False, True, None)),
+  48: Rule(NonTerminal('cmp_op'), [Terminal('MORETHAN', True)], 'expr_gt', RuleOptions(False, True, None)),
+  49: Rule(NonTerminal('cmp_op'), [Terminal('LESSTHAN', True)], 'expr_lt', RuleOptions(False, True, None)),
   50: Rule(NonTerminal('term_expr'), [NonTerminal('term_expr'), NonTerminal('term_op'), NonTerminal('factor_expr')], None, RuleOptions(False, True, None)),
   51: Rule(NonTerminal('term_expr'), [NonTerminal('factor_expr')], None, RuleOptions(False, True, None)),
-  52: Rule(NonTerminal('term_op'), [Terminal('MINUS', True)], 'expr_sub', RuleOptions(False, True, None)),
-  53: Rule(NonTerminal('term_op'), [Terminal('PLUS', True)], 'expr_add', RuleOptions(False, True, None)),
+  52: Rule(NonTerminal('term_op'), [Terminal('PLUS', True)], 'expr_add', RuleOptions(False, True, None)),
+  53: Rule(NonTerminal('term_op'), [Terminal('MINUS', True)], 'expr_sub', RuleOptions(False, True, None)),
   54: Rule(NonTerminal('factor_expr'), [NonTerminal('factor_expr'), NonTerminal('factor_op'), NonTerminal('unary_expr')], None, RuleOptions(False, True, None)),
   55: Rule(NonTerminal('factor_expr'), [NonTerminal('unary_expr')], None, RuleOptions(False, True, None)),
-  56: Rule(NonTerminal('factor_op'), [Terminal('STAR', True)], 'expr_mul', RuleOptions(False, True, None)),
-  57: Rule(NonTerminal('factor_op'), [Terminal('PERCENT', True)], 'expr_mod', RuleOptions(False, True, None)),
-  58: Rule(NonTerminal('factor_op'), [Terminal('SLASH', True)], 'expr_div', RuleOptions(False, True, None)),
-  59: Rule(NonTerminal('unary_expr'), [NonTerminal('unary_op'), NonTerminal('atom_expr')], None, RuleOptions(False, True, None)),
-  60: Rule(NonTerminal('unary_expr'), [NonTerminal('atom_expr')], None, RuleOptions(False, True, None)),
-  61: Rule(NonTerminal('unary_op'), [Terminal('MINUS', True)], 'expr_neg', RuleOptions(False, True, None)),
-  62: Rule(NonTerminal('unary_op'), [Terminal('BANG', True)], 'expr_not', RuleOptions(False, True, None)),
-  63: Rule(NonTerminal('atom_expr'), [Terminal('LPAR', True), NonTerminal('expr'), Terminal('RPAR', True)], None, RuleOptions(False, True, None)),
+  56: Rule(NonTerminal('factor_op'), [Terminal('SLASH', True)], 'expr_div', RuleOptions(False, True, None)),
+  57: Rule(NonTerminal('factor_op'), [Terminal('STAR', True)], 'expr_mul', RuleOptions(False, True, None)),
+  58: Rule(NonTerminal('factor_op'), [Terminal('PERCENT', True)], 'expr_mod', RuleOptions(False, True, None)),
+  59: Rule(NonTerminal('unary_expr'), [NonTerminal('atom_expr')], None, RuleOptions(False, True, None)),
+  60: Rule(NonTerminal('unary_expr'), [NonTerminal('unary_op'), NonTerminal('atom_expr')], None, RuleOptions(False, True, None)),
+  61: Rule(NonTerminal('unary_op'), [Terminal('BANG', True)], 'expr_not', RuleOptions(False, True, None)),
+  62: Rule(NonTerminal('unary_op'), [Terminal('MINUS', True)], 'expr_neg', RuleOptions(False, True, None)),
+  63: Rule(NonTerminal('atom_expr'), [NonTerminal('var_expr')], None, RuleOptions(False, True, None)),
   64: Rule(NonTerminal('atom_expr'), [NonTerminal('property_expr')], None, RuleOptions(False, True, None)),
-  65: Rule(NonTerminal('atom_expr'), [NonTerminal('const_expr')], None, RuleOptions(False, True, None)),
-  66: Rule(NonTerminal('atom_expr'), [NonTerminal('var_expr')], None, RuleOptions(False, True, None)),
+  65: Rule(NonTerminal('atom_expr'), [Terminal('LPAR', True), NonTerminal('expr'), Terminal('RPAR', True)], None, RuleOptions(False, True, None)),
+  66: Rule(NonTerminal('atom_expr'), [NonTerminal('const_expr')], None, RuleOptions(False, True, None)),
   67: Rule(NonTerminal('const_expr'), [Terminal('FALSE', True)], 'expr_false', RuleOptions(False, True, None)),
   68: Rule(NonTerminal('const_expr'), [Terminal('TRUE', True)], 'expr_true', RuleOptions(False, True, None)),
   69: Rule(NonTerminal('const_expr'), [Terminal('INT', False)], 'expr_intlit', RuleOptions(False, True, None)),
@@ -4074,16 +4074,16 @@ RULES = {
   71: Rule(NonTerminal('cond_expr'), [Terminal('IF', True), NonTerminal('imply_expr'), Terminal('THEN', True), NonTerminal('imply_expr'), Terminal('ELSE', True), NonTerminal('imply_expr')], None, RuleOptions(False, True, None)),
   72: Rule(NonTerminal('property_expr'), [NonTerminal('func_name'), Terminal('LPAR', True), NonTerminal('var_expr'), Terminal('RPAR', True)], None, RuleOptions(False, True, None)),
   73: Rule(NonTerminal('type_names'), [NonTerminal('type_name')], None, RuleOptions(False, False, None)),
-  74: Rule(NonTerminal('type_names'), [], None, RuleOptions(False, False, None)),
-  75: Rule(NonTerminal('type_names'), [NonTerminal('type_name'), NonTerminal('__anon_star_6')], None, RuleOptions(False, False, None)),
+  74: Rule(NonTerminal('type_names'), [NonTerminal('type_name'), NonTerminal('__anon_star_6')], None, RuleOptions(False, False, None)),
+  75: Rule(NonTerminal('type_names'), [], None, RuleOptions(False, False, None)),
   76: Rule(NonTerminal('enum_item'), [Terminal('STRLIT', False)], None, RuleOptions(False, True, None)),
   77: Rule(NonTerminal('expr_type_name'), [Terminal('BOOL', True)], 'expr_bool', RuleOptions(False, True, None)),
   78: Rule(NonTerminal('expr_type_name'), [Terminal('__ANON_8', True)], 'expr_int', RuleOptions(False, True, None)),
   79: Rule(NonTerminal('type_name'), [Terminal('NAME', False)], None, RuleOptions(False, True, None)),
   80: Rule(NonTerminal('var_name'), [Terminal('NAME', False)], None, RuleOptions(False, True, None)),
   81: Rule(NonTerminal('func_name'), [Terminal('NAME', False)], None, RuleOptions(False, True, None)),
-  82: Rule(NonTerminal('__anon_star_0'), [NonTerminal('__anon_star_0'), NonTerminal('type_decl')], None, None),
-  83: Rule(NonTerminal('__anon_star_0'), [NonTerminal('type_decl')], None, None),
+  82: Rule(NonTerminal('__anon_star_0'), [NonTerminal('type_decl')], None, None),
+  83: Rule(NonTerminal('__anon_star_0'), [NonTerminal('__anon_star_0'), NonTerminal('type_decl')], None, None),
   84: Rule(NonTerminal('__anon_star_1'), [Terminal('COMMA', True), NonTerminal('enum_item')], None, None),
   85: Rule(NonTerminal('__anon_star_1'), [NonTerminal('__anon_star_1'), Terminal('COMMA', True), NonTerminal('enum_item')], None, None),
   86: Rule(NonTerminal('__anon_star_2'), [NonTerminal('__anon_star_2'), NonTerminal('value_item')], None, None),
@@ -4094,267 +4094,267 @@ RULES = {
   91: Rule(NonTerminal('__anon_star_4'), [Terminal('COMMA', True), NonTerminal('func_rhs')], None, None),
   92: Rule(NonTerminal('__anon_star_5'), [NonTerminal('func_constraint_item')], None, None),
   93: Rule(NonTerminal('__anon_star_5'), [NonTerminal('__anon_star_5'), NonTerminal('func_constraint_item')], None, None),
-  94: Rule(NonTerminal('__anon_star_6'), [Terminal('COMMA', True), NonTerminal('type_name')], None, None),
-  95: Rule(NonTerminal('__anon_star_6'), [NonTerminal('__anon_star_6'), Terminal('COMMA', True), NonTerminal('type_name')], None, None),
+  94: Rule(NonTerminal('__anon_star_6'), [NonTerminal('__anon_star_6'), Terminal('COMMA', True), NonTerminal('type_name')], None, None),
+  95: Rule(NonTerminal('__anon_star_6'), [Terminal('COMMA', True), NonTerminal('type_name')], None, None),
 }
 parse_tree_builder = ParseTreeBuilder(RULES.values(), Tree)
 class ParseTable: pass
 parse_table = ParseTable()
 STATES = {
-  0: {0: (1, 1), 1: (0, 1), 2: (0, 2), 3: (0, 3), 4: (0, 4), 5: (0, 5), 6: (0, 6), 7: (0, 7), 8: (0, 8), 9: (0, 9), 10: (0, 10)},
-  1: {0: (1, 2), 2: (0, 2), 3: (0, 3), 7: (0, 7), 8: (0, 8), 9: (0, 9), 6: (0, 11), 10: (0, 10)},
-  2: {10: (1, 5), 3: (1, 5), 9: (1, 5), 0: (1, 5)},
-  3: {11: (0, 12), 12: (0, 13)},
-  4: {13: (0, 14)},
-  5: {14: (0, 15), 0: (0, 16)},
-  6: {10: (1, 83), 0: (1, 83), 9: (1, 83), 3: (1, 83)},
-  7: {10: (1, 4), 3: (1, 4), 9: (1, 4), 0: (1, 4)},
-  8: {10: (1, 3), 3: (1, 3), 9: (1, 3), 0: (1, 3)},
-  9: {11: (0, 12), 12: (0, 17)},
-  10: {11: (0, 12), 12: (0, 18)},
-  11: {10: (1, 82), 0: (1, 82), 9: (1, 82), 3: (1, 82)},
-  12: {15: (1, 79), 16: (1, 79), 17: (1, 79), 18: (1, 79), 19: (1, 79), 11: (1, 79), 20: (1, 79)},
-  13: {18: (0, 19)},
-  14: {},
-  15: {13: (1, 19), 21: (0, 20), 22: (0, 21), 23: (0, 22), 24: (0, 23)},
-  16: {25: (0, 24), 11: (0, 25)},
-  17: {26: (0, 26), 15: (0, 27), 17: (0, 28)},
-  18: {15: (0, 29), 17: (0, 30), 27: (0, 31)},
-  19: {28: (0, 32)},
-  20: {13: (1, 20), 24: (0, 33), 22: (0, 21)},
-  21: {11: (0, 25), 25: (0, 34)},
-  22: {13: (1, 0)},
-  23: {13: (1, 88), 22: (1, 88)},
-  24: {29: (0, 35)},
-  25: {30: (1, 81), 29: (1, 81)},
-  26: {10: (1, 6), 3: (1, 6), 9: (1, 6), 0: (1, 6)},
-  27: {31: (0, 36), 32: (0, 37), 33: (0, 38)},
-  28: {10: (1, 9), 3: (1, 9), 9: (1, 9), 0: (1, 9)},
-  29: {25: (0, 39), 34: (0, 40), 11: (0, 25), 35: (0, 41)},
-  30: {10: (1, 14), 3: (1, 14), 9: (1, 14), 0: (1, 14)},
-  31: {10: (1, 12), 3: (1, 12), 9: (1, 12), 0: (1, 12)},
-  32: {36: (0, 42)},
-  33: {13: (1, 89), 22: (1, 89)},
-  34: {30: (0, 43)},
-  35: {19: (1, 74), 37: (0, 44), 12: (0, 45), 11: (0, 12)},
-  36: {38: (1, 76), 20: (1, 76)},
-  37: {38: (1, 10), 39: (0, 46), 20: (0, 47)},
-  38: {38: (0, 48)},
-  39: {30: (0, 49)},
-  40: {38: (0, 50)},
-  41: {38: (1, 15), 11: (0, 25), 40: (0, 51), 35: (0, 52), 25: (0, 39)},
-  42: {15: (0, 27), 17: (0, 28), 26: (0, 53)},
-  43: {41: (0, 54), 12: (0, 55), 42: (0, 56), 43: (0, 57), 11: (0, 12)},
-  44: {19: (0, 58)},
-  45: {19: (1, 73), 44: (0, 59), 20: (0, 60)},
-  46: {38: (1, 11), 20: (0, 61)},
-  47: {31: (0, 36), 32: (0, 62)},
-  48: {10: (1, 8), 3: (1, 8), 9: (1, 8), 0: (1, 8)},
-  49: {45: (0, 63), 46: (0, 64), 47: (0, 65)},
-  50: {10: (1, 13), 3: (1, 13), 9: (1, 13), 0: (1, 13)},
-  51: {38: (1, 16), 11: (0, 25), 25: (0, 39), 35: (0, 66)},
-  52: {38: (1, 87), 11: (1, 87)},
-  53: {10: (1, 7), 3: (1, 7), 9: (1, 7), 0: (1, 7)},
-  54: {48: (0, 67), 15: (0, 68), 17: (0, 69)},
-  55: {15: (1, 27), 16: (1, 27), 20: (1, 27), 17: (1, 27), 49: (0, 70), 11: (0, 71)},
-  56: {16: (0, 72)},
-  57: {16: (1, 23)},
-  58: {16: (0, 73)},
-  59: {19: (1, 75), 20: (0, 74)},
-  60: {12: (0, 75), 11: (0, 12)},
-  61: {32: (0, 76), 31: (0, 36)},
-  62: {38: (1, 84), 20: (1, 84)},
-  63: {17: (1, 77)},
-  64: {17: (1, 78)},
-  65: {17: (0, 77)},
-  66: {38: (1, 86), 11: (1, 86)},
-  67: {13: (1, 21), 22: (1, 21)},
-  68: {50: (0, 78), 51: (0, 79), 29: (0, 80), 52: (0, 81), 53: (0, 82), 54: (0, 83), 25: (0, 84), 55: (0, 85), 56: (0, 86), 57: (0, 87), 28: (0, 88), 58: (0, 89), 59: (0, 90), 60: (0, 91), 61: (0, 92), 62: (0, 93), 11: (0, 94), 63: (0, 95), 49: (0, 96), 64: (0, 97), 65: (0, 98), 66: (0, 99), 67: (0, 100), 68: (0, 101), 69: (0, 102), 70: (0, 103)},
-  69: {13: (1, 30), 22: (1, 30)},
-  70: {15: (1, 28), 16: (1, 28), 20: (1, 28), 17: (1, 28)},
-  71: {15: (1, 80), 16: (1, 80), 71: (1, 80), 72: (1, 80), 17: (1, 80), 73: (1, 80), 19: (1, 80), 74: (1, 80), 20: (1, 80), 68: (1, 80), 75: (1, 80), 76: (1, 80), 77: (1, 80), 78: (1, 80), 79: (1, 80), 80: (1, 80), 81: (1, 80), 82: (1, 80), 83: (1, 80), 84: (1, 80), 85: (1, 80)},
-  72: {86: (0, 104), 43: (0, 105), 12: (0, 55), 11: (0, 12), 87: (0, 106)},
-  73: {11: (0, 12), 12: (0, 107)},
-  74: {11: (0, 12), 12: (0, 108)},
-  75: {19: (1, 94), 20: (1, 94)},
-  76: {38: (1, 85), 20: (1, 85)},
-  77: {38: (1, 17), 11: (1, 17)},
-  78: {71: (1, 41), 75: (1, 41), 17: (1, 41), 73: (1, 41), 74: (1, 41), 19: (1, 41), 85: (1, 41), 76: (0, 109), 81: (0, 110), 77: (0, 111), 83: (0, 112), 80: (0, 113), 88: (0, 114), 72: (0, 115)},
-  79: {71: (1, 42), 72: (1, 42), 17: (1, 42), 73: (1, 42), 74: (1, 42), 19: (1, 42), 83: (1, 42), 75: (1, 42), 76: (1, 42), 77: (1, 42), 85: (1, 42), 80: (1, 42), 81: (1, 42), 68: (0, 116), 84: (0, 117), 89: (0, 118)},
-  80: {50: (0, 78), 51: (0, 79), 29: (0, 80), 52: (0, 81), 61: (0, 92), 62: (0, 93), 54: (0, 83), 11: (0, 94), 63: (0, 95), 25: (0, 84), 55: (0, 85), 49: (0, 96), 56: (0, 86), 57: (0, 87), 28: (0, 88), 64: (0, 97), 53: (0, 119), 59: (0, 90), 65: (0, 98), 66: (0, 99), 60: (0, 91), 67: (0, 100), 68: (0, 101), 70: (0, 103)},
-  81: {64: (0, 97), 28: (0, 88), 29: (0, 80), 60: (0, 120), 62: (0, 93), 11: (0, 94), 25: (0, 84), 65: (0, 98), 49: (0, 96), 67: (0, 100), 57: (0, 87)},
-  82: {17: (0, 121)},
-  83: {73: (1, 36), 17: (1, 36), 74: (1, 36), 19: (1, 36), 71: (0, 122), 75: (0, 123)},
-  84: {29: (0, 124)},
-  85: {71: (1, 39), 75: (1, 39), 17: (1, 39), 73: (1, 39), 74: (1, 39), 19: (1, 39), 85: (0, 125)},
-  86: {71: (1, 51), 72: (1, 51), 17: (1, 51), 73: (1, 51), 74: (1, 51), 19: (1, 51), 68: (1, 51), 83: (1, 51), 75: (1, 51), 76: (1, 51), 77: (1, 51), 84: (1, 51), 85: (1, 51), 80: (1, 51), 81: (1, 51), 90: (0, 126), 79: (0, 127), 82: (0, 128), 78: (0, 129)},
-  87: {71: (1, 66), 72: (1, 66), 17: (1, 66), 73: (1, 66), 74: (1, 66), 19: (1, 66), 68: (1, 66), 83: (1, 66), 75: (1, 66), 76: (1, 66), 77: (1, 66), 84: (1, 66), 78: (1, 66), 81: (1, 66), 85: (1, 66), 79: (1, 66), 80: (1, 66), 82: (1, 66)},
-  88: {71: (1, 69), 72: (1, 69), 17: (1, 69), 73: (1, 69), 74: (1, 69), 19: (1, 69), 68: (1, 69), 75: (1, 69), 76: (1, 69), 77: (1, 69), 78: (1, 69), 79: (1, 69), 80: (1, 69), 82: (1, 69), 81: (1, 69), 83: (1, 69), 84: (1, 69), 85: (1, 69)},
-  89: {38: (1, 31), 50: (0, 78), 91: (0, 130), 51: (0, 79), 52: (0, 81), 29: (0, 80), 53: (0, 82), 54: (0, 83), 25: (0, 84), 55: (0, 85), 56: (0, 86), 57: (0, 87), 28: (0, 88), 59: (0, 90), 60: (0, 91), 61: (0, 92), 62: (0, 93), 11: (0, 94), 63: (0, 95), 49: (0, 96), 64: (0, 97), 58: (0, 131), 65: (0, 98), 66: (0, 99), 67: (0, 100), 68: (0, 101), 70: (0, 103)},
-  90: {28: (1, 62), 64: (1, 62), 11: (1, 62), 29: (1, 62), 65: (1, 62)},
-  91: {71: (1, 60), 72: (1, 60), 17: (1, 60), 73: (1, 60), 74: (1, 60), 19: (1, 60), 68: (1, 60), 83: (1, 60), 75: (1, 60), 76: (1, 60), 77: (1, 60), 84: (1, 60), 78: (1, 60), 81: (1, 60), 85: (1, 60), 79: (1, 60), 80: (1, 60), 82: (1, 60)},
-  92: {71: (1, 55), 72: (1, 55), 17: (1, 55), 73: (1, 55), 74: (1, 55), 19: (1, 55), 68: (1, 55), 83: (1, 55), 75: (1, 55), 76: (1, 55), 77: (1, 55), 84: (1, 55), 78: (1, 55), 85: (1, 55), 79: (1, 55), 80: (1, 55), 81: (1, 55), 82: (1, 55)},
-  93: {71: (1, 64), 72: (1, 64), 17: (1, 64), 73: (1, 64), 74: (1, 64), 19: (1, 64), 68: (1, 64), 83: (1, 64), 75: (1, 64), 76: (1, 64), 77: (1, 64), 84: (1, 64), 78: (1, 64), 81: (1, 64), 85: (1, 64), 79: (1, 64), 80: (1, 64), 82: (1, 64)},
-  94: {15: (1, 80), 16: (1, 80), 71: (1, 80), 72: (1, 80), 17: (1, 80), 73: (1, 80), 19: (1, 80), 74: (1, 80), 20: (1, 80), 68: (1, 80), 75: (1, 80), 76: (1, 80), 77: (1, 80), 78: (1, 80), 79: (1, 80), 80: (1, 80), 81: (1, 80), 82: (1, 80), 83: (1, 80), 84: (1, 80), 85: (1, 80), 30: (1, 81), 29: (1, 81)},
-  95: {19: (1, 34), 17: (1, 34)},
-  96: {71: (1, 70), 72: (1, 70), 17: (1, 70), 73: (1, 70), 19: (1, 70), 74: (1, 70), 68: (1, 70), 75: (1, 70), 76: (1, 70), 77: (1, 70), 78: (1, 70), 79: (1, 70), 80: (1, 70), 82: (1, 70), 81: (1, 70), 83: (1, 70), 84: (1, 70), 85: (1, 70)},
-  97: {71: (1, 67), 72: (1, 67), 17: (1, 67), 73: (1, 67), 74: (1, 67), 19: (1, 67), 68: (1, 67), 75: (1, 67), 76: (1, 67), 77: (1, 67), 78: (1, 67), 79: (1, 67), 80: (1, 67), 82: (1, 67), 81: (1, 67), 83: (1, 67), 84: (1, 67), 85: (1, 67)},
-  98: {71: (1, 68), 72: (1, 68), 17: (1, 68), 73: (1, 68), 74: (1, 68), 19: (1, 68), 68: (1, 68), 75: (1, 68), 76: (1, 68), 77: (1, 68), 78: (1, 68), 79: (1, 68), 80: (1, 68), 82: (1, 68), 81: (1, 68), 83: (1, 68), 84: (1, 68), 85: (1, 68)},
-  99: {50: (0, 78), 51: (0, 79), 29: (0, 80), 52: (0, 81), 61: (0, 92), 62: (0, 93), 54: (0, 83), 11: (0, 94), 25: (0, 84), 55: (0, 85), 49: (0, 96), 63: (0, 132), 56: (0, 86), 57: (0, 87), 28: (0, 88), 64: (0, 97), 59: (0, 90), 65: (0, 98), 60: (0, 91), 67: (0, 100), 68: (0, 101)},
-  100: {71: (1, 65), 72: (1, 65), 17: (1, 65), 73: (1, 65), 74: (1, 65), 19: (1, 65), 68: (1, 65), 83: (1, 65), 75: (1, 65), 76: (1, 65), 77: (1, 65), 84: (1, 65), 78: (1, 65), 81: (1, 65), 85: (1, 65), 79: (1, 65), 80: (1, 65), 82: (1, 65)},
-  101: {28: (1, 61), 64: (1, 61), 11: (1, 61), 29: (1, 61), 65: (1, 61)},
-  102: {38: (0, 133)},
-  103: {19: (1, 35), 17: (1, 35)},
-  104: {15: (1, 24), 17: (1, 24), 92: (0, 134), 20: (0, 135)},
-  105: {15: (1, 26), 20: (1, 26), 17: (1, 26)},
-  106: {15: (1, 22), 17: (1, 22)},
-  107: {17: (0, 136)},
-  108: {19: (1, 95), 20: (1, 95)},
-  109: {28: (1, 44), 59: (1, 44), 64: (1, 44), 11: (1, 44), 29: (1, 44), 68: (1, 44), 65: (1, 44)},
-  110: {28: (1, 45), 59: (1, 45), 64: (1, 45), 11: (1, 45), 29: (1, 45), 68: (1, 45), 65: (1, 45)},
-  111: {28: (1, 48), 59: (1, 48), 64: (1, 48), 11: (1, 48), 29: (1, 48), 68: (1, 48), 65: (1, 48)},
-  112: {28: (1, 46), 59: (1, 46), 64: (1, 46), 11: (1, 46), 29: (1, 46), 68: (1, 46), 65: (1, 46)},
-  113: {28: (1, 47), 59: (1, 47), 64: (1, 47), 11: (1, 47), 29: (1, 47), 68: (1, 47), 65: (1, 47)},
-  114: {51: (0, 137), 29: (0, 80), 52: (0, 81), 61: (0, 92), 62: (0, 93), 11: (0, 94), 25: (0, 84), 49: (0, 96), 56: (0, 86), 57: (0, 87), 64: (0, 97), 28: (0, 88), 59: (0, 90), 65: (0, 98), 60: (0, 91), 67: (0, 100), 68: (0, 101)},
-  115: {28: (1, 49), 59: (1, 49), 64: (1, 49), 11: (1, 49), 29: (1, 49), 68: (1, 49), 65: (1, 49)},
-  116: {28: (1, 52), 59: (1, 52), 64: (1, 52), 11: (1, 52), 29: (1, 52), 68: (1, 52), 65: (1, 52)},
-  117: {28: (1, 53), 59: (1, 53), 64: (1, 53), 11: (1, 53), 29: (1, 53), 68: (1, 53), 65: (1, 53)},
-  118: {29: (0, 80), 52: (0, 81), 61: (0, 92), 62: (0, 93), 11: (0, 94), 25: (0, 84), 49: (0, 96), 56: (0, 138), 57: (0, 87), 64: (0, 97), 28: (0, 88), 59: (0, 90), 65: (0, 98), 60: (0, 91), 67: (0, 100), 68: (0, 101)},
-  119: {19: (0, 139)},
-  120: {71: (1, 59), 72: (1, 59), 17: (1, 59), 73: (1, 59), 74: (1, 59), 19: (1, 59), 68: (1, 59), 83: (1, 59), 75: (1, 59), 76: (1, 59), 77: (1, 59), 84: (1, 59), 78: (1, 59), 81: (1, 59), 85: (1, 59), 79: (1, 59), 80: (1, 59), 82: (1, 59)},
-  121: {28: (1, 33), 59: (1, 33), 64: (1, 33), 11: (1, 33), 66: (1, 33), 68: (1, 33), 29: (1, 33), 38: (1, 33), 65: (1, 33)},
-  122: {50: (0, 78), 51: (0, 79), 29: (0, 80), 52: (0, 81), 61: (0, 92), 62: (0, 93), 11: (0, 94), 25: (0, 84), 49: (0, 96), 56: (0, 86), 57: (0, 87), 64: (0, 97), 28: (0, 88), 55: (0, 140), 59: (0, 90), 65: (0, 98), 60: (0, 91), 67: (0, 100), 68: (0, 101)},
-  123: {50: (0, 78), 51: (0, 79), 29: (0, 80), 63: (0, 141), 52: (0, 81), 61: (0, 92), 62: (0, 93), 54: (0, 83), 11: (0, 94), 25: (0, 84), 55: (0, 85), 49: (0, 96), 56: (0, 86), 57: (0, 87), 28: (0, 88), 64: (0, 97), 59: (0, 90), 65: (0, 98), 60: (0, 91), 67: (0, 100), 68: (0, 101)},
-  124: {49: (0, 96), 11: (0, 71), 57: (0, 142)},
-  125: {50: (0, 143), 51: (0, 79), 29: (0, 80), 52: (0, 81), 61: (0, 92), 62: (0, 93), 11: (0, 94), 25: (0, 84), 49: (0, 96), 56: (0, 86), 57: (0, 87), 64: (0, 97), 28: (0, 88), 59: (0, 90), 65: (0, 98), 60: (0, 91), 67: (0, 100), 68: (0, 101)},
-  126: {29: (0, 80), 52: (0, 81), 62: (0, 93), 11: (0, 94), 61: (0, 144), 25: (0, 84), 49: (0, 96), 57: (0, 87), 64: (0, 97), 28: (0, 88), 59: (0, 90), 65: (0, 98), 60: (0, 91), 67: (0, 100), 68: (0, 101)},
-  127: {28: (1, 57), 59: (1, 57), 64: (1, 57), 11: (1, 57), 29: (1, 57), 68: (1, 57), 65: (1, 57)},
-  128: {28: (1, 58), 59: (1, 58), 64: (1, 58), 11: (1, 58), 29: (1, 58), 68: (1, 58), 65: (1, 58)},
-  129: {28: (1, 56), 59: (1, 56), 64: (1, 56), 11: (1, 56), 29: (1, 56), 68: (1, 56), 65: (1, 56)},
-  130: {38: (1, 32), 50: (0, 78), 51: (0, 79), 29: (0, 80), 52: (0, 81), 53: (0, 82), 54: (0, 83), 25: (0, 84), 55: (0, 85), 56: (0, 86), 57: (0, 87), 28: (0, 88), 59: (0, 90), 60: (0, 91), 61: (0, 92), 62: (0, 93), 11: (0, 94), 63: (0, 95), 49: (0, 96), 64: (0, 97), 58: (0, 145), 65: (0, 98), 66: (0, 99), 67: (0, 100), 68: (0, 101), 70: (0, 103)},
-  131: {28: (1, 92), 59: (1, 92), 64: (1, 92), 11: (1, 92), 66: (1, 92), 68: (1, 92), 29: (1, 92), 38: (1, 92), 65: (1, 92)},
-  132: {74: (0, 146)},
-  133: {13: (1, 29), 22: (1, 29)},
-  134: {15: (1, 25), 17: (1, 25), 20: (0, 147)},
-  135: {43: (0, 105), 86: (0, 148), 12: (0, 55), 11: (0, 12)},
-  136: {13: (1, 18), 22: (1, 18)},
-  137: {71: (1, 43), 72: (1, 43), 17: (1, 43), 73: (1, 43), 74: (1, 43), 19: (1, 43), 83: (1, 43), 75: (1, 43), 76: (1, 43), 77: (1, 43), 85: (1, 43), 80: (1, 43), 81: (1, 43), 68: (0, 116), 84: (0, 117), 89: (0, 118)},
-  138: {71: (1, 50), 72: (1, 50), 17: (1, 50), 73: (1, 50), 74: (1, 50), 19: (1, 50), 68: (1, 50), 83: (1, 50), 75: (1, 50), 76: (1, 50), 77: (1, 50), 84: (1, 50), 85: (1, 50), 80: (1, 50), 81: (1, 50), 90: (0, 126), 79: (0, 127), 82: (0, 128), 78: (0, 129)},
-  139: {71: (1, 63), 72: (1, 63), 17: (1, 63), 73: (1, 63), 74: (1, 63), 19: (1, 63), 68: (1, 63), 83: (1, 63), 75: (1, 63), 76: (1, 63), 77: (1, 63), 84: (1, 63), 78: (1, 63), 81: (1, 63), 85: (1, 63), 79: (1, 63), 80: (1, 63), 82: (1, 63)},
-  140: {71: (1, 38), 75: (1, 38), 17: (1, 38), 73: (1, 38), 74: (1, 38), 19: (1, 38), 85: (0, 125)},
-  141: {73: (1, 37), 17: (1, 37), 74: (1, 37), 19: (1, 37)},
-  142: {19: (0, 149)},
-  143: {71: (1, 40), 75: (1, 40), 17: (1, 40), 73: (1, 40), 74: (1, 40), 19: (1, 40), 85: (1, 40), 76: (0, 109), 81: (0, 110), 77: (0, 111), 83: (0, 112), 80: (0, 113), 88: (0, 114), 72: (0, 115)},
-  144: {71: (1, 54), 72: (1, 54), 17: (1, 54), 73: (1, 54), 74: (1, 54), 19: (1, 54), 68: (1, 54), 83: (1, 54), 75: (1, 54), 76: (1, 54), 77: (1, 54), 84: (1, 54), 78: (1, 54), 85: (1, 54), 79: (1, 54), 80: (1, 54), 81: (1, 54), 82: (1, 54)},
-  145: {28: (1, 93), 59: (1, 93), 64: (1, 93), 11: (1, 93), 66: (1, 93), 68: (1, 93), 29: (1, 93), 38: (1, 93), 65: (1, 93)},
-  146: {50: (0, 78), 51: (0, 79), 29: (0, 80), 52: (0, 81), 61: (0, 92), 62: (0, 93), 54: (0, 83), 11: (0, 94), 63: (0, 150), 25: (0, 84), 55: (0, 85), 49: (0, 96), 56: (0, 86), 57: (0, 87), 28: (0, 88), 64: (0, 97), 59: (0, 90), 65: (0, 98), 60: (0, 91), 67: (0, 100), 68: (0, 101)},
-  147: {43: (0, 105), 12: (0, 55), 86: (0, 151), 11: (0, 12)},
-  148: {15: (1, 91), 20: (1, 91), 17: (1, 91)},
-  149: {71: (1, 72), 72: (1, 72), 17: (1, 72), 73: (1, 72), 74: (1, 72), 19: (1, 72), 68: (1, 72), 75: (1, 72), 76: (1, 72), 77: (1, 72), 78: (1, 72), 79: (1, 72), 80: (1, 72), 82: (1, 72), 81: (1, 72), 83: (1, 72), 84: (1, 72), 85: (1, 72)},
-  150: {73: (0, 152)},
-  151: {15: (1, 90), 20: (1, 90), 17: (1, 90)},
-  152: {50: (0, 78), 51: (0, 79), 29: (0, 80), 52: (0, 81), 61: (0, 92), 62: (0, 93), 54: (0, 83), 11: (0, 94), 25: (0, 84), 55: (0, 85), 49: (0, 96), 56: (0, 86), 57: (0, 87), 28: (0, 88), 63: (0, 153), 64: (0, 97), 59: (0, 90), 65: (0, 98), 60: (0, 91), 67: (0, 100), 68: (0, 101)},
-  153: {19: (1, 71), 17: (1, 71)},
+  0: {0: (1, 2), 1: (0, 1), 2: (0, 2), 3: (0, 3), 4: (0, 4), 5: (0, 5), 6: (0, 6), 7: (0, 7), 8: (0, 8), 9: (0, 9), 10: (0, 10)},
+  1: {3: (1, 4), 0: (1, 4), 5: (1, 4), 6: (1, 4)},
+  2: {3: (1, 3), 0: (1, 3), 5: (1, 3), 6: (1, 3)},
+  3: {11: (0, 11), 12: (0, 12)},
+  4: {0: (1, 1), 1: (0, 1), 2: (0, 2), 3: (0, 3), 5: (0, 5), 6: (0, 6), 10: (0, 10), 7: (0, 13)},
+  5: {12: (0, 12), 11: (0, 14)},
+  6: {11: (0, 15), 12: (0, 12)},
+  7: {3: (1, 82), 0: (1, 82), 5: (1, 82), 6: (1, 82)},
+  8: {13: (0, 16), 0: (0, 17)},
+  9: {14: (0, 18)},
+  10: {3: (1, 5), 0: (1, 5), 5: (1, 5), 6: (1, 5)},
+  11: {15: (0, 19), 16: (0, 20), 17: (0, 21)},
+  12: {18: (1, 79), 16: (1, 79), 19: (1, 79), 12: (1, 79), 20: (1, 79), 21: (1, 79), 15: (1, 79)},
+  13: {3: (1, 83), 0: (1, 83), 5: (1, 83), 6: (1, 83)},
+  14: {19: (0, 22)},
+  15: {22: (0, 23), 15: (0, 24), 16: (0, 25)},
+  16: {14: (1, 19), 23: (0, 26), 24: (0, 27), 25: (0, 28), 26: (0, 29)},
+  17: {12: (0, 30), 27: (0, 31)},
+  18: {},
+  19: {28: (0, 32), 29: (0, 33), 30: (0, 34)},
+  20: {3: (1, 9), 0: (1, 9), 6: (1, 9), 5: (1, 9)},
+  21: {3: (1, 6), 0: (1, 6), 6: (1, 6), 5: (1, 6)},
+  22: {31: (0, 35)},
+  23: {3: (1, 12), 0: (1, 12), 6: (1, 12), 5: (1, 12)},
+  24: {27: (0, 36), 12: (0, 30), 32: (0, 37), 33: (0, 38)},
+  25: {3: (1, 14), 0: (1, 14), 6: (1, 14), 5: (1, 14)},
+  26: {12: (0, 30), 27: (0, 39)},
+  27: {14: (1, 0)},
+  28: {14: (1, 88), 23: (1, 88)},
+  29: {14: (1, 20), 23: (0, 26), 25: (0, 40)},
+  30: {34: (1, 81), 35: (1, 81)},
+  31: {34: (0, 41)},
+  32: {21: (1, 76), 36: (1, 76)},
+  33: {36: (1, 11), 37: (0, 42), 21: (0, 43)},
+  34: {36: (0, 44)},
+  35: {38: (0, 45)},
+  36: {35: (0, 46)},
+  37: {36: (1, 16), 27: (0, 36), 39: (0, 47), 12: (0, 30), 32: (0, 48)},
+  38: {36: (0, 49)},
+  39: {35: (0, 50)},
+  40: {14: (1, 89), 23: (1, 89)},
+  41: {20: (1, 75), 12: (0, 12), 11: (0, 51), 40: (0, 52)},
+  42: {36: (1, 10), 21: (0, 53)},
+  43: {29: (0, 54), 28: (0, 32)},
+  44: {3: (1, 8), 0: (1, 8), 6: (1, 8), 5: (1, 8)},
+  45: {15: (0, 19), 16: (0, 20), 17: (0, 55)},
+  46: {41: (0, 56), 42: (0, 57), 43: (0, 58)},
+  47: {36: (1, 15), 27: (0, 36), 32: (0, 59), 12: (0, 30)},
+  48: {12: (1, 87), 36: (1, 87)},
+  49: {3: (1, 13), 0: (1, 13), 6: (1, 13), 5: (1, 13)},
+  50: {44: (0, 60), 45: (0, 61), 12: (0, 12), 11: (0, 62), 46: (0, 63)},
+  51: {20: (1, 73), 21: (0, 64), 47: (0, 65)},
+  52: {20: (0, 66)},
+  53: {28: (0, 32), 29: (0, 67)},
+  54: {21: (1, 84), 36: (1, 84)},
+  55: {3: (1, 7), 0: (1, 7), 6: (1, 7), 5: (1, 7)},
+  56: {16: (1, 77)},
+  57: {16: (1, 78)},
+  58: {16: (0, 68)},
+  59: {12: (1, 86), 36: (1, 86)},
+  60: {18: (0, 69)},
+  61: {18: (1, 23)},
+  62: {18: (1, 27), 16: (1, 27), 15: (1, 27), 21: (1, 27), 12: (0, 70), 48: (0, 71)},
+  63: {49: (0, 72), 15: (0, 73), 16: (0, 74)},
+  64: {11: (0, 75), 12: (0, 12)},
+  65: {20: (1, 74), 21: (0, 76)},
+  66: {18: (0, 77)},
+  67: {21: (1, 85), 36: (1, 85)},
+  68: {12: (1, 17), 36: (1, 17)},
+  69: {50: (0, 78), 12: (0, 12), 51: (0, 79), 45: (0, 80), 11: (0, 62)},
+  70: {52: (1, 80), 53: (1, 80), 15: (1, 80), 54: (1, 80), 55: (1, 80), 20: (1, 80), 21: (1, 80), 56: (1, 80), 57: (1, 80), 58: (1, 80), 18: (1, 80), 16: (1, 80), 59: (1, 80), 60: (1, 80), 61: (1, 80), 62: (1, 80), 63: (1, 80), 64: (1, 80), 65: (1, 80), 66: (1, 80), 67: (1, 80)},
+  71: {18: (1, 28), 16: (1, 28), 15: (1, 28), 21: (1, 28)},
+  72: {14: (1, 21), 23: (1, 21)},
+  73: {68: (0, 81), 69: (0, 82), 57: (0, 83), 70: (0, 84), 71: (0, 85), 72: (0, 86), 73: (0, 87), 12: (0, 88), 74: (0, 89), 48: (0, 90), 75: (0, 91), 76: (0, 92), 77: (0, 93), 34: (0, 94), 78: (0, 95), 79: (0, 96), 27: (0, 97), 80: (0, 98), 81: (0, 99), 82: (0, 100), 83: (0, 101), 84: (0, 102), 85: (0, 103), 86: (0, 104), 87: (0, 105), 31: (0, 106)},
+  74: {14: (1, 30), 23: (1, 30)},
+  75: {20: (1, 95), 21: (1, 95)},
+  76: {12: (0, 12), 11: (0, 107)},
+  77: {11: (0, 108), 12: (0, 12)},
+  78: {16: (1, 24), 15: (1, 24), 88: (0, 109), 21: (0, 110)},
+  79: {16: (1, 22), 15: (1, 22)},
+  80: {16: (1, 26), 15: (1, 26), 21: (1, 26)},
+  81: {16: (1, 51), 52: (1, 51), 59: (1, 51), 60: (1, 51), 61: (1, 51), 54: (1, 51), 55: (1, 51), 62: (1, 51), 20: (1, 51), 63: (1, 51), 57: (1, 51), 64: (1, 51), 65: (1, 51), 66: (1, 51), 67: (1, 51), 89: (0, 111), 56: (0, 112), 58: (0, 113), 53: (0, 114)},
+  82: {16: (1, 64), 52: (1, 64), 53: (1, 64), 59: (1, 64), 60: (1, 64), 61: (1, 64), 54: (1, 64), 55: (1, 64), 62: (1, 64), 20: (1, 64), 63: (1, 64), 56: (1, 64), 57: (1, 64), 64: (1, 64), 65: (1, 64), 66: (1, 64), 58: (1, 64), 67: (1, 64)},
+  83: {12: (1, 62), 78: (1, 62), 34: (1, 62), 31: (1, 62), 77: (1, 62)},
+  84: {36: (1, 32), 68: (0, 81), 69: (0, 82), 57: (0, 83), 71: (0, 85), 72: (0, 86), 73: (0, 87), 12: (0, 88), 74: (0, 89), 48: (0, 90), 75: (0, 91), 76: (0, 92), 77: (0, 93), 70: (0, 115), 34: (0, 94), 78: (0, 95), 79: (0, 96), 90: (0, 116), 27: (0, 97), 81: (0, 99), 82: (0, 100), 83: (0, 101), 84: (0, 102), 85: (0, 103), 86: (0, 104), 87: (0, 105), 31: (0, 106)},
+  85: {16: (1, 38), 52: (1, 38), 20: (1, 38), 60: (1, 38), 64: (1, 38), 55: (1, 38), 63: (0, 117)},
+  86: {16: (1, 63), 52: (1, 63), 53: (1, 63), 59: (1, 63), 60: (1, 63), 61: (1, 63), 54: (1, 63), 55: (1, 63), 62: (1, 63), 20: (1, 63), 63: (1, 63), 56: (1, 63), 57: (1, 63), 64: (1, 63), 65: (1, 63), 66: (1, 63), 58: (1, 63), 67: (1, 63)},
+  87: {16: (1, 55), 52: (1, 55), 53: (1, 55), 59: (1, 55), 60: (1, 55), 61: (1, 55), 54: (1, 55), 55: (1, 55), 62: (1, 55), 20: (1, 55), 63: (1, 55), 56: (1, 55), 57: (1, 55), 64: (1, 55), 65: (1, 55), 66: (1, 55), 58: (1, 55), 67: (1, 55)},
+  88: {34: (1, 81), 35: (1, 81), 52: (1, 80), 53: (1, 80), 15: (1, 80), 54: (1, 80), 55: (1, 80), 20: (1, 80), 21: (1, 80), 56: (1, 80), 57: (1, 80), 58: (1, 80), 18: (1, 80), 16: (1, 80), 59: (1, 80), 60: (1, 80), 61: (1, 80), 62: (1, 80), 63: (1, 80), 64: (1, 80), 65: (1, 80), 66: (1, 80), 67: (1, 80)},
+  89: {16: (1, 41), 52: (1, 41), 20: (1, 41), 63: (1, 41), 60: (1, 41), 64: (1, 41), 55: (1, 41), 59: (0, 118), 54: (0, 119), 62: (0, 120), 61: (0, 121), 91: (0, 122), 66: (0, 123), 67: (0, 124)},
+  90: {52: (1, 70), 53: (1, 70), 54: (1, 70), 55: (1, 70), 20: (1, 70), 56: (1, 70), 57: (1, 70), 58: (1, 70), 16: (1, 70), 59: (1, 70), 60: (1, 70), 61: (1, 70), 62: (1, 70), 63: (1, 70), 64: (1, 70), 65: (1, 70), 66: (1, 70), 67: (1, 70)},
+  91: {16: (1, 37), 52: (1, 37), 20: (1, 37), 60: (1, 37), 55: (0, 125), 64: (0, 126)},
+  92: {16: (1, 34), 20: (1, 34)},
+  93: {52: (1, 67), 53: (1, 67), 54: (1, 67), 55: (1, 67), 20: (1, 67), 56: (1, 67), 57: (1, 67), 58: (1, 67), 16: (1, 67), 59: (1, 67), 60: (1, 67), 61: (1, 67), 62: (1, 67), 63: (1, 67), 64: (1, 67), 65: (1, 67), 66: (1, 67), 67: (1, 67)},
+  94: {34: (0, 94), 68: (0, 81), 78: (0, 95), 69: (0, 82), 74: (0, 89), 27: (0, 97), 12: (0, 88), 57: (0, 83), 81: (0, 99), 82: (0, 100), 71: (0, 85), 83: (0, 101), 72: (0, 86), 79: (0, 127), 75: (0, 91), 73: (0, 87), 84: (0, 102), 85: (0, 103), 48: (0, 90), 86: (0, 104), 76: (0, 92), 87: (0, 105), 77: (0, 93), 31: (0, 106)},
+  95: {52: (1, 68), 53: (1, 68), 54: (1, 68), 55: (1, 68), 20: (1, 68), 56: (1, 68), 57: (1, 68), 58: (1, 68), 16: (1, 68), 59: (1, 68), 60: (1, 68), 61: (1, 68), 62: (1, 68), 63: (1, 68), 64: (1, 68), 65: (1, 68), 66: (1, 68), 67: (1, 68)},
+  96: {16: (0, 128)},
+  97: {34: (0, 129)},
+  98: {36: (0, 130)},
+  99: {16: (1, 59), 52: (1, 59), 53: (1, 59), 59: (1, 59), 60: (1, 59), 61: (1, 59), 54: (1, 59), 55: (1, 59), 62: (1, 59), 20: (1, 59), 63: (1, 59), 56: (1, 59), 57: (1, 59), 64: (1, 59), 65: (1, 59), 66: (1, 59), 58: (1, 59), 67: (1, 59)},
+  100: {16: (1, 43), 52: (1, 43), 59: (1, 43), 60: (1, 43), 61: (1, 43), 54: (1, 43), 55: (1, 43), 62: (1, 43), 20: (1, 43), 63: (1, 43), 64: (1, 43), 66: (1, 43), 67: (1, 43), 92: (0, 131), 65: (0, 132), 57: (0, 133)},
+  101: {34: (0, 94), 85: (0, 134), 68: (0, 81), 78: (0, 95), 69: (0, 82), 74: (0, 89), 27: (0, 97), 12: (0, 88), 57: (0, 83), 81: (0, 99), 82: (0, 100), 71: (0, 85), 72: (0, 86), 75: (0, 91), 73: (0, 87), 84: (0, 102), 48: (0, 90), 86: (0, 104), 87: (0, 105), 77: (0, 93), 31: (0, 106)},
+  102: {12: (1, 61), 78: (1, 61), 34: (1, 61), 31: (1, 61), 77: (1, 61)},
+  103: {16: (1, 35), 20: (1, 35)},
+  104: {16: (1, 66), 52: (1, 66), 53: (1, 66), 59: (1, 66), 60: (1, 66), 61: (1, 66), 54: (1, 66), 55: (1, 66), 62: (1, 66), 20: (1, 66), 63: (1, 66), 56: (1, 66), 57: (1, 66), 64: (1, 66), 65: (1, 66), 66: (1, 66), 58: (1, 66), 67: (1, 66)},
+  105: {34: (0, 94), 72: (0, 86), 12: (0, 88), 78: (0, 95), 48: (0, 90), 69: (0, 82), 86: (0, 104), 27: (0, 97), 77: (0, 93), 31: (0, 106), 81: (0, 135)},
+  106: {52: (1, 69), 53: (1, 69), 54: (1, 69), 55: (1, 69), 20: (1, 69), 56: (1, 69), 57: (1, 69), 58: (1, 69), 16: (1, 69), 59: (1, 69), 60: (1, 69), 61: (1, 69), 62: (1, 69), 63: (1, 69), 64: (1, 69), 65: (1, 69), 66: (1, 69), 67: (1, 69)},
+  107: {20: (1, 94), 21: (1, 94)},
+  108: {16: (0, 136)},
+  109: {16: (1, 25), 15: (1, 25), 21: (0, 137)},
+  110: {50: (0, 138), 12: (0, 12), 45: (0, 80), 11: (0, 62)},
+  111: {34: (0, 94), 77: (0, 93), 78: (0, 95), 69: (0, 82), 27: (0, 97), 12: (0, 88), 57: (0, 83), 81: (0, 99), 72: (0, 86), 84: (0, 102), 48: (0, 90), 86: (0, 104), 87: (0, 105), 73: (0, 139), 31: (0, 106)},
+  112: {12: (1, 57), 84: (1, 57), 78: (1, 57), 57: (1, 57), 34: (1, 57), 31: (1, 57), 77: (1, 57)},
+  113: {12: (1, 58), 84: (1, 58), 78: (1, 58), 57: (1, 58), 34: (1, 58), 31: (1, 58), 77: (1, 58)},
+  114: {12: (1, 56), 84: (1, 56), 78: (1, 56), 57: (1, 56), 34: (1, 56), 31: (1, 56), 77: (1, 56)},
+  115: {83: (1, 92), 12: (1, 92), 84: (1, 92), 36: (1, 92), 78: (1, 92), 57: (1, 92), 34: (1, 92), 31: (1, 92), 77: (1, 92)},
+  116: {36: (1, 31), 68: (0, 81), 69: (0, 82), 57: (0, 83), 71: (0, 85), 72: (0, 86), 73: (0, 87), 12: (0, 88), 74: (0, 89), 48: (0, 90), 75: (0, 91), 76: (0, 92), 77: (0, 93), 34: (0, 94), 78: (0, 95), 79: (0, 96), 70: (0, 140), 27: (0, 97), 81: (0, 99), 82: (0, 100), 83: (0, 101), 84: (0, 102), 85: (0, 103), 86: (0, 104), 87: (0, 105), 31: (0, 106)},
+  117: {34: (0, 94), 68: (0, 81), 78: (0, 95), 69: (0, 82), 27: (0, 97), 12: (0, 88), 74: (0, 141), 57: (0, 83), 81: (0, 99), 82: (0, 100), 72: (0, 86), 73: (0, 87), 84: (0, 102), 48: (0, 90), 86: (0, 104), 87: (0, 105), 77: (0, 93), 31: (0, 106)},
+  118: {12: (1, 46), 84: (1, 46), 78: (1, 46), 57: (1, 46), 34: (1, 46), 31: (1, 46), 77: (1, 46)},
+  119: {12: (1, 48), 84: (1, 48), 78: (1, 48), 57: (1, 48), 34: (1, 48), 31: (1, 48), 77: (1, 48)},
+  120: {12: (1, 49), 84: (1, 49), 78: (1, 49), 57: (1, 49), 34: (1, 49), 31: (1, 49), 77: (1, 49)},
+  121: {12: (1, 45), 84: (1, 45), 78: (1, 45), 57: (1, 45), 34: (1, 45), 31: (1, 45), 77: (1, 45)},
+  122: {34: (0, 94), 68: (0, 81), 78: (0, 95), 69: (0, 82), 27: (0, 97), 12: (0, 88), 57: (0, 83), 81: (0, 99), 72: (0, 86), 73: (0, 87), 82: (0, 142), 84: (0, 102), 48: (0, 90), 86: (0, 104), 87: (0, 105), 77: (0, 93), 31: (0, 106)},
+  123: {12: (1, 47), 84: (1, 47), 78: (1, 47), 57: (1, 47), 34: (1, 47), 31: (1, 47), 77: (1, 47)},
+  124: {12: (1, 44), 84: (1, 44), 78: (1, 44), 57: (1, 44), 34: (1, 44), 31: (1, 44), 77: (1, 44)},
+  125: {34: (0, 94), 68: (0, 81), 78: (0, 95), 69: (0, 82), 74: (0, 89), 27: (0, 97), 12: (0, 88), 57: (0, 83), 81: (0, 99), 82: (0, 100), 71: (0, 143), 72: (0, 86), 73: (0, 87), 84: (0, 102), 48: (0, 90), 86: (0, 104), 87: (0, 105), 77: (0, 93), 31: (0, 106)},
+  126: {34: (0, 94), 68: (0, 81), 78: (0, 95), 69: (0, 82), 74: (0, 89), 27: (0, 97), 12: (0, 88), 57: (0, 83), 81: (0, 99), 82: (0, 100), 71: (0, 85), 72: (0, 86), 75: (0, 91), 73: (0, 87), 84: (0, 102), 85: (0, 144), 48: (0, 90), 86: (0, 104), 87: (0, 105), 77: (0, 93), 31: (0, 106)},
+  127: {20: (0, 145)},
+  128: {83: (1, 33), 12: (1, 33), 84: (1, 33), 78: (1, 33), 36: (1, 33), 57: (1, 33), 34: (1, 33), 31: (1, 33), 77: (1, 33)},
+  129: {72: (0, 146), 48: (0, 90), 12: (0, 70)},
+  130: {14: (1, 29), 23: (1, 29)},
+  131: {34: (0, 94), 68: (0, 147), 78: (0, 95), 69: (0, 82), 27: (0, 97), 12: (0, 88), 57: (0, 83), 81: (0, 99), 72: (0, 86), 73: (0, 87), 84: (0, 102), 48: (0, 90), 86: (0, 104), 87: (0, 105), 77: (0, 93), 31: (0, 106)},
+  132: {12: (1, 52), 84: (1, 52), 78: (1, 52), 57: (1, 52), 34: (1, 52), 31: (1, 52), 77: (1, 52)},
+  133: {12: (1, 53), 84: (1, 53), 78: (1, 53), 57: (1, 53), 34: (1, 53), 31: (1, 53), 77: (1, 53)},
+  134: {60: (0, 148)},
+  135: {16: (1, 60), 52: (1, 60), 53: (1, 60), 59: (1, 60), 60: (1, 60), 61: (1, 60), 54: (1, 60), 55: (1, 60), 62: (1, 60), 20: (1, 60), 63: (1, 60), 56: (1, 60), 57: (1, 60), 64: (1, 60), 65: (1, 60), 66: (1, 60), 58: (1, 60), 67: (1, 60)},
+  136: {14: (1, 18), 23: (1, 18)},
+  137: {50: (0, 149), 12: (0, 12), 45: (0, 80), 11: (0, 62)},
+  138: {16: (1, 91), 15: (1, 91), 21: (1, 91)},
+  139: {16: (1, 54), 52: (1, 54), 53: (1, 54), 59: (1, 54), 60: (1, 54), 61: (1, 54), 54: (1, 54), 55: (1, 54), 62: (1, 54), 20: (1, 54), 63: (1, 54), 56: (1, 54), 57: (1, 54), 64: (1, 54), 65: (1, 54), 66: (1, 54), 58: (1, 54), 67: (1, 54)},
+  140: {83: (1, 93), 12: (1, 93), 84: (1, 93), 36: (1, 93), 78: (1, 93), 57: (1, 93), 34: (1, 93), 31: (1, 93), 77: (1, 93)},
+  141: {16: (1, 40), 52: (1, 40), 20: (1, 40), 63: (1, 40), 60: (1, 40), 64: (1, 40), 55: (1, 40), 59: (0, 118), 54: (0, 119), 62: (0, 120), 61: (0, 121), 91: (0, 122), 66: (0, 123), 67: (0, 124)},
+  142: {16: (1, 42), 52: (1, 42), 59: (1, 42), 60: (1, 42), 61: (1, 42), 54: (1, 42), 55: (1, 42), 62: (1, 42), 20: (1, 42), 63: (1, 42), 64: (1, 42), 66: (1, 42), 67: (1, 42), 92: (0, 131), 65: (0, 132), 57: (0, 133)},
+  143: {16: (1, 39), 52: (1, 39), 20: (1, 39), 60: (1, 39), 64: (1, 39), 55: (1, 39), 63: (0, 117)},
+  144: {16: (1, 36), 52: (1, 36), 20: (1, 36), 60: (1, 36)},
+  145: {16: (1, 65), 52: (1, 65), 53: (1, 65), 59: (1, 65), 60: (1, 65), 61: (1, 65), 54: (1, 65), 55: (1, 65), 62: (1, 65), 20: (1, 65), 63: (1, 65), 56: (1, 65), 57: (1, 65), 64: (1, 65), 65: (1, 65), 66: (1, 65), 58: (1, 65), 67: (1, 65)},
+  146: {20: (0, 150)},
+  147: {16: (1, 50), 52: (1, 50), 59: (1, 50), 60: (1, 50), 61: (1, 50), 54: (1, 50), 55: (1, 50), 62: (1, 50), 20: (1, 50), 63: (1, 50), 57: (1, 50), 64: (1, 50), 65: (1, 50), 66: (1, 50), 67: (1, 50), 89: (0, 111), 56: (0, 112), 58: (0, 113), 53: (0, 114)},
+  148: {34: (0, 94), 68: (0, 81), 77: (0, 93), 78: (0, 95), 69: (0, 82), 74: (0, 89), 27: (0, 97), 12: (0, 88), 57: (0, 83), 81: (0, 99), 82: (0, 100), 71: (0, 85), 72: (0, 86), 75: (0, 91), 73: (0, 87), 84: (0, 102), 48: (0, 90), 86: (0, 104), 87: (0, 105), 85: (0, 151), 31: (0, 106)},
+  149: {16: (1, 90), 15: (1, 90), 21: (1, 90)},
+  150: {52: (1, 72), 53: (1, 72), 54: (1, 72), 55: (1, 72), 20: (1, 72), 56: (1, 72), 57: (1, 72), 58: (1, 72), 16: (1, 72), 59: (1, 72), 60: (1, 72), 61: (1, 72), 62: (1, 72), 63: (1, 72), 64: (1, 72), 65: (1, 72), 66: (1, 72), 67: (1, 72)},
+  151: {52: (0, 152)},
+  152: {34: (0, 94), 68: (0, 81), 78: (0, 95), 69: (0, 82), 74: (0, 89), 27: (0, 97), 12: (0, 88), 57: (0, 83), 81: (0, 99), 82: (0, 100), 71: (0, 85), 72: (0, 86), 75: (0, 91), 73: (0, 87), 84: (0, 102), 48: (0, 90), 86: (0, 104), 85: (0, 153), 87: (0, 105), 77: (0, 93), 31: (0, 106)},
+  153: {16: (1, 71), 20: (1, 71)},
 }
 TOKEN_TYPES = (
 {0: 'PROGRAM',
- 1: '__anon_star_0',
- 2: 'enum_set_decl',
- 3: 'ENUMSET',
- 4: 'start',
- 5: 'type_decls',
- 6: 'type_decl',
- 7: 'enum_decl',
- 8: 'value_decl',
- 9: 'ENUM',
- 10: 'VALUE',
- 11: 'NAME',
- 12: 'type_name',
- 13: '$END',
- 14: 'program_decl',
+ 1: 'enum_set_decl',
+ 2: 'enum_decl',
+ 3: 'ENUM',
+ 4: '__anon_star_0',
+ 5: 'ENUMSET',
+ 6: 'VALUE',
+ 7: 'type_decl',
+ 8: 'type_decls',
+ 9: 'start',
+ 10: 'value_decl',
+ 11: 'type_name',
+ 12: 'NAME',
+ 13: 'program_decl',
+ 14: '$END',
  15: 'LBRACE',
- 16: '__ANON_0',
- 17: 'SEMICOLON',
- 18: 'LSQB',
- 19: 'RPAR',
- 20: 'COMMA',
- 21: '__anon_star_3',
- 22: 'FUNC',
- 23: 'func_decls',
- 24: 'func_decl',
- 25: 'func_name',
- 26: 'enum_body',
- 27: 'value_body',
- 28: 'INT',
- 29: 'LPAR',
- 30: 'COLON',
- 31: 'STRLIT',
- 32: 'enum_item',
- 33: 'enum_items',
- 34: 'value_items',
- 35: 'value_item',
- 36: 'RSQB',
- 37: 'type_names',
- 38: 'RBRACE',
- 39: '__anon_star_1',
- 40: '__anon_star_2',
- 41: 'func_body',
- 42: 'func_lhs',
- 43: 'opt_arg',
- 44: '__anon_star_6',
- 45: 'BOOL',
- 46: '__ANON_8',
- 47: 'expr_type_name',
- 48: 'func_constraints',
- 49: 'var_name',
- 50: 'cmp_expr',
- 51: 'term_expr',
- 52: 'unary_op',
- 53: 'expr',
- 54: 'or_expr',
- 55: 'and_expr',
- 56: 'factor_expr',
- 57: 'var_expr',
- 58: 'func_constraint_item',
- 59: 'BANG',
- 60: 'atom_expr',
- 61: 'unary_expr',
- 62: 'property_expr',
- 63: 'imply_expr',
- 64: 'FALSE',
- 65: 'TRUE',
- 66: 'IF',
- 67: 'const_expr',
- 68: 'MINUS',
- 69: 'func_constraint_items',
- 70: 'cond_expr',
- 71: '__ANON_2',
- 72: '__ANON_5',
- 73: 'ELSE',
- 74: 'THEN',
- 75: '__ANON_1',
- 76: 'MORETHAN',
- 77: '__ANON_4',
- 78: 'STAR',
- 79: 'PERCENT',
- 80: 'LESSTHAN',
- 81: '__ANON_7',
- 82: 'SLASH',
- 83: '__ANON_6',
- 84: 'PLUS',
- 85: '__ANON_3',
- 86: 'func_rhs',
- 87: 'func_rhss',
- 88: 'cmp_op',
- 89: 'term_op',
- 90: 'factor_op',
- 91: '__anon_star_5',
- 92: '__anon_star_4'}
+ 16: 'SEMICOLON',
+ 17: 'enum_body',
+ 18: '__ANON_0',
+ 19: 'LSQB',
+ 20: 'RPAR',
+ 21: 'COMMA',
+ 22: 'value_body',
+ 23: 'FUNC',
+ 24: 'func_decls',
+ 25: 'func_decl',
+ 26: '__anon_star_3',
+ 27: 'func_name',
+ 28: 'STRLIT',
+ 29: 'enum_item',
+ 30: 'enum_items',
+ 31: 'INT',
+ 32: 'value_item',
+ 33: 'value_items',
+ 34: 'LPAR',
+ 35: 'COLON',
+ 36: 'RBRACE',
+ 37: '__anon_star_1',
+ 38: 'RSQB',
+ 39: '__anon_star_2',
+ 40: 'type_names',
+ 41: 'BOOL',
+ 42: '__ANON_8',
+ 43: 'expr_type_name',
+ 44: 'func_lhs',
+ 45: 'opt_arg',
+ 46: 'func_body',
+ 47: '__anon_star_6',
+ 48: 'var_name',
+ 49: 'func_constraints',
+ 50: 'func_rhs',
+ 51: 'func_rhss',
+ 52: 'ELSE',
+ 53: 'SLASH',
+ 54: 'MORETHAN',
+ 55: '__ANON_2',
+ 56: 'STAR',
+ 57: 'MINUS',
+ 58: 'PERCENT',
+ 59: '__ANON_7',
+ 60: 'THEN',
+ 61: '__ANON_6',
+ 62: 'LESSTHAN',
+ 63: '__ANON_3',
+ 64: '__ANON_1',
+ 65: 'PLUS',
+ 66: '__ANON_4',
+ 67: '__ANON_5',
+ 68: 'factor_expr',
+ 69: 'property_expr',
+ 70: 'func_constraint_item',
+ 71: 'and_expr',
+ 72: 'var_expr',
+ 73: 'unary_expr',
+ 74: 'cmp_expr',
+ 75: 'or_expr',
+ 76: 'cond_expr',
+ 77: 'FALSE',
+ 78: 'TRUE',
+ 79: 'expr',
+ 80: 'func_constraint_items',
+ 81: 'atom_expr',
+ 82: 'term_expr',
+ 83: 'IF',
+ 84: 'BANG',
+ 85: 'imply_expr',
+ 86: 'const_expr',
+ 87: 'unary_op',
+ 88: '__anon_star_4',
+ 89: 'factor_op',
+ 90: '__anon_star_5',
+ 91: 'cmp_op',
+ 92: 'term_op'}
 )
 parse_table.states = {s: {TOKEN_TYPES[t]: (a, RULES[x] if a is Reduce else x) for t, (a, x) in acts.items()}
                       for s, acts in STATES.items()}
 parse_table.start_state = 0
-parse_table.end_state = 14
+parse_table.end_state = 18
 class Lark_StandAlone:
   def __init__(self, transformer=None, postlex=None):
      callback = parse_tree_builder.create_callback(transformer=transformer)

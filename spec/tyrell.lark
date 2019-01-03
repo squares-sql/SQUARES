@@ -43,7 +43,7 @@ opt_arg: type_name [var_name]
 ?func_constraints: ";"
   | "{" func_constraint_items "}"
 
-?func_constraint_items: func_constraint_item func_constraint_item*
+func_constraint_items: func_constraint_item func_constraint_item*
 
 ?func_constraint_item: expr ";"
 
