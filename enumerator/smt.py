@@ -31,6 +31,9 @@ class SmtEnumerator(Enumerator):
     # z3 variables to denote if a node is a function or not
     variables_fun = []
 
+    # map from internal k-tree to nodes of program
+    program2tree = {}
+
     def initLeafProductions(self):
         for p in self.spec.productions():
             # FIXME: improve empty integration
@@ -171,17 +174,31 @@ class SmtEnumerator(Enumerator):
         self.createLeafConstraints(self.z3_solver)
         self.createChildrenConstraints(self.z3_solver)
 
+
     def blockModel(self):
         m = self.z3_solver.model()
         block = []
         for d in m:
             c = d()
             block.append(c != m[d])
-        self.z3_solver.add(Or(block))
+        ctr = Or(block)
+        self.z3_solver.add(ctr)
 
     def update(self, info=None):
         # TODO: block more than one model
-        self.blockModel()
+        # self.blockModel() # do I need to block the model anyway?
+        if info != None and not isinstance(info, str):
+            for core in info:
+              ctr = None
+              for constraint in core:
+                if ctr == None:
+                  ctr = self.variables[self.program2tree[constraint[0]].id - 1] != constraint[1].id
+                else:
+                  ctr = Or(ctr, self.variables[self.program2tree[constraint[0]].id - 1] != constraint[1].id)
+              self.z3_solver.add(ctr)
+        else:
+          self.blockModel()
+
 
     def buildProgram(self):
         m = self.z3_solver.model()
@@ -191,6 +208,8 @@ class SmtEnumerator(Enumerator):
             a = str(x)
             if a[:1] == 'n':
                 result[int(a[1:]) - 1] = int(str(m[c]))
+
+        self.program2tree.clear()
 
         code = []
         for n in self.nodes:
@@ -208,8 +227,9 @@ class SmtEnumerator(Enumerator):
                         if str(code[c.id - 1]).find('Empty') == -1:
                             assert builder_nodes[c.id - 1] is not None
                             children.append(builder_nodes[c.id - 1])
-                builder_nodes[y] = builder.make_node(
-                    code[self.nodes[y].id - 1].id, children)
+                n = code[self.nodes[y].id - 1].id
+                builder_nodes[y] = builder.make_node(n, children)
+                self.program2tree[builder_nodes[y]] = self.nodes[y]
 
         assert(builder_nodes[0] is not None)
         return builder_nodes[0]
