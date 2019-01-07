@@ -3,16 +3,6 @@ from abc import ABC, abstractmethod
 from typing import Tuple, List, Iterator, Any
 
 
-class InterpreterError(RuntimeError):
-    _why: Any
-
-    def __init__(self, why: Any = None):
-        self._why = why
-
-    def why(self) -> Any:
-        return self._why
-
-
 class Interpreter(ABC):
 
     @abstractmethod

@@ -1,8 +1,9 @@
 import unittest
-import itertools
+from itertools import product
 import spec as S
 import dsl as D
-from interpreter import PostOrderInterpreter, InterpreterError
+from .post_order import PostOrderInterpreter
+from .error import GeneralError
 
 
 class BoolInterpreter(PostOrderInterpreter):
@@ -12,8 +13,8 @@ class BoolInterpreter(PostOrderInterpreter):
         elif data == 'false':
             return False
         else:
-            raise InterpreterError(
-                'Cannot evaluate bool literal: {}'.format(data))
+            raise GeneralError(
+                msg='Cannot evaluate bool literal: {}'.format(data))
 
     def eval_const(self, node, args):
         return args[0]
@@ -75,7 +76,7 @@ class TestSimpleInterpreter(unittest.TestCase):
         with self.assertRaises(StopIteration):
             next(interpreter)
 
-        for x, y in itertools.product(self._domain, self._domain):
+        for x, y in product(self._domain, self._domain):
             out_value = self._interp.eval(p, [x, y])
             expect_value = x and y
             self.assertEqual(out_value, expect_value)
@@ -85,7 +86,7 @@ class TestSimpleInterpreter(unittest.TestCase):
         p = b.from_sexp_string(
             '(and (const (BoolLit "true")) (const (BoolLit "false")))')
 
-        for x, y in itertools.product(self._domain, self._domain):
+        for x, y in product(self._domain, self._domain):
             out_value = self._interp.eval(p, [x, y])
             expect_value = False
             self.assertEqual(out_value, expect_value)
@@ -118,7 +119,7 @@ class TestSimpleInterpreter(unittest.TestCase):
         self.assertListEqual(in_values, [True, False])
         self.assertEqual(out_value, True)
 
-        for x, y in itertools.product(self._domain, self._domain):
+        for x, y in product(self._domain, self._domain):
             out_value = self._interp.eval(p, [x, y])
             expect_value = (not x) or y
             self.assertEqual(out_value, expect_value)

@@ -27,6 +27,12 @@ class Synthesizer(ABC):
         '''
         raise NotImplementedError
 
+    def analyze_interpreter_error(self, error: InterpreterError) -> Any:
+        '''
+        Take an interpreter error and return a data structure that can be used to update the enumerator.
+        '''
+        return None
+
     @property
     def enumerator(self):
         return self._enumerator
@@ -57,7 +63,7 @@ class Synthesizer(ABC):
                     self._enumerator.update(info)
                     prog = self._enumerator.next()
             except InterpreterError as e:
-                info = e.why()
+                info = self.analyze_interpreter_error(e)
                 logger.debug('Interpreter failed. Reason: {}'.format(info))
                 self._enumerator.update(info)
                 prog = self._enumerator.next()

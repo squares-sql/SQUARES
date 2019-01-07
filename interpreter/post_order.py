@@ -1,7 +1,8 @@
 from typing import Tuple, List, Iterator, Any
-from .interpreter import Interpreter, InterpreterError
 from dsl import Node, AtomNode, ParamNode, ApplyNode
 from visitor import GenericVisitor
+from .interpreter import Interpreter
+from .error import GeneralError
 
 
 class PostOrderInterpreter(Interpreter):
@@ -28,7 +29,7 @@ class PostOrderInterpreter(Interpreter):
                 if param_index >= len(inputs):
                     msg = 'Input parameter access({}) out of bound({})'.format(
                         param_index, len(inputs))
-                    raise InterpreterError(msg)
+                    raise GeneralError(msg)
                 yield (param_node, [], inputs[param_index])
 
             def visit_apply_node(self, apply_node: ApplyNode):

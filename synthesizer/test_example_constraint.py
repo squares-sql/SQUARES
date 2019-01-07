@@ -30,6 +30,9 @@ class FooInterpreter(PostOrderInterpreter):
     def eval_mult(self, node, args):
         return args[0] * args[1]
 
+    def eval_div(self, node, args):
+        return args[0] / args[1]
+
     def apply_pos(self, arg):
         return arg > 0
 

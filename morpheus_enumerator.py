@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import spec as S
-from interpreter import PostOrderInterpreter, InterpreterError
+from interpreter import PostOrderInterpreter, GeneralError
 from enumerator import SmtEnumerator
 from synthesizer import ExampleConstraintSynthesizer, Example, Blame
 import rpy2.robjects as robjects
@@ -37,7 +37,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return ret_val
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     def eval_unite(self, node, args):
         _script = 'unite({table}, TMP, {col1}, {col2})'.format(
@@ -46,7 +46,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     def eval_filter(self, node, args):
         _script = '{table} %>% filter(.[[{col}]] {op} {const})'.format(
@@ -55,7 +55,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     def eval_separate(self, node, args):
         _script = 'separate({table}, {col1}, c("TMP1", "TMP2"))'.format(
@@ -64,7 +64,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     def eval_spread(self, node, args):
         _script = 'spread({table}, {col1}, {col2})'.format(
@@ -73,7 +73,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     def eval_gather(self, node, args):
         _script = 'gather({table}, KEY, VALUE, {cols})'.format(
@@ -82,7 +82,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     def eval_group_by(self, node, args):
         _script = 'group_by({table}, {cols})'.format(
@@ -91,7 +91,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     def eval_summarise(self, node, args):
         _script = '{table} %>% summarise(TMP = {aggr} (.[[{col}]]))'.format(
@@ -100,7 +100,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     def eval_mutate(self, node, args):
         _script = '{table} %>% mutate(TMP=.[[{col1}]] {op} .[[{col2}]])'.format(
@@ -109,7 +109,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     def eval_inner_join(self, node, args):
         _script = 'inner_join({t1}, {t2})'.format(
@@ -118,7 +118,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return robjects.r(_script)
         except:
-            raise InterpreterError([[Blame(node, node.production)]])
+            raise GeneralError()
 
     ## Abstract interpreter
     def apply_row(self, val):
