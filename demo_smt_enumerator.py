@@ -59,6 +59,7 @@ def main():
     synthesizer = ExampleConstraintSynthesizer(
         enumerator=SmtEnumerator(spec, depth=3, loc=2),
         interpreter=ToyInterpreter(),
+        spec=spec,
         examples=[
             # we want to synthesize the program (x-y)*y (depth=3, loc=2)
             # which is also equivalent to x*y-y*y (depth=3, loc=3)
