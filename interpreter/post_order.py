@@ -2,12 +2,11 @@ from typing import Tuple, List, Iterator, Any
 from dsl import Node, AtomNode, ParamNode, ApplyNode
 from visitor import GenericVisitor
 from .interpreter import Interpreter
-from .error import GeneralError
 
 
 class PostOrderInterpreter(Interpreter):
 
-    def eval_step(self, prog: Node, inputs: List[Any]) -> Iterator[Tuple[Node, List[Any], Any]]:
+    def eval(self, prog: Node, inputs: List[Any]) -> Any:
         '''
         Interpret the Given AST in post-order. Assumes the existence of `eval_XXX` method where `XXX` is the name of a function defined in the DSL.
         '''
@@ -20,9 +19,8 @@ class PostOrderInterpreter(Interpreter):
             def visit_atom_node(self, atom_node: AtomNode):
 
                 method_name = self._eval_method_name(atom_node.type.name)
-                method = getattr(self._interp, method_name, lambda x: x)
-                atom_value = method(atom_node.data)
-                yield (atom_node, [], atom_value)
+                method = getattr(self._interp, method_name, lambda x: x.data)
+                return method(atom_node.data)
 
             def visit_param_node(self, param_node: ParamNode):
                 param_index = param_node.index
@@ -30,20 +28,14 @@ class PostOrderInterpreter(Interpreter):
                     msg = 'Input parameter access({}) out of bound({})'.format(
                         param_index, len(inputs))
                     raise GeneralError(msg)
-                yield (param_node, [], inputs[param_index])
+                return inputs[param_index]
 
             def visit_apply_node(self, apply_node: ApplyNode):
-                in_values = []
-                for child in apply_node.args:
-                    for step in self.visit(child):
-                        yield step
-                    in_values.append(step[2])
-
+                in_values = [self.visit(x) for x in apply_node.args]
                 method_name = self._eval_method_name(apply_node.name)
                 method = getattr(self._interp, method_name,
                                  self._method_not_found)
-                out_value = method(apply_node, in_values)
-                yield (apply_node, in_values, out_value)
+                return method(apply_node, in_values)
 
             def _method_not_found(self, apply_node: ApplyNode, arg_values: List[Any]):
                 msg = 'Cannot find required eval method: "{}"'.format(
