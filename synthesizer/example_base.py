@@ -1,5 +1,6 @@
 from typing import Callable, NamedTuple, List, Any
 from .synthesizer import Synthesizer
+from spec import TyrellSpec
 from interpreter import Interpreter
 from enumerator import Enumerator
 from .result import ok, bad
@@ -14,11 +15,12 @@ class ExampleSynthesizer(Synthesizer):
     _equal_output: Callable[[Any, Any], bool]
 
     def __init__(self,
+                 spec: TyrellSpec,
                  enumerator: Enumerator,
                  interpreter: Interpreter,
                  examples: List[Example],
                  equal_output: Callable[[Any, Any], bool] = lambda x, y: x == y):
-        super().__init__(enumerator, interpreter)
+        super().__init__(spec, enumerator, interpreter)
         if len(examples) == 0:
             raise ValueError(
                 'ExampleSynthesizer cannot take an empty list of examples')

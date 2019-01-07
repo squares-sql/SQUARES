@@ -3,6 +3,7 @@ from typing import Any
 from .result import Result
 from interpreter import Interpreter, InterpreterError
 from enumerator import Enumerator
+from spec import TyrellSpec
 from dsl import Node
 from logger import get_logger
 
@@ -11,11 +12,13 @@ logger = get_logger('tyrell.synthesizer')
 
 class Synthesizer(ABC):
 
+    _spec: TyrellSpec
     _enumerator: Enumerator
     _interpreter: Interpreter
 
     @abstractmethod
-    def __init__(self, enumerator: Enumerator, interpreter: Interpreter):
+    def __init__(self, spec: TyrellSpec, enumerator: Enumerator, interpreter: Interpreter):
+        self._spec = spec
         self._enumerator = enumerator
         self._interpreter = interpreter
 
@@ -32,6 +35,10 @@ class Synthesizer(ABC):
         Take an interpreter error and return a data structure that can be used to update the enumerator.
         '''
         return None
+
+    @property
+    def spec(self):
+        return self._spec
 
     @property
     def enumerator(self):

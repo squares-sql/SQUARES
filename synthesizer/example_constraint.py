@@ -212,12 +212,12 @@ class ExampleConstraintSynthesizer(ExampleSynthesizer):
     _imply_map: DefaultDict[Production, List[Production]]
 
     def __init__(self,
+                 spec: TyrellSpec,
                  enumerator: Enumerator,
                  interpreter: Interpreter,
-                 spec: TyrellSpec,
                  examples: List[Example],
                  equal_output: Callable[[Any, Any], bool] = lambda x, y: x == y):
-        super().__init__(enumerator, interpreter, examples, equal_output)
+        super().__init__(spec, enumerator, interpreter, examples, equal_output)
         self._imply_map = self._build_imply_map(spec)
 
     def _check_implies(self, pre_constraints, post_constraints) -> bool:

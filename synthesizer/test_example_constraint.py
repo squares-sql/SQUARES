@@ -46,6 +46,7 @@ class TestExample(unittest.TestCase):
         def my_equal(x, y):
             return abs(x - y) <= 1
         synthesizer = ExampleSynthesizer(
+            spec=spec,
             enumerator=make_empty_enumerator(),
             interpreter=FooInterpreter(),
             examples=[
@@ -63,9 +64,9 @@ class TestExampleConstraint(unittest.TestCase):
     @staticmethod
     def do_analyze(prog, examples):
         synthesizer = ExampleConstraintSynthesizer(
+            spec=spec,
             enumerator=make_empty_enumerator(),
             interpreter=FooInterpreter(),
-            spec=spec,
             examples=examples
         )
         return synthesizer.analyze(prog)

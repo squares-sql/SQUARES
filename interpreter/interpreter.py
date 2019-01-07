@@ -1,6 +1,6 @@
 from dsl import Node
 from abc import ABC, abstractmethod
-from typing import Tuple, List, Iterator, Any
+from typing import List, Any
 
 
 class Interpreter(ABC):
