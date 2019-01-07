@@ -173,6 +173,7 @@ def main():
         enumerator=SmtEnumerator(spec, depth=2, loc=1),
         # enumerator=SmtEnumerator(spec, depth=3, loc=2),
         interpreter=MorpheusInterpreter(),
+        spec=spec,
         examples=[
             Example(input=['dat'], output=benchmark1_output),
         ]
