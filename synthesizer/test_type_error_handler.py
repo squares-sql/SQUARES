@@ -62,7 +62,7 @@ class TestTypeErrorHandler(unittest.TestCase):
         self.assertIsNotNone(blames)
         self.assertEqual(len(blames), 2)
         for blame in blames:
-            self.assertIn(Blame(inode, inode.production), blame)
+            self.assertNotIn(Blame(inode, inode.production), blame)
             self.assertIn(Blame(snode, snode.production), blame)
             self.assertTrue(
                 (Blame(enode0, enode0.production) in blame) or

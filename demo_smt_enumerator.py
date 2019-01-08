@@ -39,7 +39,10 @@ class ToyInterpreter(PostOrderInterpreter):
         return args[0]
 
     def eval_sqrt_const(self, node, args):
-        self.assertArg(node, args, 0, lambda x: x >= 0)
+        self.assertArg(node, args,
+                       index=0,
+                       cond=lambda x: x >= 0,
+                       capture_indices=[])
         return int(args[0] ** 0.5)
 
     def eval_plus(self, node, args):

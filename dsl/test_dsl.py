@@ -2,6 +2,7 @@ import unittest
 import spec as S
 from .node import AtomNode, ParamNode, ApplyNode
 from .builder import Builder
+from .iterator import bfs, dfs
 from .indexer import NodeIndexer
 from .parent_finder import ParentFinder
 
@@ -19,6 +20,9 @@ class TestDSL(unittest.TestCase):
         self._prod0 = prod_spec.add_enum_production(self._ety0, choice=0)
         self._prod2 = prod_spec.add_func_production(
             name='f', lhs=self._vty1, rhs=[self._ety0, self._vty0])
+        self._prod3 = prod_spec.add_func_production(
+            name='g', lhs=self._vty1, rhs=[self._vty1, self._ety0]
+        )
 
         prog_spec = S.ProgramSpec(
             name='test', in_types=[self._vty0], out_type=self._vty1)
@@ -75,9 +79,23 @@ class TestDSL(unittest.TestCase):
         self.assertEqual(node2.name, 'f')
         self.assertListEqual(node2.args, [node0, node1])
         with self.assertRaises(KeyError):
-            builder.make_apply('g', [])
+            builder.make_apply('h', [])
         with self.assertRaises(ValueError):
             builder.make_apply('f', [])
+
+    def test_iterator(self):
+        builder = Builder(self._spec)
+        node0 = builder.make_enum('EType0', 'e0')
+        node1 = builder.make_param(0)
+        node2 = builder.make_apply('f', [node0, node1])
+        node3 = builder.make_enum('EType0', 'e1')
+        node4 = builder.make_apply('g', [node2, node3])
+
+        bfs_res = [x for x in bfs(node4)]
+        self.assertListEqual(bfs_res, [node4, node2, node3, node0, node1])
+
+        dfs_res = [x for x in dfs(node4)]
+        self.assertListEqual(dfs_res, [node4, node2, node0, node1, node3])
 
     def test_node_indexer(self):
         builder = Builder(self._spec)

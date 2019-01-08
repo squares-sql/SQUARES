@@ -1,6 +1,7 @@
 from typing import List, Dict, Optional
 from collections import deque
 from .node import Node
+from .iterator import bfs
 
 
 class NodeIndexer:
@@ -12,25 +13,16 @@ class NodeIndexer:
     _index_map: List[Node]
 
     def _add_node(self, node: Node):
-        # Be paranoid about non-tree-like structure here
-        if node not in self._node_map:
-            next_id = len(self._index_map)
-            self._node_map[node] = next_id
-            self._index_map.append(node)
-            return True
-        else:
-            return False
+        next_id = len(self._index_map)
+        self._node_map[node] = next_id
+        self._index_map.append(node)
 
     def __init__(self, prog: Node):
         self._node_map = dict()
         self._index_map = list()
         # Assign ID to nodes in BFS order
-        queue = deque([prog])
-        while len(queue) > 0:
-            node = queue.popleft()
-            if self._add_node(node):
-                for child in node.children:
-                    queue.append(child)
+        for node in bfs(prog):
+            self._add_node(node)
 
     def get_id(self, node: Node) -> Optional[int]:
         '''Get the ID of the node, or None if the node is not indexed.'''

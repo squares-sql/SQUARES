@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Any
+from typing import Callable, Iterable, List, Any
 from dsl import Node
 from .error import AssertionViolation
 
@@ -14,12 +14,19 @@ class Interpreter(ABC):
         '''
         raise NotImplementedError
 
-    def assertArg(self, node, args, index, cond) -> None:
+    def assertArg(
+            self,
+            node: Node,
+            args: List[Any],
+            index: int,
+            cond: Callable[[Any], bool],
+            capture_indices: Iterable[int]=[]) -> None:
         '''
         Check the value of `index`-th argument against `cond`. If `cond` is not met, raise AssertionViolation.
+        If the assertion refers to the value(s) of other arugments, the indices of those arguments should be passed to `capture_indices` as a list of integer. By default, this list is empty.
         '''
         if node.is_leaf():
             raise RuntimeError(
                 'assertArg() cannot be called within a leaf node: {}'.format(node))
         if not cond(args[index]):
-            raise AssertionViolation(node.children[index], cond)
+            raise AssertionViolation(node, index, cond, capture_indices)
