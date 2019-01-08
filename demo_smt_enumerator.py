@@ -3,14 +3,14 @@
 import spec as S
 from interpreter import PostOrderInterpreter
 from enumerator import SmtEnumerator
-from synthesizer import ExampleConstraintSynthesizer, Example
+from synthesizer import AssertionViolationHandler, ExampleConstraintSynthesizer, Example
 from logger import get_logger
 
 logger = get_logger('tyrell')
 
 toy_spec_str = '''
 enum SmallInt {
-  "0", "1", "2", "3"
+  "-1", "-2", "0", "1", "2"
 }
 value Int {
     is_positive: bool;
@@ -19,6 +19,7 @@ value Empty;
 
 program Toy(Int, Int) -> Int;
 func const: Int -> SmallInt;
+func sqrt_const: Int -> SmallInt;
 func plus: Int -> Int, Int;
 func minus: Int -> Int, Int;
 func mult: Int r -> Int a, Int b {
@@ -37,6 +38,10 @@ class ToyInterpreter(PostOrderInterpreter):
     def eval_const(self, node, args):
         return args[0]
 
+    def eval_sqrt_const(self, node, args):
+        self.assertArg(node, args, 0, lambda x: x >= 0)
+        return int(args[0] ** 0.5)
+
     def eval_plus(self, node, args):
         return args[0] + args[1]
 
@@ -50,13 +55,17 @@ class ToyInterpreter(PostOrderInterpreter):
         return val > 0
 
 
+class DemoSynthesizer(AssertionViolationHandler, ExampleConstraintSynthesizer):
+    pass
+
+
 def main():
     logger.info('Parsing Spec...')
     spec = S.parse(toy_spec_str)
     logger.info('Parsing succeeded')
 
     logger.info('Building synthesizer...')
-    synthesizer = ExampleConstraintSynthesizer(
+    synthesizer = DemoSynthesizer(
         enumerator=SmtEnumerator(spec, depth=3, loc=2),
         interpreter=ToyInterpreter(),
         spec=spec,

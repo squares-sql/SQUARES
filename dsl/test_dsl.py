@@ -3,6 +3,7 @@ import spec as S
 from .node import AtomNode, ParamNode, ApplyNode
 from .builder import Builder
 from .indexer import NodeIndexer
+from .parent_finder import ParentFinder
 
 
 class TestDSL(unittest.TestCase):
@@ -107,6 +108,24 @@ class TestDSL(unittest.TestCase):
         self.assertIsNone(indexer.get_node(invalid_id))
         with self.assertRaises(KeyError):
             indexer.get_node_or_raise(invalid_id)
+
+    def test_parent_finder(self):
+        builder = Builder(self._spec)
+        node0 = builder.make_enum('EType0', 'e0')
+        node1 = builder.make_param(0)
+        node2 = builder.make_apply('f', [node0, node1])
+
+        pfinder = ParentFinder(node2)
+        self.assertIsNone(pfinder.get_parent(node2))
+        with self.assertRaises(KeyError):
+            pfinder.get_parent_or_raise(node2)
+        self.assertIs(pfinder.get_parent(node1), node2)
+        self.assertIs(pfinder.get_parent(node0), node2)
+
+        extra_node = builder.make_enum('EType0', 'e1')
+        self.assertIsNone(pfinder.get_parent(extra_node))
+        with self.assertRaises(KeyError):
+            pfinder.get_parent_or_raise(extra_node)
 
 
 if __name__ == '__main__':

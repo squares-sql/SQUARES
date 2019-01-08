@@ -28,6 +28,12 @@ class BoolInterpreter(PostOrderInterpreter):
     def eval_or(self, node, args):
         return args[0] or args[1]
 
+    def eval_assertTrue(self, node, args):
+        if not args[0]:
+            raise GeneralError(
+                'Argument of assertTrue() does not evaluate to true: {}'.format(node))
+        return True
+
 
 spec_str = '''
     enum BoolLit {
@@ -40,6 +46,7 @@ spec_str = '''
     func and: BoolExpr -> BoolExpr, BoolExpr;
     func or: BoolExpr -> BoolExpr, BoolExpr;
     func not: BoolExpr -> BoolExpr;
+    func assertTrue: BoolExpr -> BoolExpr;
 '''
 spec = S.parse(spec_str)
 
@@ -83,6 +90,27 @@ class TestSimpleInterpreter(unittest.TestCase):
             out_value = self._interp.eval(p, [x, y])
             expect_value = (not x) or y
             self.assertEqual(out_value, expect_value)
+
+    def test_context(self):
+        b = self._builder
+        p0 = b.make_param(0)
+        p1 = b.make_param(1)
+        lit = b.make_enum('BoolLit', 'true')
+        c = b.make_apply('const', [lit])
+        ap0 = b.make_apply('assertTrue', [p0])
+        acap0 = b.make_apply('and', [c, ap0])
+        nacap0 = b.make_apply('not', [acap0])
+        p = b.make_apply('or', [nacap0, p1])
+
+        try:
+            self._interp.eval(p, [False, True])
+        except GeneralError as e:
+            ctx = e.context
+            self.assertIsNotNone(ctx)
+            self.assertListEqual(ctx.stack, [p, nacap0, acap0])
+            self.assertListEqual(
+                ctx.observed, [p, nacap0, acap0, c, lit, ap0, p0])
+            self.assertListEqual(ctx.evaluated, [lit, c, p0])
 
 
 if __name__ == '__main__':

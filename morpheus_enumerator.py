@@ -3,7 +3,7 @@
 import spec as S
 from interpreter import PostOrderInterpreter, GeneralError
 from enumerator import SmtEnumerator
-from synthesizer import ExampleConstraintSynthesizer, Example, Blame
+from synthesizer import AssertionViolationHandler, ExampleConstraintSynthesizer, Example
 import rpy2.robjects as robjects
 from logger import get_logger
 
@@ -137,6 +137,10 @@ class MorpheusInterpreter(PostOrderInterpreter):
         return df.ncol
 
 
+class MorpheusSynthesizer(AssertionViolationHandler, ExampleConstraintSynthesizer):
+    pass
+
+
 def main():
 
     ##### Input-output constraint
@@ -168,12 +172,12 @@ def main():
     logger.info('Parsing succeeded')
 
     logger.info('Building synthesizer...')
-    synthesizer = ExampleConstraintSynthesizer(
+    synthesizer = MorpheusSynthesizer(
+        spec=spec,
         #loc: # of function productions
         enumerator=SmtEnumerator(spec, depth=2, loc=1),
         # enumerator=SmtEnumerator(spec, depth=3, loc=2),
         interpreter=MorpheusInterpreter(),
-        spec=spec,
         examples=[
             Example(input=['dat'], output=benchmark1_output),
         ]

@@ -2,6 +2,8 @@ from typing import Tuple, List, Iterator, Any
 from dsl import Node, AtomNode, ParamNode, ApplyNode
 from visitor import GenericVisitor
 from .interpreter import Interpreter
+from .context import Context
+from .error import InterpreterError
 
 
 class PostOrderInterpreter(Interpreter):
@@ -12,12 +14,19 @@ class PostOrderInterpreter(Interpreter):
         '''
         class NodeVisitor(GenericVisitor):
             _interp: PostOrderInterpreter
+            _context: Context
 
             def __init__(self, interp):
                 self._interp = interp
+                self._context = Context()
+
+            def visit_with_context(self, node: Node):
+                self._context.observe(node)
+                res = self.visit(node)
+                self._context.finish(node)
+                return res
 
             def visit_atom_node(self, atom_node: AtomNode):
-
                 method_name = self._eval_method_name(atom_node.type.name)
                 method = getattr(self._interp, method_name, lambda x: x.data)
                 return method(atom_node.data)
@@ -31,7 +40,9 @@ class PostOrderInterpreter(Interpreter):
                 return inputs[param_index]
 
             def visit_apply_node(self, apply_node: ApplyNode):
-                in_values = [self.visit(x) for x in apply_node.args]
+                in_values = [self.visit_with_context(
+                    x) for x in apply_node.args]
+                self._context.pop()
                 method_name = self._eval_method_name(apply_node.name)
                 method = getattr(self._interp, method_name,
                                  self._method_not_found)
@@ -46,4 +57,9 @@ class PostOrderInterpreter(Interpreter):
             def _eval_method_name(name):
                 return 'eval_' + name
 
-        return NodeVisitor(self).visit(prog)
+        node_visitor = NodeVisitor(self)
+        try:
+            return node_visitor.visit_with_context(prog)
+        except InterpreterError as e:
+            e.context = node_visitor._context
+            raise e from None

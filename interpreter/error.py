@@ -1,13 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import Callable, Any
+from typing import Callable, Optional, Any
 from dsl import Node
+from .context import Context
 
 
 class InterpreterError(RuntimeError):
+    context: Optional[Context]
 
     @abstractmethod
     def __init__(self, *args):
         super().__init__(args)
+        self.context = None
 
 
 class GeneralError(InterpreterError):
@@ -15,7 +18,7 @@ class GeneralError(InterpreterError):
         super().__init__(msg)
 
 
-class DynamicTypeError(InterpreterError):
+class AssertionViolation(InterpreterError):
     _node: Node
     _reason: Callable[[Any], bool]
 
