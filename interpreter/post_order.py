@@ -28,7 +28,7 @@ class PostOrderInterpreter(Interpreter):
 
             def visit_atom_node(self, atom_node: AtomNode):
                 method_name = self._eval_method_name(atom_node.type.name)
-                method = getattr(self._interp, method_name, lambda x: x.data)
+                method = getattr(self._interp, method_name, lambda x: x)
                 return method(atom_node.data)
 
             def visit_param_node(self, param_node: ParamNode):
