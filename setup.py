@@ -24,6 +24,7 @@ setup(
     name='tyrell',
     version='0.1',
     packages=tyrell_packages,
+    py_modules=['logger', 'visitor'],
     license='LICENSE.txt',
     description='Deduction-based synthesis framework',
     install_requires=install_dependencies,
