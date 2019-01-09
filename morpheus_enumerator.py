@@ -9,6 +9,8 @@ from logger import get_logger
 
 logger = get_logger('tyrell')
 
+counter_ = 1
+
 robjects.r('''
     library(dplyr)
     library(tidyr)
@@ -18,6 +20,13 @@ robjects.r('''
 def get_collist(sel):
     sel_str = ",".join(sel)
     return "c(" + sel_str + ")"
+
+def get_fresh_name():
+    global counter_ 
+    counter_ = counter_ + 1
+
+    fresh_str = 'RET_DF' + str(counter_)
+    return fresh_str
 
 class MorpheusInterpreter(PostOrderInterpreter):
     ## Concrete interpreter
@@ -38,11 +47,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 cond=lambda x: max_idx <= n_cols,
                 capture_indices=[0])
 
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- select({table}, {cols})'.format(
-                   ret_df='RET_DF', table=args[0], cols=get_collist(args[1]))
+                   ret_df=ret_df_name, table=args[0], cols=get_collist(args[1]))
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
@@ -57,11 +67,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
 
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- unite({table}, TMP, {col1}, {col2})'.format(
-                  ret_df='RET_DF', table=args[0], col1=str(args[1]), col2=str(args[2]))
+                  ret_df=ret_df_name, table=args[0], col1=str(args[1]), col2=str(args[2]))
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
@@ -72,11 +83,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
 
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- {table} %>% filter(.[[{col}]] {op} {const})'.format(
-                  ret_df='RET_DF', table=args[0], op=args[1], col=str(args[2]), const=str(args[3]))
+                  ret_df=ret_df_name, table=args[0], op=args[1], col=str(args[2]), const=str(args[3]))
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
@@ -87,12 +99,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
 
-
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- separate({table}, {col1}, c("TMP1", "TMP2"))'.format(
-                  ret_df='RET_DF', table=args[0], col1=str(args[1])) 
+                  ret_df=ret_df_name, table=args[0], col1=str(args[1])) 
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
@@ -107,12 +119,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
 
-
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- spread({table}, {col1}, {col2})'.format(
-                  ret_df='RET_DF', table=args[0], col1=str(args[1]), col2=str(args[2]))
+                  ret_df=ret_df_name, table=args[0], col1=str(args[1]), col2=str(args[2]))
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
@@ -124,11 +136,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 cond=lambda x: max_idx <= n_cols,
                 capture_indices=[0])
 
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- gather({table}, KEY, VALUE, {cols})'.format(
-                   ret_df='RET_DF', table=args[0], cols=get_collist(args[1]))
+                   ret_df=ret_df_name, table=args[0], cols=get_collist(args[1]))
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
@@ -140,11 +153,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 cond=lambda x: max_idx <= n_cols,
                 capture_indices=[0])
 
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- group_by({table}, {cols})'.format(
-                   ret_df='RET_DF', table=args[0], cols=get_collist(args[1]))
+                   ret_df=ret_df_name, table=args[0], cols=get_collist(args[1]))
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
@@ -155,11 +169,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
 
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- {table} %>% summarise(TMP = {aggr} (.[[{col}]]))'.format(
-                  ret_df='RET_DF', table=args[0], aggr=str(args[1]), col=str(args[2]))
+                  ret_df=ret_df_name, table=args[0], aggr=str(args[1]), col=str(args[2]))
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
@@ -174,20 +189,22 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
 
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- {table} %>% mutate(TMP=.[[{col1}]] {op} .[[{col2}]])'.format(
-                  ret_df='RET_DF', table=args[0], op=args[1], col1=str(args[2]), col2=str(args[3]))
+                  ret_df=ret_df_name, table=args[0], op=args[1], col1=str(args[2]), col2=str(args[3]))
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
     def eval_inner_join(self, node, args):
+        ret_df_name = get_fresh_name()
         _script = '{ret_df} <- inner_join({t1}, {t2})'.format(
-                  ret_df='RET_DF', t1=args[0], t2=args[1])
+                  ret_df=ret_df_name, t1=args[0], t2=args[1])
         try:
             ret_val = robjects.r(_script)
-            return 'RET_DF'
+            return ret_df_name
         except:
             raise GeneralError()
 
