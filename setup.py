@@ -1,21 +1,38 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+
+install_dependencies = [
+    'Click',
+    'colorama',
+    'sexpdata',
+    'z3-solver'
+]
+develop_dependencies = [
+    'mypy',  # for type checking
+    'rpy2',  # for Morpheus. TODO: This should really belong to the client package
+    'lark-parser',  # for parsing
+]
+
+tyrell_packages = [
+    'spec',
+    'dsl',
+    'enumerator',
+    'interpreter',
+    'synthesizer'
+]
 
 setup(
     name='tyrell',
     version='0.1',
-    packages=find_packages(),
-    install_requires=[
-        'mypy',  # for type checking
-        'rpy2',
-        'lark-parser',
-        'Click',
-        'colorama',
-        'sexpdata',
-        'z3-solver'
-    ],
+    packages=tyrell_packages,
+    license='LICENSE.txt',
+    description='Deduction-based synthesis framework',
+    install_requires=install_dependencies,
+    extras_require={
+        'dev': develop_dependencies
+    },
     entry_points={
         'console_scripts': [
-            'parse-spec=parse_spec:cli',
+            'parse-tyrell-spec=parse_tyrell_spec:cli',
         ],
     },
 )
