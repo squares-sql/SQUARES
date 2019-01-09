@@ -1,8 +1,9 @@
 from z3 import *
 from collections import deque
 from .enumerator import Enumerator
-import dsl as D
+from .optimizer import Optimizer
 
+import dsl as D
 
 class AST:
     def __init__(self):
@@ -165,6 +166,7 @@ class SmtEnumerator(Enumerator):
         self.loc = loc
         self.max_children = self.maxChildren()
         self.tree, self.nodes = self.buildKTree(self.max_children, self.depth)
+        self.model = None
         self.initLeafProductions()
         self.createVariables(self.z3_solver)
         self.createOutputConstraints(self.z3_solver)
@@ -174,13 +176,33 @@ class SmtEnumerator(Enumerator):
         self.createLeafConstraints(self.z3_solver)
         self.createChildrenConstraints(self.z3_solver)
 
+        self.optimizer = Optimizer(self.z3_solver, spec, self.variables, self.nodes)
+
+        # Example of using domain constraint -- this needs to be done outside of smt.py
+        for p in self.spec.productions():
+          if p.id == 3:
+            self.minus_prod = p
+          if p.id == 4:
+            self.mult_prod = p
+
+        # You can use any number larger than 0 as weight (does not need to be bounded at 100)
+        self.optimizer.mk_occurs(self.minus_prod, 80)
+        self.optimizer.mk_occurs(self.mult_prod, 10)
+        self.optimizer.mk_is_parent(self.minus_prod, self.mult_prod, 99)
+
+        # Since the program we want is mult(@param1, minus(@param0, @param1))
+        # The following constraints would find that program very quickly
+        # self.optimizer.mk_occurs(self.mult_prod,999)
+        # self.optimizer.mk_is_parent(self.mult_prod, self.minus_prod, 999)
+
 
     def blockModel(self):
-        m = self.z3_solver.model()
+        assert(self.model != None)
+        # m = self.z3_solver.model()   
         block = []
-        for d in m:
-            c = d()
-            block.append(c != m[d])
+        # block the model using only the variables that correspond to productions
+        for x in self.variables:
+          block.append(x != self.model[x])
         ctr = Or(block)
         self.z3_solver.add(ctr)
 
@@ -201,13 +223,12 @@ class SmtEnumerator(Enumerator):
 
 
     def buildProgram(self):
-        m = self.z3_solver.model()
-        result = [0] * len(m)
-        for x in m:
+        result = [0] * len(self.model)
+        for x in self.model:
             c = x()
             a = str(x)
             if a[:1] == 'n':
-                result[int(a[1:]) - 1] = int(str(m[c]))
+                result[int(a[1:]) - 1] = int(str(self.model[c]))
 
         self.program2tree.clear()
 
@@ -235,8 +256,9 @@ class SmtEnumerator(Enumerator):
         return builder_nodes[0]
 
     def next(self):
-        res = self.z3_solver.check()
-        if res == sat:
+        while True:
+          self.model = self.optimizer.optimize(self.z3_solver)
+          if self.model != None:
             return self.buildProgram()
-        else:
+          else:
             return None
