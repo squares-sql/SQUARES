@@ -44,16 +44,21 @@ class MorpheusInterpreter(PostOrderInterpreter):
                   table=args[0], col1=str(args[1]), col2=str(args[2]))
         try:
             ret_val = robjects.r(_script)
-            return robjects.r(_script)
+            return ret_val
         except:
             raise GeneralError()
 
     def eval_filter(self, node, args):
+        n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        self.assertArg(node, args,
+                index=2,
+                cond=lambda x: x < n_cols,
+                capture_indices=[0, 2])
         _script = '{table} %>% filter(.[[{col}]] {op} {const})'.format(
                   table=args[0], op=args[1], col=str(args[2]), const=str(args[3]))
         try:
             ret_val = robjects.r(_script)
-            return robjects.r(_script)
+            return ret_val
         except:
             raise GeneralError()
 
@@ -62,7 +67,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
                   table=args[0], col1=str(args[1])) 
         try:
             ret_val = robjects.r(_script)
-            return robjects.r(_script)
+            return ret_val
         except:
             raise GeneralError()
 
@@ -71,7 +76,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
                   table=args[0], col1=str(args[1]), col2=str(args[2]))
         try:
             ret_val = robjects.r(_script)
-            return robjects.r(_script)
+            return ret_val
         except:
             raise GeneralError()
 
@@ -80,7 +85,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
                    table=args[0], cols=get_collist(args[1]))
         try:
             ret_val = robjects.r(_script)
-            return robjects.r(_script)
+            return ret_val
         except:
             raise GeneralError()
 
@@ -89,7 +94,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
                    table=args[0], cols=get_collist(args[1]))
         try:
             ret_val = robjects.r(_script)
-            return robjects.r(_script)
+            return ret_val
         except:
             raise GeneralError()
 
@@ -98,7 +103,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
                   table=args[0], aggr=str(args[1]), col=str(args[2]))
         try:
             ret_val = robjects.r(_script)
-            return robjects.r(_script)
+            return ret_val
         except:
             raise GeneralError()
 
@@ -107,7 +112,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
                   table=args[0], op=args[1], col1=str(args[2]), col2=str(args[3]))
         try:
             ret_val = robjects.r(_script)
-            return robjects.r(_script)
+            return ret_val
         except:
             raise GeneralError()
 
@@ -116,7 +121,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
                   t1=args[0], t2=args[1])
         try:
             ret_val = robjects.r(_script)
-            return robjects.r(_script)
+            return ret_val
         except:
             raise GeneralError()
 
@@ -139,7 +144,6 @@ class MorpheusInterpreter(PostOrderInterpreter):
 
 class MorpheusSynthesizer(AssertionViolationHandler, ExampleConstraintSynthesizer):
     pass
-
 
 def main():
 
