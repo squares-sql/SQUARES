@@ -20,6 +20,6 @@ class ParentFinder:
         '''Get the parent of the node, or None if the parent cannot be found.'''
         return self._parent_map.get(node, None)
 
-    def get_parent_or_raise(self, node: Node) -> int:
+    def get_parent_or_raise(self, node: Node) -> Node:
         '''Get the parent of the node, or raise `KeyError` if the parent cannot be found.'''
         return self._parent_map[node]
