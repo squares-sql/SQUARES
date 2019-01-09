@@ -117,6 +117,13 @@ class MorpheusInterpreter(PostOrderInterpreter):
             raise GeneralError()
 
     def eval_gather(self, node, args):
+        n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        max_idx = max(list(map(lambda x: int(x), args[1])))
+        self.assertArg(node, args,
+                index=1,
+                cond=lambda x: max_idx <= n_cols,
+                capture_indices=[0])
+
         _script = '{ret_df} <- gather({table}, KEY, VALUE, {cols})'.format(
                    ret_df='RET_DF', table=args[0], cols=get_collist(args[1]))
         try:
@@ -126,6 +133,13 @@ class MorpheusInterpreter(PostOrderInterpreter):
             raise GeneralError()
 
     def eval_group_by(self, node, args):
+        n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        max_idx = max(list(map(lambda x: int(x), args[1])))
+        self.assertArg(node, args,
+                index=1,
+                cond=lambda x: max_idx <= n_cols,
+                capture_indices=[0])
+
         _script = '{ret_df} <- group_by({table}, {cols})'.format(
                    ret_df='RET_DF', table=args[0], cols=get_collist(args[1]))
         try:
