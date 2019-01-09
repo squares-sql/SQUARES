@@ -31,20 +31,37 @@ class MorpheusInterpreter(PostOrderInterpreter):
         return args[0]
 
     def eval_select(self, node, args):
-        _script = 'select({table}, {cols})'.format(
-                   table=args[0], cols=get_collist(args[1]))
+        n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        max_idx = max(list(map(lambda x: int(x), args[1])))
+        self.assertArg(node, args,
+                index=1,
+                cond=lambda x: max_idx <= n_cols,
+                capture_indices=[0])
+
+        _script = '{ret_df} <- select({table}, {cols})'.format(
+                   ret_df='RET_DF', table=args[0], cols=get_collist(args[1]))
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
     def eval_unite(self, node, args):
-        _script = 'unite({table}, TMP, {col1}, {col2})'.format(
-                  table=args[0], col1=str(args[1]), col2=str(args[2]))
+        n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        self.assertArg(node, args,
+                index=1,
+                cond=lambda x: x <= n_cols,
+                capture_indices=[0])
+        self.assertArg(node, args,
+                index=2,
+                cond=lambda x: x <= n_cols,
+                capture_indices=[0])
+
+        _script = '{ret_df} <- unite({table}, TMP, {col1}, {col2})'.format(
+                  ret_df='RET_DF', table=args[0], col1=str(args[1]), col2=str(args[2]))
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
@@ -52,76 +69,111 @@ class MorpheusInterpreter(PostOrderInterpreter):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
         self.assertArg(node, args,
                 index=2,
-                cond=lambda x: x < n_cols,
-                capture_indices=[0, 2])
-        _script = '{table} %>% filter(.[[{col}]] {op} {const})'.format(
-                  table=args[0], op=args[1], col=str(args[2]), const=str(args[3]))
+                cond=lambda x: x <= n_cols,
+                capture_indices=[0])
+
+        _script = '{ret_df} <- {table} %>% filter(.[[{col}]] {op} {const})'.format(
+                  ret_df='RET_DF', table=args[0], op=args[1], col=str(args[2]), const=str(args[3]))
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
     def eval_separate(self, node, args):
-        _script = 'separate({table}, {col1}, c("TMP1", "TMP2"))'.format(
-                  table=args[0], col1=str(args[1])) 
+        n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        self.assertArg(node, args,
+                index=1,
+                cond=lambda x: x <= n_cols,
+                capture_indices=[0])
+
+
+        _script = '{ret_df} <- separate({table}, {col1}, c("TMP1", "TMP2"))'.format(
+                  ret_df='RET_DF', table=args[0], col1=str(args[1])) 
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
     def eval_spread(self, node, args):
-        _script = 'spread({table}, {col1}, {col2})'.format(
-                  table=args[0], col1=str(args[1]), col2=str(args[2]))
+        n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        self.assertArg(node, args,
+                index=1,
+                cond=lambda x: x <= n_cols,
+                capture_indices=[0])
+        self.assertArg(node, args,
+                index=2,
+                cond=lambda x: x <= n_cols,
+                capture_indices=[0])
+
+
+        _script = '{ret_df} <- spread({table}, {col1}, {col2})'.format(
+                  ret_df='RET_DF', table=args[0], col1=str(args[1]), col2=str(args[2]))
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
     def eval_gather(self, node, args):
-        _script = 'gather({table}, KEY, VALUE, {cols})'.format(
-                   table=args[0], cols=get_collist(args[1]))
+        _script = '{ret_df} <- gather({table}, KEY, VALUE, {cols})'.format(
+                   ret_df='RET_DF', table=args[0], cols=get_collist(args[1]))
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
     def eval_group_by(self, node, args):
-        _script = 'group_by({table}, {cols})'.format(
-                   table=args[0], cols=get_collist(args[1]))
+        _script = '{ret_df} <- group_by({table}, {cols})'.format(
+                   ret_df='RET_DF', table=args[0], cols=get_collist(args[1]))
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
     def eval_summarise(self, node, args):
-        _script = '{table} %>% summarise(TMP = {aggr} (.[[{col}]]))'.format(
-                  table=args[0], aggr=str(args[1]), col=str(args[2]))
+        n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        self.assertArg(node, args,
+                index=2,
+                cond=lambda x: x <= n_cols,
+                capture_indices=[0])
+
+        _script = '{ret_df} <- {table} %>% summarise(TMP = {aggr} (.[[{col}]]))'.format(
+                  ret_df='RET_DF', table=args[0], aggr=str(args[1]), col=str(args[2]))
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
     def eval_mutate(self, node, args):
-        _script = '{table} %>% mutate(TMP=.[[{col1}]] {op} .[[{col2}]])'.format(
-                  table=args[0], op=args[1], col1=str(args[2]), col2=str(args[3]))
+        n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        self.assertArg(node, args,
+                index=2,
+                cond=lambda x: x <= n_cols,
+                capture_indices=[0])
+        self.assertArg(node, args,
+                index=3,
+                cond=lambda x: x <= n_cols,
+                capture_indices=[0])
+
+        _script = '{ret_df} <- {table} %>% mutate(TMP=.[[{col1}]] {op} .[[{col2}]])'.format(
+                  ret_df='RET_DF', table=args[0], op=args[1], col1=str(args[2]), col2=str(args[3]))
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
     def eval_inner_join(self, node, args):
-        _script = 'inner_join({t1}, {t2})'.format(
-                  t1=args[0], t2=args[1])
+        _script = '{ret_df} <- inner_join({t1}, {t2})'.format(
+                  ret_df='RET_DF', t1=args[0], t2=args[1])
         try:
             ret_val = robjects.r(_script)
-            return ret_val
+            return 'RET_DF'
         except:
             raise GeneralError()
 
@@ -179,10 +231,11 @@ def main():
     synthesizer = MorpheusSynthesizer(
         spec=spec,
         #loc: # of function productions
-        enumerator=SmtEnumerator(spec, depth=2, loc=1),
-        # enumerator=SmtEnumerator(spec, depth=3, loc=2),
+        # enumerator=SmtEnumerator(spec, depth=2, loc=1),
+        enumerator=SmtEnumerator(spec, depth=3, loc=2),
         interpreter=MorpheusInterpreter(),
         examples=[
+            # Example(input=[DataFrame2(benchmark1_input)], output=benchmark1_output),
             Example(input=['dat'], output=benchmark1_output),
         ]
     )
