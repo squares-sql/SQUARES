@@ -175,25 +175,7 @@ class SmtEnumerator(Enumerator):
         self.createFunctionConstraints(self.z3_solver)
         self.createLeafConstraints(self.z3_solver)
         self.createChildrenConstraints(self.z3_solver)
-
         self.optimizer = Optimizer(self.z3_solver, spec, self.variables, self.nodes)
-
-        # Example of using domain constraint -- this needs to be done outside of smt.py
-        for p in self.spec.productions():
-          if p.id == 3:
-            self.minus_prod = p
-          if p.id == 4:
-            self.mult_prod = p
-
-        # You can use any number larger than 0 as weight (does not need to be bounded at 100)
-        self.optimizer.mk_occurs(self.minus_prod, 80)
-        self.optimizer.mk_occurs(self.mult_prod, 10)
-        self.optimizer.mk_is_parent(self.minus_prod, self.mult_prod, 99)
-
-        # Since the program we want is mult(@param1, minus(@param0, @param1))
-        # The following constraints would find that program very quickly
-        # self.optimizer.mk_occurs(self.mult_prod,999)
-        # self.optimizer.mk_is_parent(self.mult_prod, self.minus_prod, 999)
 
 
     def blockModel(self):

@@ -83,6 +83,22 @@ def main():
     )
     logger.info('Synthesizing programs...')
 
+    for p in spec.productions():
+        if p.id == 3:
+            minus_prod = p
+        if p.id == 4:
+            mult_prod = p
+
+    # You can use any number larger than 0 as weight (does not need to be bounded at 100)
+    synthesizer.mk_occurs(minus_prod, 80)
+    synthesizer.mk_occurs(mult_prod, 10)
+    synthesizer.mk_is_parent(minus_prod, mult_prod, 99)
+
+    # Since the program we want is mult(@param1, minus(@param0, @param1))
+    # The following constraints would find that program very quickly
+    # synthesizer.mk_occurs(mult_prod,999)
+    # synthesizer.mk_is_parent(mult_prod, minus_prod, 999)
+
     prog = synthesizer.synthesize()
     if prog is not None:
         logger.info('Solution found: {}'.format(prog))
