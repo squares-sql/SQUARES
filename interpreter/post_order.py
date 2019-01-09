@@ -1,9 +1,9 @@
 from typing import Tuple, List, Iterator, Any
 from dsl import Node, AtomNode, ParamNode, ApplyNode
 from visitor import GenericVisitor
-from .interpreter import Interpreter, GeneralError
+from .interpreter import Interpreter
 from .context import Context
-from .error import InterpreterError
+from .error import InterpreterError, GeneralError
 
 
 class PostOrderInterpreter(Interpreter):
