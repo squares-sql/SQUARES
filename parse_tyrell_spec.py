@@ -1,3 +1,4 @@
+from typing import cast
 import click
 import spec as S
 from logger import get_logger
@@ -16,7 +17,8 @@ def print_spec(spec: S.TyrellSpec):
         for prod in spec.productions():
             logger.info('  {}'.format(prod))
             if prod.is_function():
-                for expr in prod.constraints:
+                fprod = cast(S.FunctionProduction, prod)
+                for expr in fprod.constraints:
                     logger.info('    Constraint: {}'.format(expr))
 
     if spec.num_predicates() > 0:

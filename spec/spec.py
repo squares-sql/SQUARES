@@ -380,7 +380,7 @@ class TyrellSpec:
         return self._prog_spec.input
 
     def num_input(self) -> int:
-        return self._prog_spec.num_input
+        return self._prog_spec.num_input()
 
     @property
     def output(self) -> Type:

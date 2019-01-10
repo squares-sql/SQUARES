@@ -75,13 +75,13 @@ class AtomNode(LeafNode):
     def __str__(self) -> str:
         return '{}'.format(self.data)
 
-    def __eq__(self, other):
-        if isinstance(other, AtomNode):
-            return self.type == other.type and self.data == other.data
-        return NotImplemented
+    # def __eq__(self, other):
+    #     if isinstance(other, AtomNode):
+    #         return self.type == other.type and self.data == other.data
+    #     return NotImplemented
 
-    def __hash__(self):
-        return hash((self.type, str(self.data)))
+    # def __hash__(self):
+    #     return hash((self.type, str(self.data)))
 
 
 class ParamNode(LeafNode):
@@ -111,13 +111,13 @@ class ParamNode(LeafNode):
     def __str__(self) -> str:
         return '@param{}'.format(self.index)
 
-    def __eq__(self, other):
-        if isinstance(other, ParamNode):
-            return self.index == other.index
-        return NotImplemented
+    # def __eq__(self, other):
+    #     if isinstance(other, ParamNode):
+    #         return self.index == other.index
+    #     return NotImplemented
 
-    def __hash__(self):
-        return hash(self.index)
+    # def __hash__(self):
+    #     return hash(self.index)
 
 
 class ApplyNode(Node):
@@ -166,10 +166,10 @@ class ApplyNode(Node):
     def __str__(self) -> str:
         return '{}({})'.format(self.name, ', '.join([str(x) for x in self._args]))
 
-    def __eq__(self, other):
-        if isinstance(other, ApplyNode):
-            return self.name == other.name and self.args == other.args
-        return NotImplemented
+    # def __eq__(self, other):
+    #     if isinstance(other, ApplyNode):
+    #         return self.name == other.name and self.args == other.args
+    #     return NotImplemented
 
-    def __hash__(self):
-        return hash((self.name, tuple(self.args)))
+    # def __hash__(self):
+    #     return hash((self.name, tuple(self.args)))
