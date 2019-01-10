@@ -4,6 +4,9 @@ from .enumerator import Enumerator
 from .optimizer import Optimizer
 
 import dsl as D
+from logger import get_logger
+
+logger = get_logger('tyrell.enumerator.smt')
 
 
 class AST:
@@ -210,6 +213,8 @@ class SmtEnumerator(Enumerator):
                     self._resolve_not_occurs_predicate(pred)
                 elif pred.name == 'is_not_parent':
                     self._resolve_is_not_parent_predicate(pred)
+                else:
+                    logger.warning('Predicate not handled: {}'.format(pred))
         except (KeyError, ValueError) as e:
             msg = 'Failed to resolve predicates. {}'.format(e)
             raise RuntimeError(msg) from None
