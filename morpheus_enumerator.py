@@ -28,6 +28,11 @@ def get_fresh_name():
     fresh_str = 'RET_DF' + str(counter_)
     return fresh_str
 
+def get_type(df, index):
+    _rscript = 'sapply({df_name}, class)[{pos}]'.format(df_name=df, pos=index)
+    ret_val = robjects.r(_rscript)
+    return ret_val[0]
+
 class MorpheusInterpreter(PostOrderInterpreter):
     ## Concrete interpreter
     def eval_ColInt(self, v):
@@ -50,11 +55,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- select({table}, {cols})'.format(
                    ret_df=ret_df_name, table=args[0], cols=get_collist(args[1]))
-        try:
-            ret_val = robjects.r(_script)
-            return ret_df_name
-        except:
-            raise GeneralError()
+        ret_val = robjects.r(_script)
+        return ret_df_name
 
     def eval_unite(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -70,11 +72,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- unite({table}, TMP, {col1}, {col2})'.format(
                   ret_df=ret_df_name, table=args[0], col1=str(args[1]), col2=str(args[2]))
-        try:
-            ret_val = robjects.r(_script)
-            return ret_df_name
-        except:
-            raise GeneralError()
+        ret_val = robjects.r(_script)
+        return ret_df_name
 
     def eval_filter(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -82,15 +81,16 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 index=2,
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
+        self.assertArg(node, args,
+                index=2,
+                cond=lambda x: get_type(args[0], str(x)) != 'factor',
+                capture_indices=[0])
 
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- {table} %>% filter(.[[{col}]] {op} {const})'.format(
                   ret_df=ret_df_name, table=args[0], op=args[1], col=str(args[2]), const=str(args[3]))
-        try:
-            ret_val = robjects.r(_script)
-            return ret_df_name
-        except:
-            raise GeneralError()
+        ret_val = robjects.r(_script)
+        return ret_df_name
 
     def eval_separate(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -102,11 +102,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- separate({table}, {col1}, c("TMP1", "TMP2"))'.format(
                   ret_df=ret_df_name, table=args[0], col1=str(args[1])) 
-        try:
-            ret_val = robjects.r(_script)
-            return ret_df_name
-        except:
-            raise GeneralError()
+        ret_val = robjects.r(_script)
+        return ret_df_name
 
     def eval_spread(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -122,11 +119,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- spread({table}, {col1}, {col2})'.format(
                   ret_df=ret_df_name, table=args[0], col1=str(args[1]), col2=str(args[2]))
-        try:
-            ret_val = robjects.r(_script)
-            return ret_df_name
-        except:
-            raise GeneralError()
+        ret_val = robjects.r(_script)
+        return ret_df_name
 
     def eval_gather(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -139,11 +133,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- gather({table}, KEY, VALUE, {cols})'.format(
                    ret_df=ret_df_name, table=args[0], cols=get_collist(args[1]))
-        try:
-            ret_val = robjects.r(_script)
-            return ret_df_name
-        except:
-            raise GeneralError()
+        ret_val = robjects.r(_script)
+        return ret_df_name
 
     def eval_group_by(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -152,15 +143,16 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 index=1,
                 cond=lambda x: max_idx <= n_cols,
                 capture_indices=[0])
+        self.assertArg(node, args,
+                index=1,
+                       cond=lambda x: len(x) == 1,
+                capture_indices=[0])
 
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- group_by({table}, {cols})'.format(
                    ret_df=ret_df_name, table=args[0], cols=get_collist(args[1]))
-        try:
-            ret_val = robjects.r(_script)
-            return ret_df_name
-        except:
-            raise GeneralError()
+        ret_val = robjects.r(_script)
+        return ret_df_name
 
     def eval_summarise(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -168,15 +160,16 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 index=2,
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
+        self.assertArg(node, args,
+                index=2,
+                cond=lambda x: get_type(args[0], str(x)) == 'integer' or get_type(args[0], str(x)) == 'numeric',
+                capture_indices=[0])
 
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- {table} %>% summarise(TMP = {aggr} (.[[{col}]]))'.format(
                   ret_df=ret_df_name, table=args[0], aggr=str(args[1]), col=str(args[2]))
-        try:
-            ret_val = robjects.r(_script)
-            return ret_df_name
-        except:
-            raise GeneralError()
+        ret_val = robjects.r(_script)
+        return ret_df_name
 
     def eval_mutate(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -188,15 +181,20 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 index=3,
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
+        self.assertArg(node, args,
+                index=2,
+                cond=lambda x: get_type(args[0], str(x)) == 'numeric',
+                capture_indices=[0])
+        self.assertArg(node, args,
+                index=3,
+                cond=lambda x: get_type(args[0], str(x)) == 'numeric',
+                capture_indices=[0])
 
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- {table} %>% mutate(TMP=.[[{col1}]] {op} .[[{col2}]])'.format(
                   ret_df=ret_df_name, table=args[0], op=args[1], col1=str(args[2]), col2=str(args[3]))
-        try:
-            ret_val = robjects.r(_script)
-            return ret_df_name
-        except:
-            raise GeneralError()
+        ret_val = robjects.r(_script)
+        return ret_df_name
 
     def eval_inner_join(self, node, args):
         ret_df_name = get_fresh_name()
@@ -263,7 +261,8 @@ def main():
         spec=spec,
         #loc: # of function productions
         # enumerator=SmtEnumerator(spec, depth=2, loc=1),
-        enumerator=SmtEnumerator(spec, depth=3, loc=2),
+        # enumerator=SmtEnumerator(spec, depth=3, loc=2),
+        enumerator=SmtEnumerator(spec, depth=4, loc=3),
         interpreter=MorpheusInterpreter(),
         examples=[
             # Example(input=[DataFrame2(benchmark1_input)], output=benchmark1_output),
