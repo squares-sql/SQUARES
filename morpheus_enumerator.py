@@ -53,10 +53,9 @@ class MorpheusInterpreter(PostOrderInterpreter):
 
     def eval_select(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
-        max_idx = max(list(map(lambda x: int(x), args[1])))
         self.assertArg(node, args,
                 index=1,
-                cond=lambda x: max_idx <= n_cols,
+                cond=lambda x: max(list(map(lambda y: int(y), x))) <= n_cols,
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
@@ -131,10 +130,9 @@ class MorpheusInterpreter(PostOrderInterpreter):
 
     def eval_gather(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
-        max_idx = max(list(map(lambda x: int(x), args[1])))
         self.assertArg(node, args,
                 index=1,
-                cond=lambda x: max_idx <= n_cols,
+                cond=lambda x: max(list(map(lambda y: int(y), x))) <= n_cols,
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
@@ -145,10 +143,9 @@ class MorpheusInterpreter(PostOrderInterpreter):
 
     def eval_group_by(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
-        max_idx = max(list(map(lambda x: int(x), args[1])))
         self.assertArg(node, args,
                 index=1,
-                cond=lambda x: max_idx <= n_cols,
+                cond=lambda x: max(list(map(lambda y: int(y), x))) <= n_cols,
                 capture_indices=[0])
         self.assertArg(node, args,
                 index=1,
