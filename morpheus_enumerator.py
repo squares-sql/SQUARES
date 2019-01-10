@@ -28,6 +28,13 @@ def get_fresh_name():
     fresh_str = 'RET_DF' + str(counter_)
     return fresh_str
 
+def get_fresh_col():
+    global counter_ 
+    counter_ = counter_ + 1
+
+    fresh_str = 'COL' + str(counter_)
+    return fresh_str
+
 def get_type(df, index):
     _rscript = 'sapply({df_name}, class)[{pos}]'.format(df_name=df, pos=index)
     ret_val = robjects.r(_rscript)
@@ -70,8 +77,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
-        _script = '{ret_df} <- unite({table}, TMP, {col1}, {col2})'.format(
-                  ret_df=ret_df_name, table=args[0], col1=str(args[1]), col2=str(args[2]))
+        _script = '{ret_df} <- unite({table}, {TMP}, {col1}, {col2})'.format(
+                  ret_df=ret_df_name, table=args[0], TMP=get_fresh_col(), col1=str(args[1]), col2=str(args[2]))
         ret_val = robjects.r(_script)
         return ret_df_name
 
@@ -100,8 +107,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
-        _script = '{ret_df} <- separate({table}, {col1}, c("TMP1", "TMP2"))'.format(
-                  ret_df=ret_df_name, table=args[0], col1=str(args[1])) 
+        _script = '{ret_df} <- separate({table}, {col1}, c({TMP1}, {TMP2}))'.format(
+                  ret_df=ret_df_name, table=args[0], col1=str(args[1]), TMP1=get_fresh_col(), TMP2=get_fresh_col())
         ret_val = robjects.r(_script)
         return ret_df_name
 
@@ -166,8 +173,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
-        _script = '{ret_df} <- {table} %>% summarise(TMP = {aggr} (.[[{col}]]))'.format(
-                  ret_df=ret_df_name, table=args[0], aggr=str(args[1]), col=str(args[2]))
+        _script = '{ret_df} <- {table} %>% summarise({TMP} = {aggr} (.[[{col}]]))'.format(
+                  ret_df=ret_df_name, table=args[0], TMP=get_fresh_col(), aggr=str(args[1]), col=str(args[2]))
         ret_val = robjects.r(_script)
         return ret_df_name
 
@@ -191,8 +198,8 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
-        _script = '{ret_df} <- {table} %>% mutate(TMP=.[[{col1}]] {op} .[[{col2}]])'.format(
-                  ret_df=ret_df_name, table=args[0], op=args[1], col1=str(args[2]), col2=str(args[3]))
+        _script = '{ret_df} <- {table} %>% mutate({TMP}=.[[{col1}]] {op} .[[{col2}]])'.format(
+                  ret_df=ret_df_name, table=args[0], TMP=get_fresh_col(), op=args[1], col1=str(args[2]), col2=str(args[3]))
         ret_val = robjects.r(_script)
         return ret_df_name
 
