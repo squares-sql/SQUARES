@@ -107,7 +107,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
-        _script = '{ret_df} <- separate({table}, {col1}, c({TMP1}, {TMP2}))'.format(
+        _script = '{ret_df} <- separate({table}, {col1}, c("{TMP1}", "{TMP2}"))'.format(
                   ret_df=ret_df_name, table=args[0], col1=str(args[1]), TMP1=get_fresh_col(), TMP2=get_fresh_col())
         ret_val = robjects.r(_script)
         return ret_df_name

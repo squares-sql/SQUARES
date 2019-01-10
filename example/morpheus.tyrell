@@ -83,5 +83,5 @@ func summarise: Table r -> Table a, Aggr b, ColInt c {
 func inner_join: Table r -> Table a, Table b {
   col(r) < col(a) + col(b);
 }
-predicate is_parent_of(spread, unite, 60);
-predicate is_parent_of(unite, gather, 60);
+predicate is_parent(spread, unite, 60);
+predicate is_parent(unite, gather, 60);
