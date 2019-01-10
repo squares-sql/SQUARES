@@ -5,6 +5,7 @@ from .optimizer import Optimizer
 
 import dsl as D
 
+
 class AST:
     def __init__(self):
         self.head = None
@@ -160,7 +161,43 @@ class SmtEnumerator(Enumerator):
                     d.append(c)
         return tree, nodes
 
-    def __init__(self, spec=None, depth=None, loc=None):
+    @staticmethod
+    def _check_arg_types(pred, python_tys):
+        if pred.num_args() < len(python_tys):
+            msg = 'Predicate "{}" must have at least {} arugments. Only {} is found.'.format(
+                pred.name, len(python_tys), pred.num_args())
+            raise ValueError(msg)
+        for index, (arg, python_ty) in enumerate(zip(pred.args, python_tys)):
+            if not isinstance(arg, python_ty):
+                msg = 'Argument {} of predicate {} has unexpected type.'.format(
+                    index, pred.name)
+                raise ValueError(msg)
+
+    def _resolve_occurs_predicate(self, pred):
+        self._check_arg_types(pred, [str, (int, float)])
+        prod = self.spec.get_function_production_or_raise(pred.args[0])
+        weight = pred.args[1]
+        self.optimizer.mk_occurs(prod, weight)
+
+    def _resolve_is_parent_predicate(self, pred):
+        self._check_arg_types(pred, [str, str, (int, float)])
+        prod0 = self.spec.get_function_production_or_raise(pred.args[0])
+        prod1 = self.spec.get_function_production_or_raise(pred.args[1])
+        weight = pred.args[2]
+        self.optimizer.mk_is_parent(prod0, prod1, weight)
+
+    def resolve_predicates(self):
+        try:
+            for pred in self.spec.predicates():
+                if pred.name == 'occurs':
+                    self._resolve_occurs_predicate(pred)
+                elif pred.name == 'is_parent':
+                    self._resolve_is_parent_predicate(pred)
+        except (KeyError, ValueError) as e:
+            msg = 'Failed to resolve predicates. {}'.format(e)
+            raise RuntimeError(msg) from None
+
+    def __init__(self, spec, depth=None, loc=None):
         self.spec = spec
         self.depth = depth
         self.loc = loc
@@ -175,16 +212,17 @@ class SmtEnumerator(Enumerator):
         self.createFunctionConstraints(self.z3_solver)
         self.createLeafConstraints(self.z3_solver)
         self.createChildrenConstraints(self.z3_solver)
-        self.optimizer = Optimizer(self.z3_solver, spec, self.variables, self.nodes)
-
+        self.optimizer = Optimizer(
+            self.z3_solver, spec, self.variables, self.nodes)
+        self.resolve_predicates()
 
     def blockModel(self):
         assert(self.model != None)
-        # m = self.z3_solver.model()   
+        # m = self.z3_solver.model()
         block = []
         # block the model using only the variables that correspond to productions
         for x in self.variables:
-          block.append(x != self.model[x])
+            block.append(x != self.model[x])
         ctr = Or(block)
         self.z3_solver.add(ctr)
 
@@ -193,16 +231,17 @@ class SmtEnumerator(Enumerator):
         # self.blockModel() # do I need to block the model anyway?
         if info != None and not isinstance(info, str):
             for core in info:
-              ctr = None
-              for constraint in core:
-                if ctr == None:
-                  ctr = self.variables[self.program2tree[constraint[0]].id - 1] != constraint[1].id
-                else:
-                  ctr = Or(ctr, self.variables[self.program2tree[constraint[0]].id - 1] != constraint[1].id)
-              self.z3_solver.add(ctr)
+                ctr = None
+                for constraint in core:
+                    if ctr == None:
+                        ctr = self.variables[self.program2tree[constraint[0]
+                                                               ].id - 1] != constraint[1].id
+                    else:
+                        ctr = Or(
+                            ctr, self.variables[self.program2tree[constraint[0]].id - 1] != constraint[1].id)
+                self.z3_solver.add(ctr)
         else:
-          self.blockModel()
-
+            self.blockModel()
 
     def buildProgram(self):
         result = [0] * len(self.model)
@@ -239,8 +278,8 @@ class SmtEnumerator(Enumerator):
 
     def next(self):
         while True:
-          self.model = self.optimizer.optimize(self.z3_solver)
-          if self.model != None:
-            return self.buildProgram()
-          else:
-            return None
+            self.model = self.optimizer.optimize(self.z3_solver)
+            if self.model != None:
+                return self.buildProgram()
+            else:
+                return None

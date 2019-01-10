@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Iterable
 
 
 class Predicate:
@@ -10,12 +10,15 @@ class Predicate:
         self._args = args
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def args(self):
+    def args(self) -> Iterable[Any]:
         return self._args
+
+    def num_args(self) -> int:
+        return len(self._args)
 
     def __repr__(self) -> str:
         return 'Predicate(name={}, args={})'.format(self._name, self._args)

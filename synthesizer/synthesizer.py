@@ -48,12 +48,6 @@ class Synthesizer(ABC):
     def interpreter(self):
         return self._interpreter
 
-    def mk_occurs(self, production, weight=None):
-        self._enumerator.optimizer.mk_occurs(production, weight)
-
-    def mk_is_parent(self, parent, child, weight=None):
-        self._enumerator.optimizer.mk_is_parent(parent, child, weight)
-
     def synthesize(self):
         '''
         A convenient method to enumerate ASTs until the result passes the analysis.
