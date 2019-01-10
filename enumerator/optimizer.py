@@ -39,7 +39,7 @@ class Optimizer:
         self.solver.add(Implies(self.variables[y] == x, self.var_occurs[x] == 1))
       self.solver.add(Implies(ctr, rhs))
 
-    for x in range(0, len(self.variables)):
+    for x in range(0, len(self.var_occurs)):
       for y in range(0, len(self.variables)):
         self.solver.add(Implies(self.var_occurs[x] == 0, self.variables[y] != x))
 
