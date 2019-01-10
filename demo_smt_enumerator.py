@@ -30,9 +30,10 @@ func mult: Int r -> Int a, Int b {
 func empty: Empty -> Empty;
 
 # You can use any number larger than 0 as weight (does not need to be bounded at 100)
-predicate occurs(minus, 80);
+# predicate occurs(minus, 80);
 predicate occurs(mult, 10);
 predicate is_parent(minus, mult, 99);
+predicate is_not_parent(mult, minus, 500);
 
 # Since the program we want is mult(@param1, minus(@param0, @param1))
 # The following 2 constraints would find that program very quickly

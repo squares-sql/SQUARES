@@ -39,6 +39,46 @@ class Optimizer:
         self.solver.add(Implies(self.variables[y] == x, self.var_occurs[x] == 1))
       self.solver.add(Implies(ctr, rhs))
 
+    for x in range(0, len(self.variables)):
+      for y in range(0, len(self.variables)):
+        self.solver.add(Implies(self.var_occurs[x] == 0, self.variables[y] != x))
+
+  def mk_is_not_parent(self, parent, child, weight=None):
+    child_pos = []
+    # find positions that type-check between parent and child
+    for x in range(0,len(parent.rhs)):
+       if child.lhs == parent.rhs[x]:
+        child_pos.append(x)
+
+    for n in self.nodes:
+      # not a leaf node
+      if n.children != None:
+        if weight != None:
+          # FIXME: reduce duplication of code
+          name = 'relax' + str(self.id)
+          v = Int(name)
+          self.cost_relax_vars[v] = weight
+          self.relax_vars.append(v)
+          self.objective.append(Product(weight,v))
+          # domain of the relaxation variable
+          self.solver.add(Or(v == 0, v == 1))
+          # constraint for the is_parent constraint
+          ctr_children = []
+          for p in range(0,len(child_pos)):
+            ctr_children.append(self.variables[n.children[p].id-1] == child.id)
+
+          self.solver.add(Or(Implies(Or(ctr_children),self.variables[n.id - 1] != parent.id), v == 1))
+          # relation between relaxation variables and constraint
+          self.solver.add(Implies(v == 1, Or(self.variables[n.id - 1] == parent.id, Not(Or(ctr_children)))))
+          self.solver.add(Implies(And(self.variables[n.id - 1] != parent.id, Or(ctr_children)), v == 0))
+          self.id = self.id + 1
+        else:
+          ctr_children = []
+          for p in range(0,len(child_pos)):
+            ctr_children.append(self.variables[n.children[p].id-1] == child.id)
+
+          self.solver.add(Implies(Or(ctr_children),self.variables[n.id - 1] != parent.id))
+
   # FIXME: dissociate the creation of variables with the creation of constraints?
   def mk_is_parent(self, parent, child, weight=None):
     '''children production will have the parent production with probability weight'''
@@ -77,6 +117,28 @@ class Optimizer:
             ctr_children.append(self.variables[n.children[p].id-1] == child.id)
 
           self.solver.add(Implies(self.variables[n.id - 1] == parent.id, Or(ctr_children)))  
+
+  def mk_not_occurs(self, production, weight=None):
+    '''a production will not occur with a given probability'''
+    if len(self.var_occurs) == 0:
+      self.createVariablesOccurrence()
+
+    if weight != None:
+      name = 'relax' + str(self.id)
+      v = Int(name)
+      self.cost_relax_vars[v] = weight
+      self.relax_vars.append(v)
+      self.objective.append(Product(weight,v))
+      # domain of the relaxation variable
+      self.solver.add(Or(v == 0, v == 1))
+      # constraint for at least once
+      self.solver.add(Or(self.var_occurs[production.id] == 0, v == 1))
+      # relation between relaxation variables and constraint
+      self.solver.add(Implies(v == 1, self.var_occurs[production.id] != 0))
+      self.solver.add(Implies(self.var_occurs[production.id] == 0, v == 0))
+      self.id = self.id + 1
+    else:
+      self.solver.add(self.var_occurs[production.id] == 0)
 
   # FIXME: dissociate the creation of variables with the creation of constraints?
   def mk_occurs(self, production, weight=None):
