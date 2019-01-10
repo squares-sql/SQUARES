@@ -1,13 +1,14 @@
 import unittest
-import spec as S
+from .type import EnumType, ValueType
+from .spec import TypeSpec, ProductionSpec, PredicateSpec
 
 
 class TestTyrellSpec(unittest.TestCase):
 
     def test_type(self):
-        ty0 = S.EnumType('Type0')
-        ty1 = S.ValueType('Type1')
-        spec = S.TypeSpec()
+        ty0 = EnumType('Type0')
+        ty1 = ValueType('Type1')
+        spec = TypeSpec()
         spec.define_type(ty0)
         spec.define_type(ty1)
         self.assertEqual(spec.get_type('Type0'), ty0)
@@ -21,9 +22,9 @@ class TestTyrellSpec(unittest.TestCase):
             spec.define_type(ty0)
 
     def test_production(self):
-        ty0 = S.EnumType('Type0')
-        ty1 = S.ValueType('Type1')
-        spec = S.ProductionSpec()
+        ty0 = EnumType('Type0')
+        ty1 = ValueType('Type1')
+        spec = ProductionSpec()
         prod0 = spec.add_func_production(name='base', lhs=ty1, rhs=[ty0])
         prod1 = spec.add_func_production(name='rec', lhs=ty1, rhs=[ty0, ty1])
         self.assertEqual(spec.get_production(prod0.id), prod0)
@@ -44,6 +45,30 @@ class TestTyrellSpec(unittest.TestCase):
         self.assertEqual(len(list(spec.productions())), 2)
         spec.add_func_production(name='base2', lhs=ty1, rhs=[ty0])
         self.assertEqual(len(list(spec.productions())), 3)
+
+    def test_predicate(self):
+        spec = PredicateSpec()
+        pred0 = spec.add_predicate('f', ['abc', 3, False])
+        pred1 = spec.add_predicate('g', [2.5])
+        pred2 = spec.add_predicate('f', ['def', 4, True])
+
+        preds = spec.predicates()
+        self.assertEqual(len(preds), 3)
+        self.assertIn(pred0, preds)
+        self.assertIn(pred1, preds)
+        self.assertIn(pred2, preds)
+
+        f_preds = spec.get_predicates_with_name('f')
+        self.assertEqual(len(f_preds), 2)
+        self.assertIn(pred0, f_preds)
+        self.assertIn(pred2, f_preds)
+
+        g_preds = spec.get_predicates_with_name('g')
+        self.assertEqual(len(g_preds), 1)
+        self.assertIn(pred1, g_preds)
+
+        h_preds = spec.get_predicates_with_name('h')
+        self.assertEqual(len(h_preds), 0)
 
 
 if __name__ == '__main__':

@@ -6,16 +6,23 @@ logger = get_logger('tyrell')
 
 
 def print_spec(spec: S.TyrellSpec):
-    logger.info('Defined types:')
-    for ty in spec.types():
-        logger.info('  {!r}'.format(ty))
+    if spec.num_types() > 0:
+        logger.info('Defined types:')
+        for ty in spec.types():
+            logger.info('  {!r}'.format(ty))
 
-    logger.info('Defined productions:')
-    for prod in spec.productions():
-        logger.info('  {}'.format(prod))
-        if prod.is_function():
-            for expr in prod.constraints:
-                logger.info('    Constraint: {}'.format(expr))
+    if spec.num_productions() > 0:
+        logger.info('Defined productions:')
+        for prod in spec.productions():
+            logger.info('  {}'.format(prod))
+            if prod.is_function():
+                for expr in prod.constraints:
+                    logger.info('    Constraint: {}'.format(expr))
+
+    if spec.num_predicates() > 0:
+        logger.info('Defined predicates:')
+        for pred in spec.predicates():
+            logger.info('  {}'.format(pred))
 
 
 @click.command()

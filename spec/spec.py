@@ -1,7 +1,8 @@
-from typing import List, Dict, DefaultDict, Optional, Union
+from typing import Iterable, List, Dict, DefaultDict, Optional, Union, Any
 from .type import Type, EnumType, ValueType
 from .production import EnumProduction, ParamProduction, FunctionProduction, Production
 from .expr import Expr
+from .predicate import Predicate
 from collections import defaultdict
 
 
@@ -39,9 +40,9 @@ class TypeSpec:
             self._types[name] = ty
         return ty
 
-    def types(self):
+    def types(self) -> Iterable[Type]:
         '''Return an iterator for all defined types'''
-        return iter(self._types.values())
+        return self._types.values()
 
     def num_types(self) -> int:
         '''Return the total number of defined types'''
@@ -207,9 +208,9 @@ class ProductionSpec:
         self._add_production(prod)
         return prod
 
-    def productions(self):
-        '''Return an iterator for all productions'''
-        return iter(self._productions)
+    def productions(self) -> Iterable[Production]:
+        '''Return all productions'''
+        return self._productions
 
     def num_productions(self) -> int:
         '''Return the number of defined productions'''
@@ -241,27 +242,57 @@ class ProgramSpec:
         self._output = out_type
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def input(self):
+    def input(self) -> List[Type]:
         return self._input
 
-    def num_input(self):
+    def num_input(self) -> int:
         return len(self._input)
 
     @property
-    def output(self):
+    def output(self) -> Type:
         return self._output
+
+
+class PredicateSpec:
+    _preds: List[Predicate]
+    _name_map: DefaultDict[str, List[Predicate]]
+
+    def __init__(self):
+        self._preds = list()
+        self._name_map = defaultdict(list)
+
+    def add_predicate(self, name: str, args: List[Any]=[]) -> Predicate:
+        pred = Predicate(name, args)
+        self._preds.append(pred)
+        self._name_map[name].append(pred)
+        return pred
+
+    def get_predicates_with_name(self, name: str) -> List[Predicate]:
+        return self._name_map.get(name, [])
+
+    def predicates(self) -> Iterable[Predicate]:
+        return self._preds
+
+    def num_predicates(self) -> int:
+        '''Return the number of predicates'''
+        return len(self._preds)
 
 
 class TyrellSpec:
     _type_spec: TypeSpec
     _prog_spec: ProgramSpec
     _prod_spec: ProductionSpec
+    _pred_spec: PredicateSpec
 
-    def __init__(self, type_spec, prog_spec, prod_spec):
+    def __init__(self,
+                 type_spec,
+                 prog_spec,
+                 prod_spec=ProductionSpec(),
+                 pred_spec=PredicateSpec()):
         # Generate all enum productions
         self._add_enum_productions(
             prod_spec,
@@ -273,6 +304,7 @@ class TyrellSpec:
         self._type_spec = type_spec
         self._prog_spec = prog_spec
         self._prod_spec = prod_spec
+        self._pred_spec = pred_spec
 
     @staticmethod
     def _add_enum_productions(prod_spec, enum_tys):
@@ -332,7 +364,7 @@ class TyrellSpec:
     def get_enum_production_or_raise(self, ty: EnumType, value: str) -> Optional[Production]:
         return self._prod_spec.get_enum_production_or_raise(ty, value)
 
-    def productions(self):
+    def productions(self) -> Iterable[Production]:
         return self._prod_spec.productions()
 
     def num_productions(self) -> int:
@@ -340,16 +372,27 @@ class TyrellSpec:
 
     # Delegate methods for ProgramSpec
     @property
-    def name(self):
+    def name(self) -> str:
         return self._prog_spec.name
 
     @property
-    def input(self):
+    def input(self) -> List[Type]:
         return self._prog_spec.input
 
-    def num_input(self):
+    def num_input(self) -> int:
         return self._prog_spec.num_input
 
     @property
-    def output(self):
+    def output(self) -> Type:
         return self._prog_spec.output
+
+    # Delegate methods for PredicateSpec
+    def get_predicates_with_name(self, name: str) -> List[Predicate]:
+        return self._pred_spec.get_predicates_with_name(name)
+
+    def predicates(self) -> Iterable[Predicate]:
+        return self._pred_spec.predicates()
+
+    def num_predicates(self) -> int:
+        '''Return the number of predicates'''
+        return self._pred_spec.num_predicates()

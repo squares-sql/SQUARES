@@ -1,6 +1,6 @@
 from ast import literal_eval
 from typing import List, cast
-from .spec import TypeSpec, ProductionSpec, ProgramSpec, TyrellSpec
+from .spec import TypeSpec, ProductionSpec, ProgramSpec, PredicateSpec, TyrellSpec
 from .type import Type, EnumType, ValueType
 from .expr import *
 from .parser import Visitor_Recursive
@@ -237,6 +237,43 @@ class ProductionCollecotr(Visitor_Recursive):
         return self._prod_spec
 
 
+class PredicateCollector(Visitor_Recursive):
+    _pred_spec: PredicateSpec
+
+    def __init__(self):
+        self._pred_spec = PredicateSpec()
+
+    def _process_arg(self, tree):
+        arg_kind = str(tree.data)
+        if arg_kind == 'pred_var':
+            return str(tree.children[0])
+        elif arg_kind == 'pred_str':
+            return literal_eval(str(tree.children[0]))
+        elif arg_kind == 'pred_false':
+            return False
+        elif arg_kind == 'pred_true':
+            return True
+        elif arg_kind == 'pred_num':
+            num_str = str(tree.children[0])
+            try:
+                # Try integer first
+                return int(num_str)
+            except ValueError:
+                # If that doesn't work, try float instead
+                return float(num_str)
+        else:
+            msg = 'Unrecognized predicate arg kind: {}'.format(arg_kind)
+            raise NotImplementedError(msg)
+
+    def pred_body(self, tree):
+        name = tree.children[0]
+        args = [self._process_arg(x) for x in tree.children[1].children]
+        self._pred_spec.add_predicate(name, args)
+
+    def collect(self) -> PredicateSpec:
+        return self._pred_spec
+
+
 def desugar(parse_tree):
     logger.debug('Building Tyrell spec from parse tree...')
     try:
@@ -256,6 +293,12 @@ def desugar(parse_tree):
         prod_collector.visit(parse_tree)
         prod_spec = prod_collector.collect()
 
-        return TyrellSpec(type_spec, prog_spec, prod_spec)
+        # Process global predicates
+        logger.debug('Processing global predicates...')
+        pred_collector = PredicateCollector()
+        pred_collector.visit(parse_tree)
+        pred_spec = pred_collector.collect()
+
+        return TyrellSpec(type_spec, prog_spec, prod_spec, pred_spec)
     except (KeyError, ValueError) as e:
         raise ParseTreeProcessingError('{}'.format(e))

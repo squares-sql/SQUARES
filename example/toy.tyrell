@@ -22,3 +22,7 @@ func mult: Int r -> Int a, Int b {
 	is_positive(a) && is_positive(b) ==> is_positive(r);
 	!is_positive(a) && !is_positive(b) ==> !is_positive(r);
 }
+
+# These free-form global predicates will be interpreted by client synthesizers
+predicate occurs(plus, 0.5);
+predicate is_parent_of(minus, const, 0.6);

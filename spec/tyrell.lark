@@ -1,4 +1,4 @@
-start: type_decls program_decl func_decls
+start: type_decls program_decl func_decls global_preds
 
 type_decls: type_decl*
 
@@ -105,6 +105,20 @@ func_constraint_items: func_constraint_item func_constraint_item*
 
 type_names: [type_name ("," type_name)*]
 
+global_preds: global_pred*
+
+?global_pred: "predicate" pred_body ";"
+
+pred_body: func_name "(" pred_args ")"
+
+pred_args: [pred_arg ("," pred_arg)*]
+
+pred_arg: var_name -> pred_var
+  | SNUMBER -> pred_num
+  | "false" -> pred_false
+  | "true" -> pred_true
+  | STRLIT -> pred_str
+
 ?enum_item: STRLIT
 ?expr_type_name: "bool" -> expr_bool
   | "int" -> expr_int
@@ -119,6 +133,7 @@ COMMENT: "#" /.*/ "\n"
 %import common.ESCAPED_STRING -> STRLIT
 %import common.CNAME -> NAME
 %import common.INT -> INT
+%import common.SIGNED_NUMBER -> SNUMBER
 %import common.WS
 %ignore WS
 %ignore COMMENT
