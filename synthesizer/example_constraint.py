@@ -1,4 +1,4 @@
-from typing import cast, NamedTuple, Optional, List, Set, FrozenSet, Dict, DefaultDict, Any, ClassVar, Callable
+from typing import cast, NamedTuple, Optional, List, Set, FrozenSet, Mapping, MutableMapping, Any, ClassVar, Callable
 from collections import defaultdict
 from itertools import permutations
 import z3
@@ -16,6 +16,8 @@ from .result import ok, bad
 logger = get_logger('tyrell.synthesizer.constraint')
 
 Blame = NamedTuple('Blame', [('node', Node), ('production', Production)])
+ImplyMap = Mapping[Production, List[Production]]
+MutableImplyMap = MutableMapping[Production, List[Production]]
 
 
 # The default printer for Blame is too verbose. We use a simplified version here.
@@ -160,12 +162,12 @@ class Z3Encoder(GenericVisitor):
 
 class BlameFinder:
     _interp: Interpreter
-    _imply_map: DefaultDict[Production, List[Production]]
+    _imply_map: ImplyMap
     _prog: Node
     _indexer: NodeIndexer
     _blames_collection: Set[FrozenSet[Blame]]
 
-    def __init__(self, interp: Interpreter, imply_map: DefaultDict[Production, List[Production]], prog: Node):
+    def __init__(self, interp: Interpreter, imply_map: ImplyMap, prog: Node):
         self._interp = interp
         self._imply_map = imply_map
         self._prog = prog
@@ -209,7 +211,7 @@ class BlameFinder:
 
 
 class ExampleConstraintSynthesizer(ExampleSynthesizer):
-    _imply_map: DefaultDict[Production, List[Production]]
+    _imply_map: ImplyMap
 
     def __init__(self,
                  spec: TyrellSpec,
@@ -240,8 +242,8 @@ class ExampleConstraintSynthesizer(ExampleSynthesizer):
         z3_solver.add(z3.Not(z3.Implies(z3_pre, z3_post)))
         return z3_solver.check() == z3.unsat
 
-    def _build_imply_map(self, spec: TyrellSpec) -> DefaultDict[Production, List[Production]]:
-        ret = defaultdict(list)
+    def _build_imply_map(self, spec: TyrellSpec) -> ImplyMap:
+        ret: MutableImplyMap = defaultdict(list)
         constrained_prods = filter(
             lambda prod: prod.is_function() and len(prod.constraints) > 0,
             spec.productions())
