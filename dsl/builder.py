@@ -90,8 +90,13 @@ class Builder:
         # Next, check for atom node
         ty = self.get_type(sym)
         if ty is not None and ty.is_enum():
-            value = str(sexp[1])
-            return self.make_enum(ty.name, value)
+            if isinstance(sexp[1], list):
+                # Could be a enum list
+                value = [str(x) for x in sexp[1]]
+                return self.make_enum(ty.name, value)
+            else:
+                value = str(sexp[1])
+                return self.make_enum(ty.name, value)
 
         # Finally, check for apply node
         args = [self._from_sexp(x) for x in sexp[1:]]
