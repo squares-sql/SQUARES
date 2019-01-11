@@ -82,7 +82,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 capture_indices=[0])
         self.assertArg(node, args,
                 index=2,
-                cond=lambda x: x <= n_cols and x > first_idx,
+                cond=lambda x: x <= n_cols and x != first_idx,
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
