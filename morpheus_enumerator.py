@@ -40,6 +40,11 @@ def get_type(df, index):
     ret_val = robjects.r(_rscript)
     return ret_val[0]
 
+def eq_r(actual, expect):
+    _rscript = 'all_equal({lhs}, {rhs})'.format(lhs=actual, rhs=expect)
+    ret_val = robjects.r(_rscript)
+    return 'TRUE' == ret_val[0]
+
 class MorpheusInterpreter(PostOrderInterpreter):
     ## Concrete interpreter
     def eval_ColInt(self, v):
@@ -70,13 +75,14 @@ class MorpheusInterpreter(PostOrderInterpreter):
 
     def eval_unite(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        first_idx = int(args[1])
         self.assertArg(node, args,
                 index=1,
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
         self.assertArg(node, args,
                 index=2,
-                cond=lambda x: x <= n_cols,
+                cond=lambda x: x <= n_cols and x > first_idx,
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
@@ -129,13 +135,14 @@ class MorpheusInterpreter(PostOrderInterpreter):
 
     def eval_spread(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
+        first_idx = int(args[1])
         self.assertArg(node, args,
                 index=1,
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
         self.assertArg(node, args,
                 index=2,
-                cond=lambda x: x <= n_cols,
+                cond=lambda x: x <= n_cols and x > first_idx,
                 capture_indices=[0])
 
         ret_df_name = get_fresh_name()
@@ -308,8 +315,9 @@ def main():
         interpreter=MorpheusInterpreter(),
         examples=[
             # Example(input=[DataFrame2(benchmark1_input)], output=benchmark1_output),
-            Example(input=['dat'], output=benchmark1_output),
-        ]
+            Example(input=['dat'], output='dat2'),
+        ],
+        equal_output=eq_r
     )
     logger.info('Synthesizing programs...')
 

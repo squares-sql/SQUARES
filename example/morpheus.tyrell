@@ -1,14 +1,14 @@
 # First, specify the types that will be used
 enum ColInt {
-  "1", "2", "3", "9"
+  "1", "2", "3"
 }
 
 enum SmallInt {
   "1", "2", "3"
 }
 
-enumset ColList[2] {
-  "1", "2", "3", "9"
+enumset ColList[3] {
+  "2", "3", "5"
 }
 
 enum Aggr {
