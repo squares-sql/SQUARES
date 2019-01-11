@@ -61,8 +61,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- select({table}, {cols})'.format(
                    ret_df=ret_df_name, table=args[0], cols=get_collist(args[1]))
-        ret_val = robjects.r(_script)
-        return ret_df_name
+        try:
+            ret_val = robjects.r(_script)
+            return ret_df_name
+        except:
+            logger.error('Error in interpreting select...')
+            raise GeneralError()
 
     def eval_unite(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -78,8 +82,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- unite({table}, {TMP}, {col1}, {col2})'.format(
                   ret_df=ret_df_name, table=args[0], TMP=get_fresh_col(), col1=str(args[1]), col2=str(args[2]))
-        ret_val = robjects.r(_script)
-        return ret_df_name
+        try:
+            ret_val = robjects.r(_script)
+            return ret_df_name
+        except:
+            logger.error('Error in interpreting unite...')
+            raise GeneralError()
 
     def eval_filter(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -95,8 +103,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- {table} %>% filter(.[[{col}]] {op} {const})'.format(
                   ret_df=ret_df_name, table=args[0], op=args[1], col=str(args[2]), const=str(args[3]))
-        ret_val = robjects.r(_script)
-        return ret_df_name
+        try:
+            ret_val = robjects.r(_script)
+            return ret_df_name
+        except:
+            logger.error('Error in interpreting filter...')
+            raise GeneralError()
 
     def eval_separate(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -108,8 +120,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- separate({table}, {col1}, c("{TMP1}", "{TMP2}"))'.format(
                   ret_df=ret_df_name, table=args[0], col1=str(args[1]), TMP1=get_fresh_col(), TMP2=get_fresh_col())
-        ret_val = robjects.r(_script)
-        return ret_df_name
+        try:
+            ret_val = robjects.r(_script)
+            return ret_df_name
+        except:
+            logger.error('Error in interpreting separate...')
+            raise GeneralError()
 
     def eval_spread(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -125,8 +141,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- spread({table}, {col1}, {col2})'.format(
                   ret_df=ret_df_name, table=args[0], col1=str(args[1]), col2=str(args[2]))
-        ret_val = robjects.r(_script)
-        return ret_df_name
+        try:
+            ret_val = robjects.r(_script)
+            return ret_df_name
+        except:
+            logger.error('Error in interpreting spread...')
+            raise GeneralError()
 
     def eval_gather(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -138,8 +158,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- gather({table}, KEY, VALUE, {cols})'.format(
                    ret_df=ret_df_name, table=args[0], cols=get_collist(args[1]))
-        ret_val = robjects.r(_script)
-        return ret_df_name
+        try:
+            ret_val = robjects.r(_script)
+            return ret_df_name
+        except:
+            logger.error('Error in interpreting gather...')
+            raise GeneralError()
 
     def eval_group_by(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -155,8 +179,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- group_by({table}, {cols})'.format(
                    ret_df=ret_df_name, table=args[0], cols=get_collist(args[1]))
-        ret_val = robjects.r(_script)
-        return ret_df_name
+        try:
+            ret_val = robjects.r(_script)
+            return ret_df_name
+        except:
+            logger.error('Error in interpreting group_by...')
+            raise GeneralError()
 
     def eval_summarise(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -172,8 +200,12 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- {table} %>% summarise({TMP} = {aggr} (.[[{col}]]))'.format(
                   ret_df=ret_df_name, table=args[0], TMP=get_fresh_col(), aggr=str(args[1]), col=str(args[2]))
-        ret_val = robjects.r(_script)
-        return ret_df_name
+        try:
+            ret_val = robjects.r(_script)
+            return ret_df_name
+        except:
+            logger.error('Error in interpreting summarise...')
+            raise GeneralError()
 
     def eval_mutate(self, node, args):
         n_cols = robjects.r('ncol(' + args[0] + ')')[0]
@@ -197,8 +229,13 @@ class MorpheusInterpreter(PostOrderInterpreter):
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- {table} %>% mutate({TMP}=.[[{col1}]] {op} .[[{col2}]])'.format(
                   ret_df=ret_df_name, table=args[0], TMP=get_fresh_col(), op=args[1], col1=str(args[2]), col2=str(args[3]))
-        ret_val = robjects.r(_script)
-        return ret_df_name
+        try:
+            ret_val = robjects.r(_script)
+            return ret_df_name
+        except:
+            logger.error('Error in interpreting mutate...')
+            raise GeneralError()
+
 
     def eval_inner_join(self, node, args):
         ret_df_name = get_fresh_name()
@@ -208,6 +245,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
             ret_val = robjects.r(_script)
             return ret_df_name
         except:
+            logger.error('Error in interpreting innerjoin...')
             raise GeneralError()
 
     ## Abstract interpreter
