@@ -16,13 +16,15 @@ class Optimizer:
   cost_relax_vars = {}
 
   def __init__(self, solver, spec, variables, nodes):
-    self.bound = None
+    self.bound = 0
+    self.ub = 0
     self.solver = solver
     self.spec = spec
     self.variables = variables
     self.id = 0
     self.objective = []
     self.nodes = nodes
+    self.weights = []
 
   def createVariablesOccurrence(self):
     for x in range(0, self.spec.num_productions()):
@@ -60,6 +62,8 @@ class Optimizer:
           self.cost_relax_vars[v] = weight
           self.relax_vars.append(v)
           self.objective.append(Product(weight,v))
+          self.weights.append(weight)
+          self.ub += weight
           # domain of the relaxation variable
           self.solver.add(Or(v == 0, v == 1))
           # constraint for the is_parent constraint
@@ -99,6 +103,8 @@ class Optimizer:
           self.cost_relax_vars[v] = weight
           self.relax_vars.append(v)
           self.objective.append(Product(weight,v))
+          self.weights.append(weight)
+          self.ub += weight
           # domain of the relaxation variable
           self.solver.add(Or(v == 0, v == 1))
           # constraint for the is_parent constraint
@@ -129,6 +135,8 @@ class Optimizer:
       self.cost_relax_vars[v] = weight
       self.relax_vars.append(v)
       self.objective.append(Product(weight,v))
+      self.weights.append(weight)
+      self.ub += weight
       # domain of the relaxation variable
       self.solver.add(Or(v == 0, v == 1))
       # constraint for at least once
@@ -152,6 +160,8 @@ class Optimizer:
       self.cost_relax_vars[v] = weight
       self.relax_vars.append(v)
       self.objective.append(Product(weight,v))
+      self.weights.append(weight)
+      self.ub += weight
       # domain of the relaxation variable
       self.solver.add(Or(v == 0, v == 1))
       # constraint for at least once
@@ -163,11 +173,36 @@ class Optimizer:
     else:
       self.solver.add(self.var_occurs[production.id] == 1)
 
+  
+  def isSubsetSum(self, set, n, sum): 
+    subset =([[False for i in range(sum + 1)]  
+              for i in range(n + 1)]) 
+        
+    # If sum is 0, then answer is true  
+    for i in range(n + 1): 
+      subset[i][0] = True
+            
+      # If sum is not 0 and set is empty,  
+      # then answer is false  
+      for i in range(1, sum + 1): 
+        subset[0][i]= False
+                
+      # Fill the subset table in botton up manner 
+      for i in range(1, n + 1): 
+        for j in range(1, sum + 1): 
+          if j<set[i-1]: 
+            subset[i][j] = subset[i-1][j] 
+          if j>= set[i-1]: 
+            subset[i][j] = (subset[i-1][j] or subset[i - 1][j-set[i-1]]) 
+        
+    return subset[n][sum]          
+
   def optimize(self, solver):
     model = None
-    cost = None
+    cost = 0
     res = sat
     nb_sat = 0
+    nb_unsat = 0
     # no optimization is defined
     if len(self.objective) == 0:
       res = solver.check()
@@ -176,25 +211,34 @@ class Optimizer:
 
     # optimization using the LSU algorithm
     else:
-      while res == sat:
+      solver.set(unsat_core=True)
+      solver.push()
+      ctr = Sum(self.objective) <= self.bound
+      solver.assert_and_track(ctr, 'obj')
+
+      while model == None and res == sat: 
         res = solver.check()
         if res == sat:
           nb_sat += 1
           model = solver.model()
           cost = self.computeCost(model)
-          if nb_sat != 1:
-            solver.pop()
-          if cost == 0:
-            break;
-          solver.push()
-          ctr = Sum(self.objective) <= (cost-1)
-          solver.add(ctr)
+          assert (cost == self.bound)
+          solver.pop()
         else:
-          if nb_sat != 0:
-            solver.pop()
-            # FIXME: use the previous bound to speedup the optimization
-            bound = cost
+          nb_unsat += 1
+          solver.pop()
+          core = solver.unsat_core()
+          if len(core) != 0:
+            self.bound += 1
+            while(not self.isSubsetSum(self.weights, len(self.weights), self.bound) and self.bound <= self.ub):
+               self.bound += 1
+            solver.push()
+            ctr = Sum(self.objective) <= self.bound
+            solver.assert_and_track(ctr, 'obj')
+            res = sat
     
+    assert(solver.num_scopes() == 0)
+    self.bound = cost
     return model
 
   def computeCost(self, model):
