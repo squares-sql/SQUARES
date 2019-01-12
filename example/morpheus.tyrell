@@ -35,9 +35,19 @@ program Morpheus(Table) -> Table;
 # Finally, specify the production rules
 func empty: Empty -> Empty;
 
+func select: Table r -> Table a, ColList b {
+  row(r) == row(a);
+  col(r) < col(a);
+}
+
 func unite: Table r -> Table a, ColInt b, ColInt c {
   row(r) == row(a);
   col(r) == col(a) - 1;
+}
+
+func group_by: Table r -> Table a, ColList b {
+  row(r) == row(a);
+  col(r) == col(a);
 }
 
 func gather: Table r -> Table a, ColList b {
@@ -48,6 +58,30 @@ func gather: Table r -> Table a, ColList b {
 func spread: Table r -> Table a, ColInt b, ColInt c {
   row(r) <= row(a);
   col(r) >= col(a);
+}
+
+func separate: Table r -> Table a, ColInt b {
+  row(r) == row(a);
+  col(r) == col(a) + 1;
+}
+
+func mutate: Table r -> Table a, NumFunc b, ColInt c, ColInt d {
+  row(r) == row(a);
+  col(r) == col(a) + 1;
+}
+
+func filter: Table r -> Table a, BoolFunc b, ColInt c, SmallInt d {
+  row(r) < row(a);
+  col(r) == col(a);
+}
+
+func summarise: Table r -> Table a, Aggr b, ColInt c {
+  row(r) < row(a);
+  col(r) <= col(a) + 1;
+}
+
+func inner_join: Table r -> Table a, Table b {
+  col(r) < col(a) + col(b);
 }
 
 predicate is_parent(spread, unite, 60);
