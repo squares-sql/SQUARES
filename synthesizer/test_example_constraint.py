@@ -108,7 +108,7 @@ class TestExampleConstraint(unittest.TestCase):
         prog = builder.from_sexp_string('(div (@param 0) (@param 1))')
         res = self.do_analyze(
             prog,
-            [Example(input=[2, -1], output=2)]
+            [Example(input=[-2, 1], output=2)]
         )
         self.assertTrue(res.is_bad())
         reason = res.why()

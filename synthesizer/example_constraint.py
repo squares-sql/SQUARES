@@ -1,4 +1,4 @@
-from typing import cast, NamedTuple, Optional, List, Set, FrozenSet, Mapping, MutableMapping, Any, ClassVar, Callable
+from typing import cast, Tuple, NamedTuple, Optional, List, Set, FrozenSet, Mapping, MutableMapping, Any, ClassVar, Callable, Iterator
 from collections import defaultdict
 from itertools import permutations
 import z3
@@ -16,8 +16,8 @@ from .result import ok, bad
 logger = get_logger('tyrell.synthesizer.constraint')
 
 Blame = NamedTuple('Blame', [('node', Node), ('production', Production)])
-ImplyMap = Mapping[Production, List[Production]]
-MutableImplyMap = MutableMapping[Production, List[Production]]
+ImplyMap = Mapping[Tuple[Production, Expr], List[Production]]
+MutableImplyMap = MutableMapping[Tuple[Production, Expr], List[Production]]
 
 
 # The default printer for Blame is too verbose. We use a simplified version here.
@@ -82,7 +82,7 @@ class Z3Encoder(GenericVisitor):
     _interp: Interpreter
     _indexer: NodeIndexer
     _example: Example
-    _unsat_map: Dict[str, Node]
+    _unsat_map: Dict[str, Tuple[Node, int]]
     _solver: z3.Solver
 
     def __init__(self, interp: Interpreter, indexer: NodeIndexer, example: Example):
@@ -144,7 +144,7 @@ class Z3Encoder(GenericVisitor):
         for index, constraint in enumerate(apply_node.production.constraints):
             cname = self._get_constraint_var(apply_node, index)
             z3_clause = constraint_visitor.visit(constraint)
-            self._unsat_map[cname] = apply_node
+            self._unsat_map[cname] = (apply_node, index)
             self._solver.assert_and_track(z3_clause, cname)
         for arg in apply_node.args:
             self.visit(arg)
@@ -156,8 +156,12 @@ class Z3Encoder(GenericVisitor):
         unsat_core = self._solver.unsat_core()
         if len(unsat_core) == 0:
             return None
-        unsat_nodes = set(self._unsat_map[str(x)] for x in unsat_core)
-        return list(unsat_nodes)
+
+        unsat_dict = defaultdict(list)
+        for v in unsat_core:
+            node, cidx = self._unsat_map[str(v)]
+            unsat_dict[node].append(node.production.constraints[cidx])
+        return unsat_dict
 
 
 class BlameFinder:
@@ -177,23 +181,19 @@ class BlameFinder:
     def _get_raw_blames(self) -> List[List[Blame]]:
         return [list(x) for x in self._blames_collection]
 
-    def _expand_blames(self, raw_blames: List[List[Blame]]) -> List[List[Blame]]:
-        ret = list()
-        # FIXME: A more compact representation might help
-        for blames in raw_blames:
-            for idx, blame in enumerate(blames):
-                other_prods = self._imply_map.get(blame.production, [])
-                for other_prod in other_prods:
-                    derived_blames = blames.copy()
-                    derived_blame = Blame(blame.node, other_prod)
-                    derived_blames[idx] = derived_blame
-                    ret.append(derived_blames)
-        return ret
+    def _expand_blame(self, base_nodes: List[Node], node: Node, exprs: List[Expr]) -> Iterator[FrozenSet[Blame]]:
+        def gen_blame(prod):
+            return frozenset(
+                [Blame(node=n, production=(prod if n is node else n.productions))
+                 for n in base_nodes]
+            )
+        for expr in exprs:
+            keys = list(self._imply_map.keys())
+            for other_prod in self._imply_map.get((node.production, expr), []):
+                yield gen_blame(other_prod)
 
     def get_blames(self) -> List[List[Blame]]:
-        raw_blames = self._get_raw_blames()
-        derived_blames = self._expand_blames(raw_blames)
-        return raw_blames + derived_blames
+        return [list(x) for x in self._blames_collection]
 
     def process_examples(self, examples: List[Example]):
         for example in examples:
@@ -205,9 +205,13 @@ class BlameFinder:
         z3_encoder.visit(self._prog)
         blame_nodes = z3_encoder.get_blame_nodes()
         if blame_nodes is not None:
-            blames = frozenset(Blame(node=n, production=n.production)
-                               for n in blame_nodes)
-            self._blames_collection.add(blames)
+            base_nodes = list(blame_nodes.keys())
+            for node, exprs in blame_nodes.items():
+                for blame in self._expand_blame(base_nodes, node, exprs):
+                    self._blames_collection.add(blame)
+            self._blames_collection.add(
+                frozenset([(n, n.production) for n in base_nodes])
+            )
 
 
 class ExampleConstraintSynthesizer(ExampleSynthesizer):
@@ -218,11 +222,11 @@ class ExampleConstraintSynthesizer(ExampleSynthesizer):
                  enumerator: Enumerator,
                  interpreter: Interpreter,
                  examples: List[Example],
-                 equal_output: Callable[[Any, Any], bool] = lambda x, y: x == y):
+                 equal_output: Callable[[Any, Any], bool]=lambda x, y: x == y):
         super().__init__(spec, enumerator, interpreter, examples, equal_output)
         self._imply_map = self._build_imply_map(spec)
 
-    def _check_implies(self, pre_constraints, post_constraints) -> bool:
+    def _check_implies(self, pre, post) -> bool:
         def encode_property(prop_expr: PropertyExpr):
             param_expr = cast(ParamExpr, prop_expr.operand)
             var_name = '{}_p{}'.format(prop_expr.name, param_expr.index)
@@ -236,9 +240,8 @@ class ExampleConstraintSynthesizer(ExampleSynthesizer):
         constraint_visitor = ConstraintVisitor(encode_property)
 
         z3_solver = z3.Solver()
-        z3_pre = z3.And([constraint_visitor.visit(c) for c in pre_constraints])
-        z3_post = z3.And([constraint_visitor.visit(c)
-                          for c in post_constraints])
+        z3_pre = constraint_visitor.visit(pre)
+        z3_post = constraint_visitor.visit(post)
         z3_solver.add(z3.Not(z3.Implies(z3_pre, z3_post)))
         return z3_solver.check() == z3.unsat
 
@@ -250,8 +253,11 @@ class ExampleConstraintSynthesizer(ExampleSynthesizer):
         for prod0, prod1 in permutations(constrained_prods, r=2):
             if len(prod0.rhs) != len(prod1.rhs):
                 continue
-            if self._check_implies(prod0.constraints, prod1.constraints):
-                ret[prod1].append(prod0)
+            for c0 in prod0.constraints:
+                for c1 in prod1.constraints:
+                    if self._check_implies(c1, c0):
+                        ret[(prod0, c0)].append(prod1)
+                        break
         return ret
 
     def analyze(self, prog):
