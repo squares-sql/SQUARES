@@ -43,11 +43,10 @@ def print_spec(spec: S.TyrellSpec):
                   'CRITICAL'
               ]),
               help='Set the verbosity of the logger',
-              default='INFO'
-              )
+              default='INFO')
 def cli(spec_file, verbosity):
     '''
-    Next-generation Synthesizer for Data Science
+    Parse the given Tyrell DSL spec file
     '''
     logger.setLevel(verbosity)
     try:

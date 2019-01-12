@@ -3,7 +3,7 @@
 Dev Environment Setup
 =====================
 - Prerequisite:
-    - python 3.5+  
+    - python 3.6+  
 - It is preferable to have a dedicated virtualenv for this project:
 ```
     $ git clone <this repo>
