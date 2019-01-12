@@ -83,7 +83,7 @@ class MorpheusInterpreter(PostOrderInterpreter):
         self.assertArg(node, args,
                 index=2,
                 cond=lambda x: x <= n_cols and x != first_idx,
-                capture_indices=[0])
+                capture_indices=[0, 1])
 
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- unite({table}, {TMP}, {col1}, {col2})'.format(
@@ -140,10 +140,10 @@ class MorpheusInterpreter(PostOrderInterpreter):
                 index=1,
                 cond=lambda x: x <= n_cols,
                 capture_indices=[0])
-        # self.assertArg(node, args,
-        #         index=2,
-        #         cond=lambda x: x <= n_cols and x > first_idx,
-        #         capture_indices=[0, 1])
+        self.assertArg(node, args,
+                index=2,
+                cond=lambda x: x <= n_cols and x > first_idx,
+                capture_indices=[0, 1])
 
         ret_df_name = get_fresh_name()
         _script = '{ret_df} <- spread({table}, {col1}, {col2})'.format(
