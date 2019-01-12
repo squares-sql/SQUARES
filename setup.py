@@ -10,6 +10,7 @@ develop_dependencies = [
     'mypy',  # for type checking
     'rpy2',  # for Morpheus. TODO: This should really belong to the client package
     'lark-parser',  # for parsing
+    'sphinx',  # for documentation generation
 ]
 
 setup(

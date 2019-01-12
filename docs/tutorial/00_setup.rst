@@ -16,7 +16,7 @@ Now, there are several ways you may install the Tyrell framework and its depende
 
 - Install Tyrell from PyPI:
 
-  .. warning:: This option is not possible at this moment.
+  .. warning:: This option is not possible at the moment.
 
   .. code-block:: bash
 

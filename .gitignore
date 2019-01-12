@@ -70,6 +70,9 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# Sphinx
+_build/
+
 # Pyre type checker
 .pyre/
 

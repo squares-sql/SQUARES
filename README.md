@@ -24,6 +24,12 @@ Dev Environment Setup
 ```
     $ python -m unittest discover .
 ```
+- Build HTML documentations
+```
+    $ cd docs
+    $ make html
+```
+  Documentations will be available at `docs/_build/html/index.html`
     
 Morpheus prerequisite
 =====================
