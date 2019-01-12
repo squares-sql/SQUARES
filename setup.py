@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 install_dependencies = [
     'Click',
@@ -12,19 +12,10 @@ develop_dependencies = [
     'lark-parser',  # for parsing
 ]
 
-tyrell_packages = [
-    'spec',
-    'dsl',
-    'enumerator',
-    'interpreter',
-    'synthesizer'
-]
-
 setup(
     name='tyrell',
     version='0.1',
-    packages=tyrell_packages,
-    py_modules=['logger', 'visitor'],
+    packages=find_packages(),
     license='LICENSE.txt',
     description='Deduction-based synthesis framework',
     install_requires=install_dependencies,
@@ -33,7 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'parse-tyrell-spec=parse_tyrell_spec:cli',
+            'parse-tyrell-spec=tyrell.parse_tyrell_spec:cli',
         ],
     },
 )

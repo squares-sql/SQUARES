@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 from sys import argv
-import spec as S
-from interpreter import PostOrderInterpreter
-from enumerator import RandomEnumerator
-from synthesizer import ExampleSynthesizer, Example
-from logger import get_logger
+import tyrell.spec as S
+from tyrell.interpreter import PostOrderInterpreter
+from tyrell.enumerator import RandomEnumerator
+from tyrell.synthesizer import ExampleSynthesizer, Example
+from tyrell.logger import get_logger
 
 logger = get_logger('tyrell')
 
@@ -59,6 +59,7 @@ def main(seed=None):
 
     logger.info('Building synthesizer...')
     synthesizer = ExampleSynthesizer(
+        spec=spec,
         enumerator=RandomEnumerator(
             spec, max_depth=4, max_trial=1000, seed=seed),
         interpreter=ToyInterpreter(),

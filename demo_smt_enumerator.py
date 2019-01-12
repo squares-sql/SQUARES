@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-import spec as S
-from interpreter import PostOrderInterpreter
-from enumerator import SmtEnumerator
-from synthesizer import AssertionViolationHandler, ExampleConstraintSynthesizer, Example
-from logger import get_logger
+import tyrell.spec as S
+from tyrell.interpreter import PostOrderInterpreter
+from tyrell.enumerator import SmtEnumerator
+from tyrell.synthesizer import AssertionViolationHandler, ExampleConstraintSynthesizer, Example
+from tyrell.logger import get_logger
 
 logger = get_logger('tyrell')
 

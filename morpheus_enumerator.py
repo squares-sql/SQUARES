@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-import spec as S
-from interpreter import PostOrderInterpreter, GeneralError
-from enumerator import SmtEnumerator
-from synthesizer import AssertionViolationHandler, ExampleConstraintSynthesizer, Example
+import tyrell.spec as S
+from tyrell.interpreter import PostOrderInterpreter, GeneralError
+from tyrell.enumerator import SmtEnumerator
+from tyrell.synthesizer import AssertionViolationHandler, ExampleConstraintSynthesizer, Example
+from tyrell.logger import get_logger
 import rpy2.robjects as robjects
-from logger import get_logger
 
 logger = get_logger('tyrell')
 

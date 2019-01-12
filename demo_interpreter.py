@@ -1,7 +1,7 @@
-import spec as S
-import dsl as D
-from interpreter import PostOrderInterpreter
-from logger import get_logger
+import tyrell.spec as S
+import tyrell.dsl as D
+from tyrell.interpreter import PostOrderInterpreter
+from tyrell.logger import get_logger
 
 logger = get_logger('tyrell')
 
