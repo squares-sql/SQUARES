@@ -2,11 +2,11 @@ from typing import cast, List
 from ..spec import Production
 from ..dsl import AtomNode, dfs
 from ..interpreter import InterpreterError, AssertionViolation
-from .synthesizer import Synthesizer
+from .interpreter_base import InterpreterBasedSynthesizer
 from .example_constraint import Blame
 
 
-class AssertionViolationHandler(Synthesizer):
+class AssertionViolationHandler(InterpreterBasedSynthesizer):
     '''
     A mixin class for Synthesizer that provide pruning capabilities for dynamic type errors.
     '''

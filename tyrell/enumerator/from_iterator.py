@@ -20,13 +20,16 @@ class FromIteratorEnumerator(Enumerator):
             return None
 
 
-def make_empty_enumerator():
+def make_empty_enumerator() -> Enumerator:
+    '''Return an enumerator that enumerates nothing.'''
     return FromIteratorEnumerator(iter(()))
 
 
-def make_singleton_enumerator(prog: Node):
+def make_singleton_enumerator(prog: Node) -> Enumerator:
+    '''Return an enumerator that only enumerates the given program.'''
     return FromIteratorEnumerator(iter([prog]))
 
 
-def make_list_enumerator(progs: List[Node]):
+def make_list_enumerator(progs: List[Node]) -> Enumerator:
+    '''Return an enumerator that only enumerates programs in the given list.'''
     return FromIteratorEnumerator(iter(progs))

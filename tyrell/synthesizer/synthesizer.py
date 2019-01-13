@@ -14,13 +14,11 @@ class Synthesizer(ABC):
 
     _spec: TyrellSpec
     _enumerator: Enumerator
-    _interpreter: Interpreter
 
     @abstractmethod
-    def __init__(self, spec: TyrellSpec, enumerator: Enumerator, interpreter: Interpreter):
+    def __init__(self, spec: TyrellSpec, enumerator: Enumerator):
         self._spec = spec
         self._enumerator = enumerator
-        self._interpreter = interpreter
 
     @abstractmethod
     def analyze(self, ast: Node) -> Result:
@@ -43,10 +41,6 @@ class Synthesizer(ABC):
     @property
     def enumerator(self):
         return self._enumerator
-
-    @property
-    def interpreter(self):
-        return self._interpreter
 
     def synthesize(self):
         '''

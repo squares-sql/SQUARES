@@ -37,6 +37,8 @@ For example, this is a valid program supported by Tyrell:
 Intuitively, this program tries to compute `f(x, y) = (x + 1) * (y - 2)`. 
 
 
+.. _sec-syntax-spec:
+
 Syntax specification
 ====================
 
@@ -72,11 +74,11 @@ In the end (line 8 to 11), we specify what functions may appear in the program, 
 Spec file parsing
 =================
 
-Tyrell comes with a pre-installed console script ``parse-tyrell-spec`` that can read the spec file and check its consistency. We can save our example as a file ``example.tyrell``, and feed it into the script:
+Tyrell comes with a pre-installed console script ``parse-tyrell-spec`` that can read the spec file and check its consistency. We can save our example as a file ``bin_arith.tyrell``, and feed it into the script:
 
 .. code-block:: bash
 
-  $ parse-tyrell-spec example.tyrell
+  $ parse-tyrell-spec bin_arith.tyrell
 
 If the spec file is correctly written, no error would be reported.
 
@@ -85,7 +87,19 @@ Alternatively, the spec parser can be directly accessed from a python script:
 .. code-block:: python
   
   from tyrell.spec import parse_file
-  spec = parse_file('example.tyrell')
+  spec = parse_file('bin_arith.tyrell')
+
+The :func:`tyrell.spec.do_parse.parse_file` function takes file path as a parameter, and it will try to parse the content in that file. If the spec file is stored in a in-memory string instead of an on-disk file, we use :func:`tyrell.spec.do_parse.parse` function instead:
+
+.. code-block:: python
+  
+  from tyrell.spec import parse
+  spec = parse_file(r'''
+      enum IntConst {
+        "0", "1", "2"
+      }
+      ...
+  ''')
 
 
 Manual program construction
@@ -97,7 +111,7 @@ With the parsed ``spec``, one thing we can do is to quickly construct a program 
 
   from tyrell.spec import parse_file
   from tyrell.dsl import Builder
-  spec = parse_file('example.tyrell')
+  spec = parse_file('bin_arith.tyrell')
   builder = Builder(spec)
 
   # Below we construct the program f(x, y) = (x + 1) * (y - 2)
