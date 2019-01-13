@@ -91,7 +91,7 @@ Alternatively, the spec parser can be directly accessed from a python script:
 Manual program construction
 ===========================
 
-With the parsed ``spec``, one thing we can do is to quickly construct a program that conforms to this spec. This is available through :class:`tyrell.dsl.Builder` APIs.
+With the parsed ``spec``, one thing we can do is to quickly construct a program that conforms to this spec. This is available through :class:`~tyrell.dsl.builder.Builder` APIs.
 
 .. code-block:: python
 
@@ -114,7 +114,7 @@ With the parsed ``spec``, one thing we can do is to quickly construct a program 
   # Pretty-print the program
   print(prog)
 
-The process can be simplified using :meth:`tyrell.dsl.Builder.from_sexp_string`:
+The process can be simplified using :meth:`~tyrell.dsl.builder.Builder.from_sexp_string`:
 
 .. code-block:: python
 
