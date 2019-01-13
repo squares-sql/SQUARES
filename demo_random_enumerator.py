@@ -61,7 +61,7 @@ def main(seed=None):
     synthesizer = ExampleSynthesizer(
         spec=spec,
         enumerator=RandomEnumerator(
-            spec, max_depth=4, max_trial=1000, seed=seed),
+            spec, max_depth=4, seed=seed),
         interpreter=ToyInterpreter(),
         examples=[
             # we want to synthesize the program (x-y)*y (depth=3, loc=2)

@@ -221,7 +221,13 @@ class SmtEnumerator(Enumerator):
 
     def __init__(self, spec, depth=None, loc=None):
         self.spec = spec
+        if depth <= 0:
+            raise ValueError(
+                'Depth cannot be non-positive: {}'.format(depth))
         self.depth = depth
+        if loc <= 0:
+            raise ValueError(
+                'LOC cannot be non-positive: {}'.format(loc))
         self.loc = loc
         self.max_children = self.maxChildren()
         self.tree, self.nodes = self.buildKTree(self.max_children, self.depth)
@@ -239,7 +245,7 @@ class SmtEnumerator(Enumerator):
         self.resolve_predicates()
 
     def blockModel(self):
-        assert(self.model != None)
+        assert(self.model is not None)
         # m = self.z3_solver.model()
         block = []
         # block the model using only the variables that correspond to productions
@@ -251,11 +257,11 @@ class SmtEnumerator(Enumerator):
     def update(self, info=None):
         # TODO: block more than one model
         # self.blockModel() # do I need to block the model anyway?
-        if info != None and not isinstance(info, str):
+        if info is not None and not isinstance(info, str):
             for core in info:
                 ctr = None
                 for constraint in core:
-                    if ctr == None:
+                    if ctr is None:
                         ctr = self.variables[self.program2tree[constraint[0]
                                                                ].id - 1] != constraint[1].id
                     else:
@@ -301,7 +307,7 @@ class SmtEnumerator(Enumerator):
     def next(self):
         while True:
             self.model = self.optimizer.optimize(self.z3_solver)
-            if self.model != None:
+            if self.model is not None:
                 return self.buildProgram()
             else:
                 return None

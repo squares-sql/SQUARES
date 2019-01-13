@@ -14,7 +14,7 @@ class Node(ABC):
         self._prod = prod
 
     @property
-    def production(self):
+    def production(self) -> Production:
         return self._prod
 
     @property
@@ -23,6 +23,18 @@ class Node(ABC):
 
     @abstractmethod
     def is_leaf(self) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def is_enum(self) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def is_param(self) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def is_apply(self) -> bool:
         raise NotImplementedError
 
     @property
@@ -47,6 +59,9 @@ class LeafNode(Node):
     def is_leaf(self) -> bool:
         return True
 
+    def is_apply(self) -> bool:
+        return False
+
 
 class AtomNode(LeafNode):
     '''Leaf AST node that holds string data'''
@@ -65,6 +80,12 @@ class AtomNode(LeafNode):
     @property
     def children(self) -> List[Node]:
         return []
+
+    def is_enum(self) -> bool:
+        return True
+
+    def is_param(self) -> bool:
+        return False
 
     def to_sexp(self):
         return [Symbol(self.type.name), self.data]
@@ -101,6 +122,12 @@ class ParamNode(LeafNode):
     @property
     def children(self) -> List[Node]:
         return []
+
+    def is_enum(self) -> bool:
+        return False
+
+    def is_param(self) -> bool:
+        return True
 
     def to_sexp(self):
         return [Symbol('@param'), self.index]
@@ -156,6 +183,15 @@ class ApplyNode(Node):
 
     def is_leaf(self) -> bool:
         return False
+
+    def is_enum(self) -> bool:
+        return False
+
+    def is_param(self) -> bool:
+        return False
+
+    def is_apply(self) -> bool:
+        return True
 
     def to_sexp(self):
         return [Symbol(self.name)] + [x.to_sexp() for x in self.args]

@@ -3,30 +3,20 @@ from random import Random
 from .enumerator import Enumerator
 from .. import dsl as D
 from .. import spec as S
-from ..logger import get_logger
-
-logger = get_logger('tyrell.enumerator.random')
 
 
 class RandomEnumerator(Enumerator):
     _rand: Random
     _max_depth: int
-    _max_trial: int
     _builder: D.Builder
-    _enumerated: Set[D.Node]
 
-    def __init__(self, spec: S.TyrellSpec, max_depth: int, max_trial: int, seed: Optional[int]=None):
+    def __init__(self, spec: S.TyrellSpec, max_depth: int, seed: Optional[int]=None):
         self._rand = Random(seed)
         self._builder = D.Builder(spec)
         if max_depth <= 0:
             raise ValueError(
                 'Max depth cannot be non-positive: {}'.format(max_depth))
-        if max_trial <= 0:
-            raise ValueError(
-                'Max trial cannot be non-positive: {}'.format(max_trial))
         self._max_depth = max_depth
-        self._max_trial = max_trial
-        self._enumerated = set()
 
     def _do_generate(self, curr_type: S.Type, curr_depth: int, force_leaf: bool):
         # First, get all the relevant production rules for current type
@@ -54,15 +44,4 @@ class RandomEnumerator(Enumerator):
                                  force_leaf=(curr_depth >= self._max_depth - 1))
 
     def next(self):
-        num_trials = 0
-        while num_trials < self._max_trial:
-            num_trials += 1
-            ast = self._generate(self._builder.output, 0)
-            if ast not in self._enumerated:
-                self._enumerated.add(ast)
-                logger.debug(
-                    'RandomEnumerator.next() completed with {} trials'.format(num_trials))
-                return ast
-        logger.debug(
-            'RandomEnumerator.next() failed with {} trials'.format(num_trials))
-        return None
+        return self._generate(self._builder.output, 0)

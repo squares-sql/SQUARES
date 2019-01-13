@@ -118,7 +118,7 @@ The process can be simplified using :meth:`~tyrell.dsl.builder.Builder.from_sexp
 
 .. code-block:: python
 
-  # Program can be specified using S-expressions
+  # Program can be specified with S-expressions
   prog = builder.from_sexp_string(
       '''
       (mult
