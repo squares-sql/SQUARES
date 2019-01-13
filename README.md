@@ -24,6 +24,11 @@ Dev Environment Setup
 ```
     $ python -m unittest discover .
 ```
+- Create a distribution tarball
+```
+    $ python setup.py sdist
+```
+  Tarball will be available at `dist/tyrell-<version>.tar.gz`
 - Build HTML documentations
 ```
     $ cd docs

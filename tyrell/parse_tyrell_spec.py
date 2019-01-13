@@ -50,9 +50,7 @@ def cli(spec_file, verbosity):
     '''
     logger.setLevel(verbosity)
     try:
-        with open(spec_file, 'r') as f:
-            spec_str = f.read()
-        tyrell_spec = S.parse(spec_str)
+        tyrell_spec = S.parse_file(spec_file)
         print_spec(tyrell_spec)
     except (S.ParseError, S.ParseTreeProcessingError) as e:
         logger.error('Spec parsing error: {}'.format(e))

@@ -1,6 +1,6 @@
-================================
-Setting up a project with Tyrell
-================================
+====================
+Setting up a project
+====================
 
 First of all, make sure that your system has a python version >=3.6 installed. 
 

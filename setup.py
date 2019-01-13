@@ -15,7 +15,7 @@ develop_dependencies = [
 
 setup(
     name='tyrell',
-    version='0.1',
+    version='0.1dev',
     packages=find_packages(),
     license='LICENSE.txt',
     description='Deduction-based synthesis framework',
