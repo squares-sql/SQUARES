@@ -139,8 +139,71 @@ The process can be simplified using :meth:`~tyrell.dsl.builder.Builder.from_sexp
   from sexpdata import dumps
   print(dumps(prog.to_sexp()))
 
+The builder APIs returns objects of class :class:`~tyrell.dsl.node.Node`, which represent a node in the program's *abstract syntax tree*. Take a look at the doc if you are interested in what methods are defined on it. Also, check out the nice utilities like :func:`~tyrell.dsl.iterator.dfs`, :func:`~tyrell.dsl.iterator.bfs`, :class:`~tyrell.dsl.indexer.NodeIndexer`, and :class:`~tyrell.dsl.parent_finder.ParentFinder`. 
+
 
 Semantics specification
 =======================
 
-  .. todo:: Work in progress
+Now that we know what the programs look like, the next question is what do they mean. In Tyrell, we attach semantic actions to the syntax through an *interpreter*.
+
+The base class for a Tyrell interepreter is :class:`~tyrell.interpreter.interpreter.Interpreter`. To implement your own interpreter, inherit from :class:`~tyrell.interpreter.interpreter.Interpreter` and override its :meth:`~tyrell.interpreter.interpreter.Interpreter.eval` method, which takes a program and a list of input arguments, interpret the program, and returns the output.
+
+For example, a simple interpreter for the small language we defined in the previous section may look like this:
+
+.. code-block:: python
+
+  from tyrell.interpreter import Interpreter
+
+  # Define the interpreter subclass
+  class BinaryArithFuncInterpreter(Interpreter):
+      def eval(self, node, inputs):
+          return 0
+
+  # Create the interpreter object and run it
+  interp = BinaryArithFuncInterpreter()
+  print(interp.eval(builder.from_sexp_string('(@param 0)', [3, 4])))    # Prints 0
+  print(interp.eval(builder.from_sexp_string('(const (IntConst 1))', [3, 4])))  # Prints 0
+  print(interp.eval(builder.from_sexp_string('(plus (@param 1) (IntConst 2))', [3, 4])))  # Prints 0
+
+Well, this is not a super interested interpreter, as it interpret any program to ``0``. To make it more interesting, we could have examined what the structure of ``node`` is, and take different actions accodring to whether it's a parameter, an enum, or a function application (in which case you may need to recurse down and interpret its arguments).
+
+It turns out that in most situations we want to recursively interpret the programs in a *post order* tree traversal. In other words, for function applications we want to interpret the values of each the argument before the application itself can be interpreted. If that's the case, we can save a lot of keystrokes for those boilerplate ``node`` inspection code by inheriting from :class:`~tyrell.interpreter.post_order.PostOrderInterpreter`. If we take this option, all we need to do is to define one ``eval`` method for each enum and each function. Here's an example:
+
+.. code-block:: python
+
+  from tyrell.interpreter import PostOrderInterpreter
+
+  # Define the interpreter subclass by specifying the meaning of each enum and each function
+  class BinaryArithFuncInterpreter(PostOrderInterpreter):
+      # First, interpret the enums
+
+      def eval_IntConst(self, v):
+          # The argument v is always a string that was defined in our enum definition.
+          # In this case, it can be '0', '1', or '2'.
+          # Here we just turn it into an integer and return the result.
+          return int(v)
+
+      # Next, interpret the functions
+
+      def eval_const(self, node, args):
+          # The node argument is the corresponding AST node for the "const" application. In this example we don't need to look at it.
+          # The args argument is a list of values for the arguments of this "const" application.
+          # Since we have defined "const" as a unary function whose argument type is "IntConst", here the length of args will always be 1.
+          # And args[0] will always be an integer, as in eval_IntConst we have interpreted all IntConsts as integers.
+          return args[0]
+
+      def eval_plus(self, node, args):
+          return args[0] + args[1]
+
+      def eval_minus(self, node, args):
+          return args[0] - args[1]
+
+      def eval_mult(self, node, args):
+          return args[0] * args[1]
+
+  # Create the interpreter object and run it
+  interp = BinaryArithFuncInterpreter()
+  print(interp.eval(builder.from_sexp_string('(@param 0)'), [3, 4]))    # Prints 3
+  print(interp.eval(builder.from_sexp_string('(const (IntConst 1))'), [3, 4]))  # Prints 1
+  print(interp.eval(builder.from_sexp_string('(plus (@param 1) (const (IntConst 2)))'), [3, 4]))  # Prints 6
