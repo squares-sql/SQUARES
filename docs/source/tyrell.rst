@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    tyrell.decider
     tyrell.dsl
     tyrell.enumerator
     tyrell.interpreter

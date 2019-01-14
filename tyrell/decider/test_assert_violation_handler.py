@@ -1,11 +1,9 @@
 import unittest
 from ..spec import parse
 from ..dsl import Builder
-from ..enumerator import make_empty_enumerator
 from ..interpreter import PostOrderInterpreter, AssertionViolation
 from .assert_violation_handler import AssertionViolationHandler
-from .example_constraint import Blame
-from .result import ok
+from .blame import Blame
 
 spec_str = r'''
     enum SmallInt {
@@ -45,13 +43,6 @@ class FooInterpreter(PostOrderInterpreter):
         return args[0]
 
 
-class FooSynthesizer(AssertionViolationHandler):
-
-    # A dummy implementation
-    def analyze(self, ast):
-        return ok()
-
-
 class TestTypeErrorHandler(unittest.TestCase):
 
     def test_blame(self):
@@ -61,16 +52,12 @@ class TestTypeErrorHandler(unittest.TestCase):
         inode = builder.make_apply('id', [snode])
 
         interp = FooInterpreter()
-        handler = FooSynthesizer(
-            spec=spec,
-            enumerator=make_empty_enumerator(),
-            interpreter=interp
-        )
+        handler = AssertionViolationHandler(spec, interp)
 
         with self.assertRaises(AssertionViolation) as cm:
             interp.eval(inode, [])
         type_error = cm.exception
-        blames = handler.analyze_interpreter_error(type_error)
+        blames = handler.handle_interpreter_error(type_error)
         self.assertIsNotNone(blames)
         self.assertEqual(len(blames), 2)
         for blame in blames:
@@ -89,16 +76,12 @@ class TestTypeErrorHandler(unittest.TestCase):
         dnode = builder.make_apply('idiv', [cnode, enode1])
 
         interp = FooInterpreter()
-        handler = FooSynthesizer(
-            spec=spec,
-            enumerator=make_empty_enumerator(),
-            interpreter=interp
-        )
+        handler = AssertionViolationHandler(spec, interp)
 
         with self.assertRaises(AssertionViolation) as cm:
             interp.eval(dnode, [])
         type_error = cm.exception
-        blames = handler.analyze_interpreter_error(type_error)
+        blames = handler.handle_interpreter_error(type_error)
         self.assertIsNotNone(blames)
         self.assertEqual(len(blames), 2)
         for blame in blames:

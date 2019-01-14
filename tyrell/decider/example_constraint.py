@@ -1,32 +1,22 @@
-from typing import cast, Tuple, NamedTuple, Optional, List, Set, FrozenSet, Mapping, MutableMapping, Any, ClassVar, Callable, Iterator
+from typing import cast, Tuple, Optional, List, Set, FrozenSet, Mapping, MutableMapping, Any, ClassVar, Callable, Iterator
 from collections import defaultdict
 from itertools import permutations
 import z3
-from ..interpreter import Interpreter
-from ..enumerator import Enumerator
+from ..interpreter import Interpreter, InterpreterError
 from ..dsl import Node, AtomNode, ParamNode, ApplyNode, NodeIndexer
 from ..spec import Production, ValueType, TyrellSpec
 from ..spec.expr import *
 from ..logger import get_logger
 from ..visitor import GenericVisitor
-from .example_base import Example, ExampleSynthesizer
+from .example_base import Example, ExampleDecider
+from .blame import Blame
+from .assert_violation_handler import AssertionViolationHandler
 from .eval_expr import eval_expr
 from .result import ok, bad
 
 logger = get_logger('tyrell.synthesizer.constraint')
-
-Blame = NamedTuple('Blame', [('node', Node), ('production', Production)])
 ImplyMap = Mapping[Tuple[Production, Expr], List[Production]]
 MutableImplyMap = MutableMapping[Tuple[Production, Expr], List[Production]]
-
-
-# The default printer for Blame is too verbose. We use a simplified version here.
-def print_blame(blame: Blame) -> str:
-    return 'Blame(node={}, production={})'.format(blame.node, blame.production.id)
-
-
-Blame.__str__ = print_blame  # type: ignore
-Blame.__repr__ = print_blame  # type: ignore
 
 
 class ConstraintVisitor(GenericVisitor):
@@ -214,17 +204,18 @@ class BlameFinder:
             )
 
 
-class ExampleConstraintSynthesizer(ExampleSynthesizer):
+class ExampleConstraintDecider(ExampleDecider):
     _imply_map: ImplyMap
+    _assert_handler: AssertionViolationHandler
 
     def __init__(self,
                  spec: TyrellSpec,
-                 enumerator: Enumerator,
                  interpreter: Interpreter,
                  examples: List[Example],
                  equal_output: Callable[[Any, Any], bool]=lambda x, y: x == y):
-        super().__init__(spec, enumerator, interpreter, examples, equal_output)
+        super().__init__(interpreter, examples, equal_output)
         self._imply_map = self._build_imply_map(spec)
+        self._assert_handler = AssertionViolationHandler(spec, interpreter)
 
     def _check_implies(self, pre, post) -> bool:
         def encode_property(prop_expr: PropertyExpr):
@@ -275,3 +266,6 @@ class ExampleConstraintSynthesizer(ExampleSynthesizer):
                 return bad()
             else:
                 return bad(why=blames)
+
+    def analyze_interpreter_error(self, error: InterpreterError):
+        return self._assert_handler.handle_interpreter_error(error)

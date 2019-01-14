@@ -3,7 +3,8 @@
 import tyrell.spec as S
 from tyrell.interpreter import PostOrderInterpreter, GeneralError
 from tyrell.enumerator import SmtEnumerator
-from tyrell.synthesizer import AssertionViolationHandler, ExampleConstraintSynthesizer, Example
+from tyrell.decider import Example, ExampleConstraintDecider
+from tyrell.synthesizer import Synthesizer
 from tyrell.logger import get_logger
 import rpy2.robjects as robjects
 
@@ -272,9 +273,6 @@ class MorpheusInterpreter(PostOrderInterpreter):
         return df.ncol
 
 
-class MorpheusSynthesizer(AssertionViolationHandler, ExampleConstraintSynthesizer):
-    pass
-
 def main():
 
     ##### Input-output constraint
@@ -299,25 +297,24 @@ def main():
    ''')
 
     logger.info('Parsing Spec...')
-    spec = None
-    with open('example/morpheus.tyrell', 'r') as f:
-        m_spec_str = f.read()
-        spec = S.parse(m_spec_str)
+    spec = S.parse_file('example/morpheus.tyrell')
     logger.info('Parsing succeeded')
 
     logger.info('Building synthesizer...')
-    synthesizer = MorpheusSynthesizer(
-        spec=spec,
+    synthesizer = Synthesizer(
         #loc: # of function productions
         # enumerator=SmtEnumerator(spec, depth=2, loc=1),
         # enumerator=SmtEnumerator(spec, depth=3, loc=2),
         enumerator=SmtEnumerator(spec, depth=4, loc=3),
-        interpreter=MorpheusInterpreter(),
-        examples=[
-            # Example(input=[DataFrame2(benchmark1_input)], output=benchmark1_output),
-            Example(input=['dat'], output='dat2'),
-        ],
-        equal_output=eq_r
+        decider=ExampleConstraintDecider(
+            spec=spec,
+            interpreter=MorpheusInterpreter(),
+            examples=[
+                # Example(input=[DataFrame2(benchmark1_input)], output=benchmark1_output),
+                Example(input=['dat'], output='dat2'),
+            ],
+            equal_output=eq_r
+        )
     )
     logger.info('Synthesizing programs...')
 

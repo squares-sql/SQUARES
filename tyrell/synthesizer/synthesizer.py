@@ -1,9 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
-from .result import Result
-from ..interpreter import Interpreter, InterpreterError
 from ..enumerator import Enumerator
-from ..spec import TyrellSpec
+from ..decider import Decider
 from ..dsl import Node
 from ..logger import get_logger
 
@@ -12,35 +10,20 @@ logger = get_logger('tyrell.synthesizer')
 
 class Synthesizer(ABC):
 
-    _spec: TyrellSpec
     _enumerator: Enumerator
+    _decider: Decider
 
-    @abstractmethod
-    def __init__(self, spec: TyrellSpec, enumerator: Enumerator):
-        self._spec = spec
+    def __init__(self, enumerator: Enumerator, decider: Decider):
         self._enumerator = enumerator
-
-    @abstractmethod
-    def analyze(self, ast: Node) -> Result:
-        '''
-        The main API of this class.
-        It is expected to analyze the given AST and check if it is valid. If not, optionally returns why, which is used to update the enumerator.
-        '''
-        raise NotImplementedError
-
-    def analyze_interpreter_error(self, error: InterpreterError) -> Any:
-        '''
-        Take an interpreter error and return a data structure that can be used to update the enumerator.
-        '''
-        return None
-
-    @property
-    def spec(self):
-        return self._spec
+        self._decider = decider
 
     @property
     def enumerator(self):
         return self._enumerator
+
+    @property
+    def decider(self):
+        return self._decider
 
     def synthesize(self):
         '''
@@ -53,7 +36,7 @@ class Synthesizer(ABC):
             num_attempts += 1
             logger.debug('Enumerator generated: {}'.format(prog))
             try:
-                res = self.analyze(prog)
+                res = self._decider.analyze(prog)
                 if res.is_ok():
                     logger.debug(
                         'Program accepted after {} attempts'.format(num_attempts))
@@ -64,7 +47,7 @@ class Synthesizer(ABC):
                     self._enumerator.update(info)
                     prog = self._enumerator.next()
             except InterpreterError as e:
-                info = self.analyze_interpreter_error(e)
+                info = self._decider.analyze_interpreter_error(e)
                 logger.debug('Interpreter failed. Reason: {}'.format(info))
                 self._enumerator.update(info)
                 prog = self._enumerator.next()

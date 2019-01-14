@@ -1,8 +1,6 @@
 from typing import Callable, NamedTuple, List, Any
-from .interpreter_base import InterpreterBasedSynthesizer
-from ..spec import TyrellSpec
+from .decider import Decider
 from ..interpreter import Interpreter
-from ..enumerator import Enumerator
 from .result import ok, bad
 
 Example = NamedTuple('Example', [
@@ -10,23 +8,25 @@ Example = NamedTuple('Example', [
     ('output', Any)])
 
 
-class ExampleSynthesizer(InterpreterBasedSynthesizer):
+class ExampleDecider(Decider):
+    _interpreter: Interpreter
     _examples: List[Example]
     _equal_output: Callable[[Any, Any], bool]
 
     def __init__(self,
-                 spec: TyrellSpec,
-                 enumerator: Enumerator,
                  interpreter: Interpreter,
                  examples: List[Example],
                  equal_output: Callable[[Any, Any], bool] = lambda x, y: x == y):
-        super().__init__(spec, enumerator, interpreter)
         self._interpreter = interpreter
         if len(examples) == 0:
             raise ValueError(
-                'ExampleSynthesizer cannot take an empty list of examples')
+                'ExampleDecider cannot take an empty list of examples')
         self._examples = examples
         self._equal_output = equal_output
+
+    @property
+    def interpreter(self):
+        return self._interpreter
 
     def get_failed_examples(self, prog):
         '''
@@ -39,12 +39,21 @@ class ExampleSynthesizer(InterpreterBasedSynthesizer):
             self._examples
         ))
 
+    def has_failed_examples(self, prog):
+        '''
+        Test whether the given program would fail on any of the examples provided.
+        '''
+        return any(
+            not self._equal_output(
+                self.interpreter.eval(prog, x.input), x.output)
+            for x in self._examples
+        )
+
     def analyze(self, prog):
         '''
         This basic version of analyze() merely interpret the AST and see if it conforms to our examples
         '''
-        failed_examples = self.get_failed_examples(prog)
-        if len(failed_examples) == 0:
-            return ok()
+        if self.has_failed_examples(prog):
+            return bad()
         else:
-            return bad(why=None)
+            return ok()

@@ -92,19 +92,19 @@ More sophisticated enumerators usually need to take into account what the spec f
   print_enumerations(enumerator)  # 872 programs will be printed out
 
 
-Example-based decider
+The decider
 =====================
 
-Among all the programs that an enumerator provides to us, the decider's job is to see which ones of them are desirable. In Tyrell, the abstract base class for decider is called :class:`~tyrell.synthesizer.synthesizer.Synthesizer` [#naming]_. Its :meth:`~tyrell.synthesizer.synthesizer.Synthesizer.analyze` method should be overriden if you want to define your own decider. Given a program (represented by :class:`~tyrell.dsl.node.Node`), if we want to accept it we need to let our ``analyze`` method returns :func:`~tyrell.synthesizer.result.ok`. Otherwise we return :func:`~tyrell.synthesizer.result.bad`:
+Among all the programs that an enumerator provides to us, the decider's job is to see which ones of them are desirable. In Tyrell, the abstract base class for decider is called :class:`~tyrell.decider.decider.Decider`. Its :meth:`~tyrell.decider.decider.Decider.analyze` method should be overriden if you want to define your own decider. Given a program (represented by :class:`~tyrell.dsl.node.Node`), if we want to accept it we need to let our ``analyze`` method returns :func:`~tyrell.decider.result.ok`. Otherwise we return :func:`~tyrell.decider.result.bad`:
 
 .. code-block:: python
 
   from tyrell.spec import parse_file
   from tyrell.dsl import Builder
-  from tyrell.synthesizer import Synthesizer, ok, bad
+  from tyrell.decider import Decider, ok, bad
 
-  # Define a synthesizer that accepts a specific program
-  class MySynthesizer(Synthesizer):
+  # Define a decider that accepts a specific program
+  class MyDecider(Decider):
       def __init__(self, prog):
           self._prog = prog
 
@@ -117,12 +117,8 @@ Among all the programs that an enumerator provides to us, the decider's job is t
   builder = Builder(parse_file('bin_arith.tyrell'))
   prog0 = builder.from_sexp_string('(plus (@param 1) (const (IntConst 2)))')
   prog1 = builder.from_sexp_string('(plus (@param 0) (const (IntConst 1)))')
-  synthesizer = MySynthesizer(prog0)
-  res0 = synthesizer.analyze(prog0)
+  decider = MyDecider(prog0)
+  res0 = decider.analyze(prog0)
   print(res0.is_ok())  # Print 'True'
-  res1 = synthesizer.analyze(prog1)
+  res1 = decider.analyze(prog1)
   print(res1.is_ok())  # Print 'False'
-
-.. rubric:: Footnotes
-
-.. [#naming] We did not name this class ``Decider`` since it combines the functionality of both the decider and the synthesizer. 

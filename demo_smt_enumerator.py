@@ -3,7 +3,8 @@
 import tyrell.spec as S
 from tyrell.interpreter import PostOrderInterpreter
 from tyrell.enumerator import SmtEnumerator
-from tyrell.synthesizer import AssertionViolationHandler, ExampleConstraintSynthesizer, Example
+from tyrell.decider import Example, ExampleConstraintDecider
+from tyrell.synthesizer import Synthesizer
 from tyrell.logger import get_logger
 
 logger = get_logger('tyrell')
@@ -70,28 +71,26 @@ class ToyInterpreter(PostOrderInterpreter):
         return val > 0
 
 
-class DemoSynthesizer(AssertionViolationHandler, ExampleConstraintSynthesizer):
-    pass
-
-
 def main():
     logger.info('Parsing Spec...')
     spec = S.parse(toy_spec_str)
     logger.info('Parsing succeeded')
 
     logger.info('Building synthesizer...')
-    synthesizer = DemoSynthesizer(
+    synthesizer = Synthesizer(
         enumerator=SmtEnumerator(spec, depth=3, loc=2),
-        interpreter=ToyInterpreter(),
-        spec=spec,
-        examples=[
-            # we want to synthesize the program (x-y)*y (depth=3, loc=2)
-            # which is also equivalent to x*y-y*y (depth=3, loc=3)
-            Example(input=[4, 3], output=3),
-            Example(input=[6, 3], output=9),
-            Example(input=[1, 2], output=-2),
-            Example(input=[1, 1], output=0),
-        ]
+        decider=ExampleConstraintDecider(
+            spec=spec,
+            interpreter=ToyInterpreter(),
+            examples=[
+                # we want to synthesize the program (x-y)*y (depth=3, loc=2)
+                # which is also equivalent to x*y-y*y (depth=3, loc=3)
+                Example(input=[4, 3], output=3),
+                Example(input=[6, 3], output=9),
+                Example(input=[1, 2], output=-2),
+                Example(input=[1, 1], output=0),
+            ]
+        )
     )
     logger.info('Synthesizing programs...')
 

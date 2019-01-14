@@ -4,7 +4,8 @@ from sys import argv
 import tyrell.spec as S
 from tyrell.interpreter import PostOrderInterpreter
 from tyrell.enumerator import RandomEnumerator
-from tyrell.synthesizer import ExampleSynthesizer, Example
+from tyrell.decider import Example, ExampleDecider
+from tyrell.synthesizer import Synthesizer
 from tyrell.logger import get_logger
 
 logger = get_logger('tyrell')
@@ -58,19 +59,20 @@ def main(seed=None):
     logger.info('Parsing succeeded')
 
     logger.info('Building synthesizer...')
-    synthesizer = ExampleSynthesizer(
-        spec=spec,
+    synthesizer = Synthesizer(
         enumerator=RandomEnumerator(
             spec, max_depth=4, seed=seed),
-        interpreter=ToyInterpreter(),
-        examples=[
-            # we want to synthesize the program (x-y)*y (depth=3, loc=2)
-            # which is also equivalent to x*y-y*y (depth=3, loc=3)
-            Example(input=[4, 3], output=3),
-            Example(input=[6, 3], output=9),
-            Example(input=[1, 2], output=-2),
-            Example(input=[1, 1], output=0),
-        ]
+        decider=ExampleDecider(
+            interpreter=ToyInterpreter(),
+            examples=[
+                # we want to synthesize the program (x-y)*y (depth=3, loc=2)
+                # which is also equivalent to x*y-y*y (depth=3, loc=3)
+                Example(input=[4, 3], output=3),
+                Example(input=[6, 3], output=9),
+                Example(input=[1, 2], output=-2),
+                Example(input=[1, 1], output=0),
+            ]
+        )
     )
     logger.info('Synthesizing programs...')
 
