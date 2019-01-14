@@ -41,6 +41,22 @@ class TestDSL(unittest.TestCase):
         self.assertEqual(node2.name, 'f')
         self.assertEqual(node2.type, self._vty1)
 
+        node0_dup = AtomNode(self._prod0)
+        self.assertNotEqual(node0, node0_dup)
+        self.assertTrue(node0.deep_eq(node0_dup))
+        self.assertTrue(node0_dup.deep_eq(node0))
+        self.assertEqual(node0.deep_hash(), node0_dup.deep_hash())
+        node1_dup = ParamNode(self._prod1)
+        self.assertNotEqual(node1, node1_dup)
+        self.assertTrue(node1.deep_eq(node1_dup))
+        self.assertTrue(node1_dup.deep_eq(node1))
+        self.assertEqual(node1.deep_hash(), node1_dup.deep_hash())
+        node2_dup = ApplyNode(self._prod2, [node0_dup, node1_dup])
+        self.assertNotEqual(node2, node2_dup)
+        self.assertTrue(node2.deep_eq(node2_dup))
+        self.assertTrue(node2_dup.deep_eq(node2))
+        self.assertEqual(node2.deep_hash(), node2_dup.deep_hash())
+
     def test_builder_low_level_apis(self):
         builder = Builder(self._spec)
 

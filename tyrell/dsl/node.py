@@ -90,19 +90,25 @@ class AtomNode(LeafNode):
     def to_sexp(self):
         return [Symbol(self.type.name), self.data]
 
+    def deep_eq(self, other) -> bool:
+        '''
+        Test whether this node is the same with ``other``. This function performs deep comparison rather than just comparing the object identity.
+        '''
+        if isinstance(other, AtomNode):
+            return self.type == other.type and self.data == other.data
+        return False
+
+    def deep_hash(self) -> int:
+        '''
+        This function performs deep hash rather than just hashing the object identity.
+        '''
+        return hash((self.type, str(self.data)))
+
     def __repr__(self) -> str:
         return 'AtomNode({})'.format(self.data)
 
     def __str__(self) -> str:
         return '{}'.format(self.data)
-
-    # def __eq__(self, other):
-    #     if isinstance(other, AtomNode):
-    #         return self.type == other.type and self.data == other.data
-    #     return NotImplemented
-
-    # def __hash__(self):
-    #     return hash((self.type, str(self.data)))
 
 
 class ParamNode(LeafNode):
@@ -132,19 +138,25 @@ class ParamNode(LeafNode):
     def to_sexp(self):
         return [Symbol('@param'), self.index]
 
+    def deep_eq(self, other) -> bool:
+        '''
+        Test whether this node is the same with ``other``. This function performs deep comparison rather than just comparing the object identity.
+        '''
+        if isinstance(other, ParamNode):
+            return self.index == other.index
+        return False
+
+    def deep_hash(self) -> int:
+        '''
+        This function performs deep hash rather than just hashing the object identity.
+        '''
+        return hash(self.index)
+
     def __repr__(self) -> str:
         return 'ParamNode({})'.format(self.index)
 
     def __str__(self) -> str:
         return '@param{}'.format(self.index)
-
-    # def __eq__(self, other):
-    #     if isinstance(other, ParamNode):
-    #         return self.index == other.index
-    #     return NotImplemented
-
-    # def __hash__(self):
-    #     return hash(self.index)
 
 
 class ApplyNode(Node):
@@ -196,16 +208,25 @@ class ApplyNode(Node):
     def to_sexp(self):
         return [Symbol(self.name)] + [x.to_sexp() for x in self.args]
 
+    def deep_eq(self, other) -> bool:
+        '''
+        Test whether this node is the same with ``other``. This function performs deep comparison rather than just comparing the object identity.
+        '''
+        if isinstance(other, ApplyNode):
+            return self.name == other.name and \
+                len(self.args) == len(other.args) and \
+                all(x.deep_eq(y)
+                    for x, y in zip(self.args, other.args))
+        return False
+
+    def deep_hash(self) -> int:
+        '''
+        This function performs deep hash rather than just hashing the object identity.
+        '''
+        return hash((self.name, tuple([x.deep_hash() for x in self.args])))
+
     def __repr__(self) -> str:
         return 'ApplyNode({}, {})'.format(self.name, self._args)
 
     def __str__(self) -> str:
         return '{}({})'.format(self.name, ', '.join([str(x) for x in self._args]))
-
-    # def __eq__(self, other):
-    #     if isinstance(other, ApplyNode):
-    #         return self.name == other.name and self.args == other.args
-    #     return NotImplemented
-
-    # def __hash__(self):
-    #     return hash((self.name, tuple(self.args)))
