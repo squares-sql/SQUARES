@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any
+from ..interpreter import InterpreterError
 from ..enumerator import Enumerator
 from ..decider import Decider
 from ..dsl import Node
