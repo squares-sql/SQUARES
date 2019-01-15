@@ -12,6 +12,14 @@ tyrell.enumerator.enumerator module
     :undoc-members:
     :show-inheritance:
 
+tyrell.enumerator.exhaustive module
+-----------------------------------
+
+.. automodule:: tyrell.enumerator.exhaustive
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 tyrell.enumerator.from\_iterator module
 ---------------------------------------
 

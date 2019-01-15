@@ -190,7 +190,7 @@ It turns out that in most situations we want to recursively interpret the progra
 
   # Define the interpreter subclass by specifying the meaning of each enum and each function
   class BinaryArithFuncInterpreter(PostOrderInterpreter):
-      # First, interpret the enums
+      # First, interpret the enums by defining method 'eval_XXX' for each enum type named XXX.
 
       def eval_IntConst(self, v):
           # The argument v is always a string that was defined in our enum definition.
@@ -198,7 +198,7 @@ It turns out that in most situations we want to recursively interpret the progra
           # Here we just turn it into an integer and return the result.
           return int(v)
 
-      # Next, interpret the functions
+      # Next, interpret the functions by defining method 'eval_YYY' for each function named YYY
 
       def eval_const(self, node, args):
           # The node argument is the corresponding AST node for the "const" application. In this example we don't need to look at it.
