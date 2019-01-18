@@ -36,11 +36,7 @@ Dev Environment Setup
 ```
   Documentations will be available at `docs/_build/html/index.html`
     
-Morpheus prerequisite
-=====================
-- R 3.3+ （https://cran.r-project.org/bin/macosx/R-3.5.2.pkg）
-    - dplyr: install.packages("dplyr")
-    - tidyr: install.packages("tidyr")
-    - devtools: install.packages("devtools")
-- Install MorpheusData for PLDI17 (optional): devtools::install_github("fredfeng/MorpheusData")
-- Load MorpheusData for PLDI17 in R (optional): library(MorpheusData)
+References
+- Yu Feng, Ruben Martins, Osbert Bastani, Isil Dillig. Program Synthesis using Conflict-Driven Learning. PLDI'18.
+- Yu Feng, Ruben Martins, Jacob Van Geffen, Isil Dillig, Swarat Chaudhuri. Component-based Synthesis of Table Consolidation and Transformation Tasks from Examples. PLDI'17
+- Yu Feng, Ruben Martins, Yuepeng Wang, Isil Dillig, Thomas W. Reps. Component-Based Synthesis for Complex APIs. POPL'17
