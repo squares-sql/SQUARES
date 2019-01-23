@@ -5,14 +5,14 @@ Deduction-based Synthesizer
 Recall the synthesizer loop we had in the beginning of :doc:`the previous tutorial <02_synthesizer_basic>`:
 
 .. code-block:: python
-  
+
   def synthesize(enumerator, decider):
       for prog in enumerator.enumerate():
           if decider.is_success(prog):
               return prog
       return None
 
-We mentioned that for this basic search scheme there is room for improvement. Here is one observation: currently the decider does not really communicate much with the enumerator. The enumerator only gets a yes/no answer from the decider and that's it. If the program is accepted, all is good. But if it is not, the enumerator can do nothing except coming up with the next candidate in the search space. 
+We mentioned that for this basic search scheme there is room for improvement. Here is one observation: currently the decider does not really communicate much with the enumerator. The enumerator only gets a yes/no answer from the decider and that's it. If the program is accepted, all is good. But if it is not, the enumerator can do nothing except coming up with the next candidate in the search space.
 
 What if the decider, in addition to rejecting the program, can provide more insights to the enumerator? What if the decider is able to tell the enumerator why a program is rejected, and what if the enumerator is able to utilize the reason returned by the decider to make sure that programs that gets rejected by the same reason never gets enumerated again, which may lead to a significant cut of its search space? This simple idea is at the heart of deduction-based synthesis.
 
@@ -45,7 +45,7 @@ To get more information, the decider needs some additional guidance from the use
       def eval_foo(self, node, args):
           return args[0] + int((args[1] - 1) ** 0.5)
 
-Here, we human can see that the integer square root operation in ``eval_foo`` certainly requires that its argument is no less than zero. If the decider sees that ``foo(@param0, -2)`` is being generated, it should be smart enough to inform the enumerator that it should never let the second parameter of ``foo`` be less than 1. 
+Here, we human can see that the integer square root operation in ``eval_foo`` certainly requires that its argument is no less than zero. If the decider sees that ``foo(@param0, -2)`` is being generated, it should be smart enough to inform the enumerator that it should never let the second parameter of ``foo`` be less than 1.
 
 In Tyrell, we convey this kind of dynamic information though :meth:`~tyrell.interpreter.interpreter.Interpreter.assertArg`:
 
@@ -90,7 +90,7 @@ Sometimes we refer to the value of other parameters inside the assertion we wrot
 
 Note that inside the lambda we pass to ``cond``, the value of ``args[0]`` is referenced. Whenever that happens, we also need to tell ``assertArg`` that parameter index 0 is *captured* through ``capture_indices``.
 
-.. warning:: Currently only assertions on enum nodes will be processed. But this is not a fundanmental limitation and we should really extend the support to make runtime assertion like this more useful. 
+.. warning:: Currently only assertions on enum nodes will be processed. But this is not a fundamental limitation and we should really extend the support to make runtime assertion like this more useful.
 
 
 Static feedback
@@ -135,7 +135,7 @@ Writing runtime assertion is not the only way of providing hints to the decider 
 Putting it together
 ===================
 
-In the Tyrell framework, writing dynamic assertions and static constraints are useful only when both the decider and the enumerator is willing them to process them. Unfortunately, neither :class:`~tyrell.enumerator.exhaustive.ExhaustiveEnumerator` nor :class:`~tyrell.decider.example_base.ExampleDecider` mentioned in the :doc:`the previous tutorial <02_synthesizer_basic>` does the processing. 
+In the Tyrell framework, writing dynamic assertions and static constraints are useful only when both the decider and the enumerator is willing them to process them. Unfortunately, neither :class:`~tyrell.enumerator.exhaustive.ExhaustiveEnumerator` nor :class:`~tyrell.decider.example_base.ExampleDecider` mentioned in the :doc:`the previous tutorial <02_synthesizer_basic>` does the processing.
 
 If we want the synthesizer to understand those assertions and constraints we wrote, the combination of :class:`~tyrell.enumerator.smt.SmtEnumerator` and :class:`~tyrell.decider.example_constraint.ExampleConstraintDecider` is needed:
 
@@ -166,4 +166,4 @@ If we want the synthesizer to understand those assertions and constraints we wro
   )
   print(synthesizer.synthesize())
 
-.. warning:: Currently due to an implementation quirk, for SmtEnumerator to work there must be a dummy Empty value type and dummy "func empty: Empty -> Empty" function defintion included in the spec file.
+.. warning:: Currently due to an implementation quirk, for ``SmtEnumerator`` to work there must be a dummy ``Empty`` value type and dummy ``func empty: Empty -> Empty`` function definition included in the spec file.

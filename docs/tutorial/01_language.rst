@@ -17,7 +17,7 @@ The Tyrell framework recognizes programs in a simplistic form: a program is an e
   expr    := atom
            | func (expr*)
 
-Here ``func`` just represents a function identifier. 
+Here ``func`` just represents a function identifier.
 
 An atom is either a constant, or a reference to the program's input value:
 
@@ -34,7 +34,7 @@ For example, this is a valid program supported by Tyrell:
 
   mult(plus(@param0, 1), minus(@param1, 2))
 
-Intuitively, this program tries to compute `f(x, y) = (x + 1) * (y - 2)`. 
+Intuitively, this program tries to compute `f(x, y) = (x + 1) * (y - 2)`.
 
 
 .. _sec-syntax-spec:
@@ -42,7 +42,7 @@ Intuitively, this program tries to compute `f(x, y) = (x + 1) * (y - 2)`.
 Syntax specification
 ====================
 
-Different domains may need different collections of functions and constants. Different functions may have different arities. It is also rarely the case that function arguments can take arbitrary values: Sometimes we know that certain argument may only be chosen from a small set of constants, and sometimes we know that certain argument may only be of a specific type. 
+Different domains may need different collections of functions and constants. Different functions may have different arities. It is also rarely the case that function arguments can take arbitrary values: Sometimes we know that certain argument may only be chosen from a small set of constants, and sometimes we know that certain argument may only be of a specific type.
 
 To help narrow down the space of valid programs, Tyrell uses *spec file* to refine a program's specification on a syntax level. Here is a simple example of such a spec file:
 
@@ -85,14 +85,14 @@ If the spec file is correctly written, no error would be reported.
 Alternatively, the spec parser can be directly accessed from a python script:
 
 .. code-block:: python
-  
+
   from tyrell.spec import parse_file
   spec = parse_file('bin_arith.tyrell')
 
-The :func:`tyrell.spec.do_parse.parse_file` function takes file path as a parameter, and it will try to parse the content in that file. If the spec file is stored in a in-memory string instead of an on-disk file, we use :func:`tyrell.spec.do_parse.parse` function instead:
+The :func:`~tyrell.spec.do_parse.parse_file` function takes file path as a parameter, and it will try to parse the content in that file. If the spec file is stored in a in-memory string instead of an on-disk file, we use :func:`~tyrell.spec.do_parse.parse` function instead:
 
 .. code-block:: python
-  
+
   from tyrell.spec import parse
   spec = parse_file(r'''
       enum IntConst {
@@ -153,7 +153,7 @@ The process can be simplified using :meth:`~tyrell.dsl.builder.Builder.from_sexp
   from sexpdata import dumps
   print(dumps(prog.to_sexp()))
 
-The builder APIs returns objects of class :class:`~tyrell.dsl.node.Node`, which represent a node in the program's *abstract syntax tree*. Take a look at the doc if you are interested in what methods are defined on it. Also, check out the nice utilities like :func:`~tyrell.dsl.iterator.dfs`, :func:`~tyrell.dsl.iterator.bfs`, :class:`~tyrell.dsl.indexer.NodeIndexer`, and :class:`~tyrell.dsl.parent_finder.ParentFinder`. 
+The builder APIs returns objects of class :class:`~tyrell.dsl.node.Node`, which represent a node in the program's *abstract syntax tree*. Take a look at the doc if you are interested in what methods are defined on it. Also, check out the nice utilities like :func:`~tyrell.dsl.iterator.dfs`, :func:`~tyrell.dsl.iterator.bfs`, :class:`~tyrell.dsl.indexer.NodeIndexer`, and :class:`~tyrell.dsl.parent_finder.ParentFinder`.
 
 
 Semantics specification
