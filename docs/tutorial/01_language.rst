@@ -9,7 +9,7 @@ A synthesizer, as the name suggests, generates *programs* as its output. Therefo
 Shape of a program
 ==================
 
-The Tyrell framework recognizes programs in a simplistic form: a program is an experession that can either be an atom or a function application:
+The Tyrell framework recognizes programs in a simplistic form: a program is an expression that can either be an atom or a function application:
 
 ::
 
@@ -17,7 +17,7 @@ The Tyrell framework recognizes programs in a simplistic form: a program is an e
   expr    := atom
            | func (expr*)
 
-Here ``func`` just represents a function identifier. 
+Here ``func`` just represents a function identifier.
 
 An atom is either a constant, or a reference to the program's input value:
 
@@ -34,7 +34,7 @@ For example, this is a valid program supported by Tyrell:
 
   mult(plus(@param0, 1), minus(@param1, 2))
 
-Intuitively, this program tries to compute `f(x, y) = (x + 1) * (y - 2)`. 
+Intuitively, this program tries to compute `f(x, y) = (x + 1) * (y - 2)`.
 
 
 .. _sec-syntax-spec:
@@ -42,7 +42,7 @@ Intuitively, this program tries to compute `f(x, y) = (x + 1) * (y - 2)`.
 Syntax specification
 ====================
 
-Different domains may need different collections of functions and constants. Different functions may have different arities. It is also rarely the case that function arguments can take arbitrary values: Sometimes we know that certain argument may only be chosen from a small set of constants, and sometimes we know that certain argument may only be of a specific type. 
+Different domains may need different collections of functions and constants. Different functions may have different arities. It is also rarely the case that function arguments can take arbitrary values: Sometimes we know that certain argument may only be chosen from a small set of constants, and sometimes we know that certain argument may only be of a specific type.
 
 To help narrow down the space of valid programs, Tyrell uses *spec file* to refine a program's specification on a syntax level. Here is a simple example of such a spec file:
 
@@ -68,7 +68,7 @@ Each spec file starts with type definitions (line 1 to 4). Tyrell supports two k
 
 Next section in the spec file is the input/output definition (line 6). It starts with the keyword ``program``, followed by the name of the program, followed by the input types of the program, and finally the ``->`` symbol and the output type of the program. Note that the types that appear in this part of the spec file must all be ``value`` types.
 
-In the end (line 8 to 11), we specify what functions may appear in the program, and what kind of arguments these function takes. Note that unlike the input/output definition, the return type of the function comes before all the argument types. In this example, we defined 4 functions: one unary function ``const`` that takes a ``IntConst`` and produces a ``IntValue``, and three binary functions ``plus``, ``minus``, and ``mult`` that take two ``IntValue`` and returns ``IntValue``.
+In the end (line 8 to 11), we specify what functions may appear in the program, and what kind of arguments these functions take. Note that unlike the input/output definition, the return type of the function comes before all the argument types. In this example, we defined 4 functions: one unary function ``const`` that takes a ``IntConst`` and produces a ``IntValue``, and three binary functions ``plus``, ``minus``, and ``mult`` that take two ``IntValue`` and returns ``IntValue``.
 
 
 Spec file parsing
@@ -85,14 +85,14 @@ If the spec file is correctly written, no error would be reported.
 Alternatively, the spec parser can be directly accessed from a python script:
 
 .. code-block:: python
-  
+
   from tyrell.spec import parse_file
   spec = parse_file('bin_arith.tyrell')
 
-The :func:`tyrell.spec.do_parse.parse_file` function takes file path as a parameter, and it will try to parse the content in that file. If the spec file is stored in a in-memory string instead of an on-disk file, we use :func:`tyrell.spec.do_parse.parse` function instead:
+The :func:`~tyrell.spec.do_parse.parse_file` function takes file path as a parameter, and it will try to parse the content in that file. If the spec file is stored in a in-memory string instead of an on-disk file, we use :func:`~tyrell.spec.do_parse.parse` function instead:
 
 .. code-block:: python
-  
+
   from tyrell.spec import parse
   spec = parse_file(r'''
       enum IntConst {
@@ -153,7 +153,7 @@ The process can be simplified using :meth:`~tyrell.dsl.builder.Builder.from_sexp
   from sexpdata import dumps
   print(dumps(prog.to_sexp()))
 
-The builder APIs returns objects of class :class:`~tyrell.dsl.node.Node`, which represent a node in the program's *abstract syntax tree*. Take a look at the doc if you are interested in what methods are defined on it. Also, check out the nice utilities like :func:`~tyrell.dsl.iterator.dfs`, :func:`~tyrell.dsl.iterator.bfs`, :class:`~tyrell.dsl.indexer.NodeIndexer`, and :class:`~tyrell.dsl.parent_finder.ParentFinder`. 
+The builder APIs returns objects of class :class:`~tyrell.dsl.node.Node`, which represent a node in the program's *abstract syntax tree*. Take a look at the doc if you are interested in what methods are defined on it. Also, check out the nice utilities like :func:`~tyrell.dsl.iterator.dfs`, :func:`~tyrell.dsl.iterator.bfs`, :class:`~tyrell.dsl.indexer.NodeIndexer`, and :class:`~tyrell.dsl.parent_finder.ParentFinder`.
 
 
 Semantics specification
@@ -161,7 +161,7 @@ Semantics specification
 
 Now that we know what the programs look like, the next question is what do they mean. In Tyrell, we attach semantic actions to the syntax through an *interpreter*.
 
-The base class for a Tyrell interepreter is :class:`~tyrell.interpreter.interpreter.Interpreter`. To implement your own interpreter, inherit from :class:`~tyrell.interpreter.interpreter.Interpreter` and override its :meth:`~tyrell.interpreter.interpreter.Interpreter.eval` method, which takes a program and a list of input arguments, interpret the program, and returns the output.
+The base class for a Tyrell interpreter is :class:`~tyrell.interpreter.interpreter.Interpreter`. To implement your own interpreter, inherit from :class:`~tyrell.interpreter.interpreter.Interpreter` and override its :meth:`~tyrell.interpreter.interpreter.Interpreter.eval` method, which takes a program and a list of input arguments, interprets the program, and returns the output.
 
 For example, a simple interpreter for the small language we defined in the previous section may look like this:
 
@@ -180,7 +180,7 @@ For example, a simple interpreter for the small language we defined in the previ
   print(interp.eval(builder.from_sexp_string('(const (IntConst 1))', [3, 4])))  # Prints 0
   print(interp.eval(builder.from_sexp_string('(plus (@param 1) (IntConst 2))', [3, 4])))  # Prints 0
 
-Well, this is not a super interested interpreter, as it interpret any program to ``0``. To make it more interesting, we could have examined what the structure of ``node`` is, and take different actions accodring to whether it's a parameter, an enum, or a function application (in which case you may need to recurse down and interpret its arguments).
+Well, this is not a super interesting interpreter, as it interprets any program to ``0``. To make it more interesting, we could have examined what the structure of ``node`` is, and take different actions according to whether it's a parameter, an enum, or a function application (in which case you may need to recurse down and interpret its arguments).
 
 It turns out that in most situations we want to recursively interpret the programs in a *post order* tree traversal. In other words, for function applications we want to interpret the values of each the argument before the application itself can be interpreted. If that's the case, we can save a lot of keystrokes for those boilerplate ``node`` inspection code by inheriting from :class:`~tyrell.interpreter.post_order.PostOrderInterpreter`. If we take this option, all we need to do is to define one ``eval`` method for each enum and each function. Here's an example:
 

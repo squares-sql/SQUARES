@@ -80,7 +80,7 @@ In the previous example, nothing gets printed as the enumerator returns ``None``
 
   The two enumerator examples shown above are used to demonstrate how the :class:`~tyrell.enumerator.enumerator.Enumerator` interface works. Simple enumerators like these can be more easily constructed via :func:`~tyrell.enumerator.from_iterator.make_empty_enumerator`, :func:`~tyrell.enumerator.from_iterator.make_singleton_enumerator`, and :func:`~tyrell.enumerator.from_iterator.make_list_enumerator`.
 
-More sophisticated enumerators usually need to take into account what the spec file look like. For example, if we want to exhaustively enumerate all programs defined by a given spec, we could use :class:`~tyrell.enumerator.exhaustive.ExhaustiveEnumerator`:
+More sophisticated enumerators usually need to take into account what the spec file looks like. For example, if we want to exhaustively enumerate all programs defined by a given spec, we could use :class:`~tyrell.enumerator.exhaustive.ExhaustiveEnumerator`:
 
 .. code-block:: python
 
@@ -95,7 +95,7 @@ More sophisticated enumerators usually need to take into account what the spec f
 The decider
 ===========
 
-Among all the programs that an enumerator provides to us, the decider's job is to see which ones of them are desirable. In Tyrell, the abstract base class for decider is called :class:`~tyrell.decider.decider.Decider`. Its :meth:`~tyrell.decider.decider.Decider.analyze` method should be overriden if you want to define your own decider. Given a program (represented by :class:`~tyrell.dsl.node.Node`), if we want to accept it we need to let our ``analyze`` method returns :func:`~tyrell.decider.result.ok`. Otherwise we return :func:`~tyrell.decider.result.bad`:
+Among all the programs that an enumerator provides to us, the decider's job is to see which ones of them are desirable. In Tyrell, the abstract base class for decider is called :class:`~tyrell.decider.decider.Decider`. Its :meth:`~tyrell.decider.decider.Decider.analyze` method should be overridden if you want to define your own decider. Given a program (represented by :class:`~tyrell.dsl.node.Node`), if we want to accept it we need to let our ``analyze`` method returns :func:`~tyrell.decider.result.ok`. Otherwise we return :func:`~tyrell.decider.result.bad`:
 
 .. code-block:: python
 
@@ -161,7 +161,7 @@ In practice, we obviously do not know exactly which program we want to accept in
 Putting it together
 ===================
 
-Now we have all the pieces ready, it is time to put them together to create our final product: the synthesizer. Let's have a breif review of the topics we have touched in this tutorial so far:
+Now we have all the pieces ready, it is time to put them together to create our final product: the synthesizer. Let's have a brief review of the topics we have touched in this tutorial so far:
 
 - A synthesizer needs a *spec* to put syntactic constraints on the synthesized programs.
 
@@ -171,11 +171,11 @@ Now we have all the pieces ready, it is time to put them together to create our 
 
 - A synthesizer needs a *decider* to put semantic constraints on the synthesized programs.
 
-  + The decider often needs to refer to the *interpreter* for semnatic evaluation of a program
+  + The decider often needs to refer to the *interpreter* for semantic evaluation of a program
 
   + Semantic constraints are often given in the form of *input-output examples*. 
 
-In Tyrell, a synthesizer can be constructed using the :class:`~tyrell.synthesizer.synthesizer.Synthesizer` class. The API is simple: we give it our :class:`~tyrell.enumerator.enumerator.Enumerator` instance and :class:`~tyrell.decider.decider.Decider` instance, and then we can invoke the :meth:`~tyrell.synthesizer.synthesizer.Synthesizer.synthesize()` method to obtain the program that we want. Here is a complete example, which nicely illustrate every point in the reivew above:
+In Tyrell, a synthesizer can be constructed using the :class:`~tyrell.synthesizer.synthesizer.Synthesizer` class. The API is simple: we give it our :class:`~tyrell.enumerator.enumerator.Enumerator` instance and :class:`~tyrell.decider.decider.Decider` instance, and then we can invoke the :meth:`~tyrell.synthesizer.synthesizer.Synthesizer.synthesize()` method to obtain the program that we want. Here is a complete example, which nicely illustrates every point in the review above:
 
 .. code-block:: python
 
