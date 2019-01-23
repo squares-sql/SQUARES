@@ -5,14 +5,14 @@ Deduction-based Synthesizer
 Recall the synthesizer loop we had in the beginning of :doc:`the previous tutorial <02_synthesizer_basic>`:
 
 .. code-block:: python
-  
+
   def synthesize(enumerator, decider):
       for prog in enumerator.enumerate():
           if decider.is_success(prog):
               return prog
       return None
 
-We mentioned that for this basic search scheme there is room for improvement. Here is one observation: currently the decider does not really communicate much with the enumerator. The enumerator only gets a yes/no answer from the decider and that's it. If the program is accepted, all is good. But if it is not, the enumerator can do nothing except coming up with the next candidate in the search space. 
+We mentioned that for this basic search scheme there is room for improvement. Here is one observation: currently the decider does not really communicate much with the enumerator. The enumerator only gets a yes/no answer from the decider and that's it. If the program is accepted, all is good. But if it is not, the enumerator can do nothing except coming up with the next candidate in the search space.
 
 What if the decider, in addition to rejecting the program, can provide more insights to the enumerator? What if the decider is able to tell the enumerator why a program is rejected, and what if the enumerator is able to utilize the reason returned by the decider to make sure that programs that get rejected by the same reason never get enumerated again, which may lead to a significant cut of its search space? This simple idea is at the heart of deduction-based synthesis.
 

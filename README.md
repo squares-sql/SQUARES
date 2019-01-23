@@ -18,7 +18,7 @@ Dev Environment Setup
 ```
 - Test whether the installation is successful
 ```
-    $ parse-spec example/toy.tyrell
+    $ parse-tyrell-spec example/toy.tyrell
 ```
 - Run all unit tests
 ```
