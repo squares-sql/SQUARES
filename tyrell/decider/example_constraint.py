@@ -174,7 +174,7 @@ class BlameFinder:
     def _expand_blame(self, base_nodes: List[Node], node: Node, exprs: List[Expr]) -> Iterator[FrozenSet[Blame]]:
         def gen_blame(prod):
             return frozenset(
-                [Blame(node=n, production=(prod if n is node else n.productions))
+                [Blame(node=n, production=(prod if n is node else n.production))
                  for n in base_nodes]
             )
         for expr in exprs:
