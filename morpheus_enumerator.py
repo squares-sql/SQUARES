@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import tyrell.spec as S
 from tyrell.interpreter import PostOrderInterpreter, GeneralError
 from tyrell.enumerator import SmtEnumerator
@@ -272,29 +273,38 @@ class MorpheusInterpreter(PostOrderInterpreter):
 
         return df.ncol
 
+def init_tbl(df_name, csv_loc):
+    cmd = '''
+    tbl_name <- read.csv(csv_location, check.names = FALSE)
+    fctr.cols <- sapply(tbl_name, is.factor)
+    int.cols <- sapply(tbl_name, is.integer)
+    tbl_name[, fctr.cols] <- sapply(tbl_name[, fctr.cols], as.character)
+    tbl_name[, int.cols] <- sapply(tbl_name[, int.cols], as.numeric)
+    '''
+    cmd = cmd.replace('tbl_name', df_name).replace('csv_location', '"'+ csv_loc + '"')
+    print(cmd)
+    robjects.r(cmd)
+    return None
 
 def main():
 
-    ##### Input-output constraint
-    benchmark1_input = robjects.r('''
-    dat <- read.table(text="
-    round var1 var2 nam        val
-    round1   22   33 foo 0.16912201
-    round2   11   44 foo 0.18570826
-    round1   22   33 bar 0.12410581
-    round2   11   44 bar 0.03258235
-    ", header=T)
-    dat
-   ''')
-
-    benchmark1_output = robjects.r('''
-    dat2 <- read.table(text="
-    nam val_round1 val_round2 var1_round1 var1_round2 var2_round1 var2_round2
-    bar  0.1241058 0.03258235          22          11          33          44
-    foo  0.1691220 0.18570826          22          11          33          44
-    ", header=T)
-    dat2
-   ''')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i0', '--input0', type=str)
+    parser.add_argument('-i1', '--input1', type=str)
+    parser.add_argument('-o', '--output', type=str)
+    parser.add_argument('-l', '--length', type=int)
+    args = parser.parse_args()
+    loc_val = args.length
+    # Input and Output must be in CSV format.
+    input0 = args.input0
+    input1 = args.input1
+    output = args.output
+    # This is required by Ruben.
+    depth_val = loc_val + 1
+    print(input0, input1, output, loc_val)
+    init_tbl('dat', input0)
+    #FIXME: ignore the second input table for now.
+    init_tbl('dat2', output)
 
     logger.info('Parsing Spec...')
     spec = S.parse_file('example/morpheus.tyrell')
@@ -303,9 +313,7 @@ def main():
     logger.info('Building synthesizer...')
     synthesizer = Synthesizer(
         #loc: # of function productions
-        # enumerator=SmtEnumerator(spec, depth=2, loc=1),
-        # enumerator=SmtEnumerator(spec, depth=3, loc=2),
-        enumerator=SmtEnumerator(spec, depth=4, loc=3),
+        enumerator=SmtEnumerator(spec, depth=depth_val, loc=loc_val),
         decider=ExampleConstraintDecider(
             spec=spec,
             interpreter=MorpheusInterpreter(),
