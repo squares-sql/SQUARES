@@ -14,13 +14,13 @@ Recall the synthesizer loop we had in the beginning of :doc:`the previous tutori
 
 We mentioned that for this basic search scheme there is room for improvement. Here is one observation: currently the decider does not really communicate much with the enumerator. The enumerator only gets a yes/no answer from the decider and that's it. If the program is accepted, all is good. But if it is not, the enumerator can do nothing except coming up with the next candidate in the search space.
 
-What if the decider, in addition to rejecting the program, can provide more insights to the enumerator? What if the decider is able to tell the enumerator why a program is rejected, and what if the enumerator is able to utilize the reason returned by the decider to make sure that programs that gets rejected by the same reason never gets enumerated again, which may lead to a significant cut of its search space? This simple idea is at the heart of deduction-based synthesis.
+What if the decider, in addition to rejecting the program, can provide more insights to the enumerator? What if the decider is able to tell the enumerator why a program is rejected, and what if the enumerator is able to utilize the reason returned by the decider to make sure that programs that get rejected by the same reason never get enumerated again, which may lead to a significant cut of its search space? This simple idea is at the heart of deduction-based synthesis.
 
 
 Dynamic feedback
 ================
 
-How would the decider figure out why a program gets rejected? In the setting of input-output example-based synthesis, the decider reject a program because it does not conform to some of the provided examples. However, such examples cannot be used as the feedback directly since they are not really meaningful to the enumerator: if the enumerator knows beforehand which programs are good for all the examples, there would be no point in having a decider in the first place!
+How would the decider figure out why a program gets rejected? In the setting of input-output example-based synthesis, the decider rejects a program because it does not conform to some of the provided examples. However, such examples cannot be used as the feedback directly since they are not really meaningful to the enumerator: if the enumerator knows beforehand which programs are good for all the examples, there would be no point in having a decider in the first place!
 
 To get more information, the decider needs some additional guidance from the user. Take this (somewhat contrived) example:
 
@@ -96,7 +96,7 @@ Note that inside the lambda we pass to ``cond``, the value of ``args[0]`` is ref
 Static feedback
 ===============
 
-Writing runtime assertion is not the only way of providing hints to the decider in Tyrell. Alternatively, we could, for each function, provide high-level descriptions on what they do in the spec:
+Writing runtime assertions is not the only way of providing hints to the decider in Tyrell. Alternatively, we could, for each function, provide high-level descriptions of what they do in the spec:
 
 .. code-block:: python
 
@@ -135,7 +135,7 @@ Writing runtime assertion is not the only way of providing hints to the decider 
 Putting it together
 ===================
 
-In the Tyrell framework, writing dynamic assertions and static constraints are useful only when both the decider and the enumerator is willing them to process them. Unfortunately, neither :class:`~tyrell.enumerator.exhaustive.ExhaustiveEnumerator` nor :class:`~tyrell.decider.example_base.ExampleDecider` mentioned in the :doc:`the previous tutorial <02_synthesizer_basic>` does the processing.
+In the Tyrell framework, writing dynamic assertions and static constraints is useful only when both the decider and the enumerator are willing to process them. Unfortunately, neither :class:`~tyrell.enumerator.exhaustive.ExhaustiveEnumerator` nor :class:`~tyrell.decider.example_base.ExampleDecider` mentioned in the :doc:`the previous tutorial <02_synthesizer_basic>` do the processing. 
 
 If we want the synthesizer to understand those assertions and constraints we wrote, the combination of :class:`~tyrell.enumerator.smt.SmtEnumerator` and :class:`~tyrell.decider.example_constraint.ExampleConstraintDecider` is needed:
 
