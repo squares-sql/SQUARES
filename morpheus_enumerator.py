@@ -43,10 +43,17 @@ def get_type(df, index):
     return ret_val[0]
 
 def eq_r(actual, expect):
-    _rscript = 'all.equal({lhs}, {rhs}, tolerance=0.000001)'.format(lhs=actual, rhs=expect)
-    ret_val = robjects.r(_rscript)
+    _rscript = 'all.equal(lapply({lhs}, FUN=function(x){{ data.frame(as.matrix(x))}}),lapply({rhs}, FUN=function(x){{ data.frame(as.matrix(x)) }} ), tolerance=0.000001)'.format(lhs=actual, rhs=expect)
+    #_rscript = 'all.equal({lhs}, {rhs}, tolerance=0.000001)'.format(lhs=actual, rhs=expect)
+    #ret_val = robjects.r(_rscript)
+    #return True == ret_val[0]
+    try:
+        ret_val = robjects.r(_rscript)
+    except:
+        return False
+    # print(ret_val[0])
     return True == ret_val[0]
-
+    
 class MorpheusInterpreter(PostOrderInterpreter):
     ## Concrete interpreter
     def eval_ColInt(self, v):
