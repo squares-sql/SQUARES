@@ -48,7 +48,7 @@ class Optimizer:
                 self.solver.add(
                     Implies(self.var_occurs[x] == 0, self.variables[y] != x))
 
-    def mk_is_not_parent(self, parent, child, weight=None):
+    def mk_is_not_parent(self, parent, child, weight=100):
         child_pos = []
         # find positions that type-check between parent and child
         for x in range(0, len(parent.rhs)):
@@ -58,7 +58,7 @@ class Optimizer:
         for n in self.nodes:
             # not a leaf node
             if n.children != None:
-                if weight != None:
+                if weight != 100:
                     # FIXME: reduce duplication of code
                     name = 'relax' + str(self.id)
                     v = Int(name)
@@ -93,7 +93,7 @@ class Optimizer:
                         Implies(Or(ctr_children), self.variables[n.id - 1] != parent.id))
 
     # FIXME: dissociate the creation of variables with the creation of constraints?
-    def mk_is_parent(self, parent, child, weight=None):
+    def mk_is_parent(self, parent, child, weight=100):
         '''children production will have the parent production with probability weight'''
 
         child_pos = []
@@ -105,7 +105,7 @@ class Optimizer:
         for n in self.nodes:
             # not a leaf node
             if n.children != None:
-                if weight != None:
+                if weight != 100:
                     # FIXME: reduce duplication of code
                     name = 'relax' + str(self.id)
                     v = Int(name)
@@ -139,12 +139,12 @@ class Optimizer:
                     self.solver.add(
                         Implies(self.variables[n.id - 1] == parent.id, Or(ctr_children)))
 
-    def mk_not_occurs(self, production, weight=None):
+    def mk_not_occurs(self, production, weight=100):
         '''a production will not occur with a given probability'''
         if len(self.var_occurs) == 0:
             self.createVariablesOccurrence()
 
-        if weight != None:
+        if weight != 100:
             name = 'relax' + str(self.id)
             v = Int(name)
             self.cost_relax_vars[v] = weight
@@ -166,12 +166,12 @@ class Optimizer:
             self.solver.add(self.var_occurs[production.id] == 0)
 
     # FIXME: dissociate the creation of variables with the creation of constraints?
-    def mk_occurs(self, production, weight=None):
+    def mk_occurs(self, production, weight=100):
         '''a production will occur with a given probability'''
         if len(self.var_occurs) == 0:
             self.createVariablesOccurrence()
 
-        if weight != None:
+        if weight != 100:
             name = 'relax' + str(self.id)
             v = Int(name)
             self.cost_relax_vars[v] = weight
