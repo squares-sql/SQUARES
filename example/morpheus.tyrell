@@ -1,6 +1,6 @@
 # First, specify the types that will be used
 enum ColInt {
-  "1", "2", "3", "4", "5", "6"
+  "1","2","3","4","5","6"
 }
 
 enum SmallInt {
@@ -8,7 +8,7 @@ enum SmallInt {
 }
 
 enumset ColList[2] {
-  "1","2","3","4","5"
+  "1","2","3","4","5","6"
 }
 
 enum Aggr {

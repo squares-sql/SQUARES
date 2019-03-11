@@ -15,6 +15,7 @@ Dev Environment Setup
 - Make an editable install with `pip`. This would automatically handles package dependencies. One of our dependency, `z3-solver`, takes a long time to build. Please be patient.
 ```
     $ pip install -e ".[dev]"
+    $ python setup.py sdist  # for package
 ```
 - Test whether the installation is successful
 ```
