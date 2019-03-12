@@ -25,6 +25,8 @@ enum BoolFunc {
 value Table {
 	col: int;
 	row: int;
+  head: int;
+  content: int;
 }
 
 value Empty;
@@ -43,6 +45,8 @@ func select: Table r -> Table a, ColList b {
 func unite: Table r -> Table a, ColInt b, ColInt c {
   row(r) == row(a);
   col(r) == col(a) - 1;
+  head(r) <= head(a) + 1;
+  content(r) >= content(a) + 1;
 }
 
 func group_by: Table r -> Table a, ColList b {
@@ -53,11 +57,15 @@ func group_by: Table r -> Table a, ColList b {
 func gather: Table r -> Table a, ColList b {
   row(r) >= row(a);
   col(r) <= col(a);
+  head(r) <= head(a) + 2;
+  content(r) <= content(a) + 2;
 }
 
 func spread: Table r -> Table a, ColInt b, ColInt c {
   row(r) <= row(a);
   col(r) >= col(a);
+  head(r) <= head(a);
+  content(r) <= content(a);
 }
 
 func separate: Table r -> Table a, ColInt b {

@@ -53,6 +53,23 @@ def eq_r(actual, expect):
     # logger.info(robjects.r(expect))
     ret_val = robjects.r(_rscript)
     return True == ret_val[0][0]
+
+def get_head(df):
+    head = set()
+    for h in df.colnames:
+        head.add(h)
+
+    return head
+
+def get_content(df):
+    content = set()
+    for vec in df:
+        for elem in vec:
+            e_val = str(elem)
+            content.add(e_val)
+
+    return content
+
     
 class MorpheusInterpreter(PostOrderInterpreter):
     ## Concrete interpreter
@@ -266,19 +283,29 @@ class MorpheusInterpreter(PostOrderInterpreter):
 
     ## Abstract interpreter
     def apply_row(self, val):
-        df = val
-        if isinstance(val, str):
-            df = robjects.r(val)
-        ## df: rpy2.robjects.vectors.DataFrame
-
+        df = robjects.r(val)
         return df.nrow
 
     def apply_col(self, val):
-        df = val
-        if isinstance(val, str):
-            df = robjects.r(val)
-
+        df = robjects.r(val)
         return df.ncol
+
+    def apply_head(self, val):
+        input_df = robjects.r('input0')
+        curr_df = robjects.r(val)
+
+        head_input = get_head(input_df)
+        content_input = get_content(input_df)
+        head_curr = get_head(curr_df)
+        return len(head_curr - head_input - content_input)
+
+    def apply_content(self, val):
+        input_df = robjects.r('input0')
+        curr_df = robjects.r(val)
+
+        content_input = get_content(input_df)
+        content_curr = get_content(curr_df)
+        return len(content_curr - content_input)
 
 def init_tbl(df_name, csv_loc):
     cmd = '''
@@ -289,7 +316,6 @@ def init_tbl(df_name, csv_loc):
     tbl_name[, int.cols] <- sapply(tbl_name[, int.cols], as.numeric)
     '''
     cmd = cmd.replace('tbl_name', df_name).replace('csv_location', '"'+ csv_loc + '"')
-    print(cmd)
     robjects.r(cmd)
     return None
 
@@ -309,9 +335,9 @@ def main():
     # This is required by Ruben.
     depth_val = loc_val + 1
     print(input0, input1, output, loc_val)
-    init_tbl('dat', input0)
+    init_tbl('input0', input0)
     #FIXME: ignore the second input table for now.
-    init_tbl('dat2', output)
+    init_tbl('output', output)
 
     logger.info('Parsing Spec...')
     spec = S.parse_file('example/morpheus.tyrell')
@@ -326,7 +352,7 @@ def main():
             interpreter=MorpheusInterpreter(),
             examples=[
                 # Example(input=[DataFrame2(benchmark1_input)], output=benchmark1_output),
-                Example(input=['dat'], output='dat2'),
+                Example(input=['input0'], output='output'),
             ],
             equal_output=eq_r
         )
