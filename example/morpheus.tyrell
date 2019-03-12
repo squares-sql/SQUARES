@@ -64,7 +64,7 @@ func gather: Table r -> Table a, ColList b {
 func spread: Table r -> Table a, ColInt b, ColInt c {
   row(r) <= row(a);
   col(r) >= col(a);
-  head(r) <= head(a);
+  head(r) <= content(a);
   content(r) <= content(a);
 }
 
