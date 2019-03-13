@@ -4,7 +4,7 @@ import argparse
 import tyrell.spec as S
 from tyrell.interpreter import PostOrderInterpreter, GeneralError
 from tyrell.enumerator import SmtEnumerator
-from tyrell.decider import Example, ExampleConstraintDecider
+from tyrell.decider import Example, ExampleConstraintPruningDecider
 from tyrell.synthesizer import Synthesizer
 from tyrell.logger import get_logger
 import rpy2.robjects as robjects
@@ -347,7 +347,7 @@ def main():
     synthesizer = Synthesizer(
         #loc: # of function productions
         enumerator=SmtEnumerator(spec, depth=depth_val, loc=loc_val),
-        decider=ExampleConstraintDecider(
+        decider=ExampleConstraintPruningDecider(
             spec=spec,
             interpreter=MorpheusInterpreter(),
             examples=[
