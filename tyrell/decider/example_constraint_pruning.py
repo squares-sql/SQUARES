@@ -9,7 +9,7 @@ from .example_base import Example, ExampleDecider
 from .eval_expr import eval_expr
 from .result import ok, bad
 from ..spec import TyrellSpec, ValueType
-from ..dsl import Node, AtomNode, ParamNode, ApplyNode, NodeIndexer
+from ..dsl import Node, AtomNode, ParamNode, ApplyNode, NodeIndexer, dfs
 from ..interpreter import Interpreter, InterpreterError
 from ..logger import get_logger
 from ..spec.expr import *
@@ -140,6 +140,10 @@ class PruningException(Exception):
         super().__init__(message)
         self._node = node
 
+    @property
+    def node(self):
+        return self._node
+
 
 class ConstraintInterpreter(GenericVisitor):
     _interp: Interpreter
@@ -237,8 +241,16 @@ class BlameFinder:
                 else:
                     return bad(why=blames)
         except PruningException as e:
-            # TODO: should be a more refined blame?
-            return bad()
+            node = e.node
+            # Blame should include all children of node
+            blame_nodes = {child for child in dfs(node)}
+            # Blame should also include all non-children non-leaf nodes with constraints
+            for prog_node in dfs(self._prog):
+                if prog_node.is_param():
+                    blame_nodes.add(node)
+                elif prog_node.is_apply() and len(prog_node.production.constraints) > 0:
+                    blame_nodes.add(node)
+            return bad([[Blame(node, node.production) for node in blame_nodes]])
 
     def process_example(self, example: Example, equal_output: Callable[[Any, Any], bool]):
         z3_encoder = Z3Encoder(self._interp, self._indexer, example)
