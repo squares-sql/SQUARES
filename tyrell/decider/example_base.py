@@ -28,6 +28,14 @@ class ExampleDecider(Decider):
     def interpreter(self):
         return self._interpreter
 
+    @property
+    def examples(self):
+        return self._examples
+
+    @property
+    def equal_output(self):
+        return self._equal_output
+
     def get_failed_examples(self, prog):
         '''
         Test the program on all examples provided.

@@ -1,4 +1,16 @@
-from typing import cast, Tuple, Optional, List, Set, FrozenSet, Mapping, MutableMapping, Any, ClassVar, Callable, Iterator
+from typing import (
+    cast,
+    Tuple,
+    Optional,
+    List,
+    Set,
+    FrozenSet,
+    Mapping,
+    MutableMapping,
+    Any,
+    Callable,
+    Iterator
+)
 from collections import defaultdict
 from itertools import permutations
 import z3
@@ -12,60 +24,12 @@ from .example_base import Example, ExampleDecider
 from .blame import Blame
 from .assert_violation_handler import AssertionViolationHandler
 from .eval_expr import eval_expr
+from .constraint_encoder import ConstraintEncoder
 from .result import ok, bad
 
 logger = get_logger('tyrell.synthesizer.constraint')
 ImplyMap = Mapping[Tuple[Production, Expr], List[Production]]
 MutableImplyMap = MutableMapping[Tuple[Production, Expr], List[Production]]
-
-
-class ConstraintVisitor(GenericVisitor):
-    _encode_property: Callable[[PropertyExpr], z3.ExprRef]
-
-    _unary_dispatch_table: ClassVar[Dict[UnaryOperator, Callable[[Any], Any]]] = {
-        UnaryOperator.NOT: lambda x: z3.Not(x),
-        UnaryOperator.NEG: lambda x: -x
-    }
-    _binary_dispatch_table: ClassVar[Dict[BinaryOperator, Callable[[Any, Any], Any]]] = {
-        BinaryOperator.ADD: lambda x, y: x + y,
-        BinaryOperator.SUB: lambda x, y: x - y,
-        BinaryOperator.MUL: lambda x, y: x * y,
-        BinaryOperator.DIV: lambda x, y: x / y,
-        BinaryOperator.MOD: lambda x, y: x % y,
-        BinaryOperator.EQ: lambda x, y: x == y,
-        BinaryOperator.NE: lambda x, y: x != y,
-        BinaryOperator.LT: lambda x, y: x < y,
-        BinaryOperator.LE: lambda x, y: x <= y,
-        BinaryOperator.GT: lambda x, y: x > y,
-        BinaryOperator.GE: lambda x, y: x >= y,
-        BinaryOperator.AND: lambda x, y: z3.And(x, y),
-        BinaryOperator.OR: lambda x, y: z3.Or(x, y),
-        BinaryOperator.IMPLY: lambda x, y: z3.Implies(x, y)
-    }
-
-    def __init__(self, encode_property: Callable[[PropertyExpr], z3.ExprRef]):
-        self._encode_property = encode_property
-
-    def visit_const_expr(self, const_expr: ConstExpr):
-        return const_expr.value
-
-    def visit_property_expr(self, prop_expr: PropertyExpr):
-        return self._encode_property(prop_expr)
-
-    def visit_unary_expr(self, unary_expr: UnaryExpr):
-        arg = self.visit(unary_expr.operand)
-        return self._unary_dispatch_table[unary_expr.operator](arg)
-
-    def visit_binary_expr(self, binary_expr: BinaryExpr):
-        larg = self.visit(binary_expr.lhs)
-        rarg = self.visit(binary_expr.rhs)
-        return self._binary_dispatch_table[binary_expr.operator](larg, rarg)
-
-    def visit_cond_expr(self, cond_expr: CondExpr):
-        cond_arg = self.visit(cond_expr.condition)
-        true_arg = self.visit(cond_expr.true_value)
-        false_arg = self.visit(cond_expr.false_value)
-        return z3.If(cond_arg, true_arg, false_arg)
 
 
 class Z3Encoder(GenericVisitor):
@@ -130,7 +94,7 @@ class Z3Encoder(GenericVisitor):
             pname = prop_expr.name
             pty = prop_expr.type
             return self.get_z3_var(node, pname, pty)
-        constraint_visitor = ConstraintVisitor(encode_property)
+        constraint_visitor = ConstraintEncoder(encode_property)
         for index, constraint in enumerate(apply_node.production.constraints):
             cname = self._get_constraint_var(apply_node, index)
             z3_clause = constraint_visitor.visit(constraint)
@@ -228,7 +192,7 @@ class ExampleConstraintDecider(ExampleDecider):
                 return z3.Bool(var_name)
             else:
                 raise RuntimeError('Unrecognized ExprType: {}'.format(ptype))
-        constraint_visitor = ConstraintVisitor(encode_property)
+        constraint_visitor = ConstraintEncoder(encode_property)
 
         z3_solver = z3.Solver()
         z3_pre = constraint_visitor.visit(pre)
