@@ -1,4 +1,4 @@
-# Tyrell+: Next-generation Synthesizer for Data Science
+# Trinity+: Next-generation Synthesizer for Data Science
 
 Dev Environment Setup
 =====================
