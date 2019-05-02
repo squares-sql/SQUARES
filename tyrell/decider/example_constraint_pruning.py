@@ -56,6 +56,8 @@ class Z3Encoder(GenericVisitor):
             expected_expr = PropertyExpr(pname, pty, ParamExpr(index))
             expected = eval_expr(
                 self._interp, self._example.input, self._example.output, expected_expr)
+            if expected == -1:
+                expected = self.get_z3_var(node, pname + '_sym', pty)
             self._solver.add(actual == expected)
 
     def encode_output_alignment(self, prog: Node):
