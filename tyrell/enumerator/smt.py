@@ -220,6 +220,11 @@ class SmtEnumerator(Enumerator):
             raise RuntimeError(msg) from None
 
     def __init__(self, spec, depth=None, loc=None):
+        self.z3_solver = Solver()
+        self.leaf_productions = []
+        self.variables = []
+        self.variables_fun = []
+        self.program2tree = {}
         self.spec = spec
         if depth <= 0:
             raise ValueError(
