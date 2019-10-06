@@ -73,7 +73,7 @@ class ToyInterpreter(PostOrderInterpreter):
 
 def main():
     logger.info('Parsing Spec...')
-    spec = S.parse(toy_spec_str)
+    spec = S.parse_file('example/toy.tyrell')
     logger.info('Parsing succeeded')
 
     logger.info('Building synthesizer...')
