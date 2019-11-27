@@ -1,0 +1,20 @@
+inputs: tests-examples/cp19/tables/aircraft.txt, tests-examples/cp19/tables/certified.txt
+output: tests-examples/cp19/tables/40.out
+const: "3"
+aggrs: "n"
+attrs: 
+bools: "<"
+loc: 4
+
+# 5.3.2 optimal solution sql modified
+
+certified <- read.table("tests-examples/cp19/tables/certified.txt", sep =",", header=T)
+aircraft <- read.table("tests-examples/cp19/tables/aircraft.txt", sep =",", header=T)
+datout <- read.table("tests-examples/cp19/tables/40.out", sep =",", header=T)
+datout
+
+out <- inner_join(
+inner_join(certified, aircraft),
+filter(
+inner_join(certified, aircraft) %>% 
+group_by(eid) %>% summarise(n = n()), n < 3)) %>% select(eid, aname)

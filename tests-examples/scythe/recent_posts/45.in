@@ -1,0 +1,19 @@
+inputs: tests-examples/scythe/recent_posts/tables/45-1.txt, tests-examples/scythe/recent_posts/tables/45-2.txt
+output: tests-examples/scythe/recent_posts/tables/45.out
+const:
+aggrs: "sum"
+attrs: "quantity"
+loc: 2
+
+#solution
+
+ SELECT menu.name, sum(orderregel.quantity)    as quantity
+  FROM `menu` 
+  LEFT JOIN orderregel
+  on menu.menu_id = orderregel. menu_id
+  group by menu_id 
+
+out <- select(left_join(dat1,summarise(dat2 %>% group_by(Menu_id), sumquantity = sum(quantity))), Name, sumquantity)
+
+http://stackoverflow.com/questions/39962965/sql-inner-join-select-field-list
+

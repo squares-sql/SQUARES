@@ -1,0 +1,14 @@
+inputs: tests-examples/scythe/recent_posts/tables/42-1.txt
+output: tests-examples/scythe/recent_posts/tables/42.out
+const: 
+aggrs: 
+attrs: 
+loc: 0
+
+#solution
+
+SELECT id, name
+FROM dbo.NerdsTable
+ORDER BY school ASC, id ASC
+
+http://stackoverflow.com/questions/39981320/grouping-while-maintaining-next-record

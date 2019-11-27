@@ -1,0 +1,21 @@
+inputs: tests-examples/scythe/recent_posts/tables/28-1.txt
+output: tests-examples/scythe/recent_posts/tables/28.out
+const: "1"
+aggrs: "n"
+attrs: "Member"
+loc: 5
+
+#solution
+
+SELECT a.member, count(a.member) as total 
+FROM t1 a JOIN t1 b 
+WHERE a.element=b.element AND b.member=1 AND a.member > 1 
+GROUP BY a.member ORDER BY total DESC;
+
+summarise(
+filter(
+inner_join(
+intersect(select(dat1,Element), select(
+filter(dat1, Member == 1), Element)),dat1), Member != 1) %>% group_by(Member), n = n())
+
+http://stackoverflow.com/questions/40038197/most-similar-members-in-one-table

@@ -1,0 +1,8 @@
+type,id,sort_order,attribute,value
+items,17473,1,previous_editions,15743
+items,17568,1,previous_editions,3893
+items,17568,2,previous_editions,7626
+items,18117,1,previous_editions,14430
+items,18117,2,previous_editions,17337
+items,18117,3,previous_editions,17123
+items,18117,4,previous_editions,17614

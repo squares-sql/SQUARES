@@ -1,0 +1,6 @@
+id_invitation,id_demand,company
+1,1,google
+2,1,NULL[str]
+3,2,google
+4,2,NULL[str]
+5,3,google

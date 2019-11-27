@@ -1,0 +1,10 @@
+inputs: 
+output: 
+const: 
+aggrs: 
+attrs:
+loc:
+
+#solution
+
+http://stackoverflow.com/questions/39982085/converting-column-headers-to-row-elements

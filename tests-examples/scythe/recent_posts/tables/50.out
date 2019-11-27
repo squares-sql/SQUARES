@@ -1,0 +1,5 @@
+role_id,role_type,id,employee_name,joining_date
+2,B,4,Google,45
+4,B,5,Yahoo,300
+1,A,1,Einstein,1241998
+3,A,2,Maxwell,3162002

@@ -1,14 +1,14 @@
 # First, specify the types that will be used
 enum ColInt {
-  "1","2","3","4","5","6"
+  "1", "2", "3"
 }
 
 enum SmallInt {
   "1", "2", "3"
 }
 
-enumset ColList[2] {
-  "1","2","3","4","5","6"
+enumset ColList[3] {
+  "2", "3", "5"
 }
 
 enum Aggr {
@@ -25,8 +25,6 @@ enum BoolFunc {
 value Table {
 	col: int;
 	row: int;
-  head: int;
-  content: int;
 }
 
 value Empty;
@@ -45,8 +43,6 @@ func select: Table r -> Table a, ColList b {
 func unite: Table r -> Table a, ColInt b, ColInt c {
   row(r) == row(a);
   col(r) == col(a) - 1;
-  head(r) <= head(a) + 1;
-  content(r) >= content(a) + 1;
 }
 
 func group_by: Table r -> Table a, ColList b {
@@ -57,15 +53,11 @@ func group_by: Table r -> Table a, ColList b {
 func gather: Table r -> Table a, ColList b {
   row(r) >= row(a);
   col(r) <= col(a);
-  head(r) <= head(a) + 2;
-  content(r) <= content(a) + 2;
 }
 
 func spread: Table r -> Table a, ColInt b, ColInt c {
   row(r) <= row(a);
   col(r) >= col(a);
-  head(r) <= content(a);
-  content(r) <= content(a);
 }
 
 func separate: Table r -> Table a, ColInt b {
@@ -92,8 +84,8 @@ func inner_join: Table r -> Table a, Table b {
   col(r) < col(a) + col(b);
 }
 
-predicate is_parent(spread, unite, 100);
-predicate is_parent(unite, gather, 100);
-predicate occurs(spread, 100);
-predicate occurs(unite, 100);
-predicate occurs(gather, 100);
+predicate is_parent(spread, unite, 60);
+predicate is_parent(unite, gather, 60);
+predicate occurs(spread, 10);
+predicate occurs(unite, 10);
+predicate occurs(gather, 10);

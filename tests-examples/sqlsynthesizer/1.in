@@ -1,0 +1,17 @@
+inputs: tests-examples/sqlsynthesizer/tables/01-1.txt
+output: tests-examples/sqlsynthesizer/tables/01.out
+const: "1", "NULL[str]"
+aggrs: "n"
+attrs: "upedonid"
+loc: 3
+
+#solution
+
+Select t3.upedonid, Count(t3.idx_key) As count_idx_key
+From (Select *
+      From input1
+      Where input1.upedonidIs Not Null) As t3
+Group By t3.upedonid
+Having t3.count_idx_key > 1.0;
+
+http://stackoverflow.com/questions/40205535/sql-2-columns-in-1-in-result-set

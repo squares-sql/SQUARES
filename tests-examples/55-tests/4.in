@@ -1,0 +1,15 @@
+inputs: tests-examples/55-tests/tables/4-1.txt, tests-examples/55-tests/tables/4-2.txt, tests-examples/55-tests/tables/4-3.txt
+output: tests-examples/55-tests/tables/4.out
+const: "2"
+aggrs: "n"
+attrs:
+bools: "=="
+loc: 3
+
+# 5.1.4 optimal solution
+
+inner_join(class,enroll) %>% inner_join(student) %>% 
+group_by(S_name,meets_at) %>% summarize(n = n()) %>% 
+filter(n == 2) %>% select(S_name) 
+
+filters(summariseGrouped(inner_join3(@param0, @param1, @param2), n = n(), S_name, meets_at), n > 2, n == 2, |)

@@ -1,0 +1,35 @@
+inputs: tests-examples/scythe/recent_posts/tables/07-1.txt
+output: tests-examples/scythe/recent_posts/tables/07.out
+const: 
+aggrs: "min", "max"
+attrs: "FromDate", "ToDate"
+loc: 3
+
+#solution
+
+select t1.Employee, t1.mindt, t2.maxdt, t1.code
+from
+(select min(FromDate), Code, Employee
+from t
+group by Employee, Code) t1
+join
+(select max(ToDate), Code, Employee
+from t
+group by Employee, Code) t2
+on t1.code = t2.code
+
+out <- inner_join(
+summarise(dat1 %>% group_by(Employee, Code), minFromDate = min(FromDate)), 
+summarise(dat1 %>% group_by(Employee, Code), maxToDate = max(ToDate)))
+
+
+or  
+
+dat0 <- read.table("tests-examples/scythe/recent_posts/tables/07-1.txt", sep =",", header=T)
+dat0
+datout <- read.table("tests-examples/scythe/recent_posts/tables/07.out", sep =",", header=T)
+datout
+select(left_join(summariseGrouped(dat0, minFromDate = min(FromDate), Code, Employee), summariseGrouped(dat0, maxToDate = max(ToDate), Employee, Code)), Employee,Code,minFromDate,maxToDate, distinct)
+
+
+http://stackoverflow.com/questions/40171795/postgres-group-by-looking-at-dates-ranges

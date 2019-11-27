@@ -1,0 +1,13 @@
+inputs: tests-examples/textbook/tables/6-1.txt, tests-examples/textbook/tables/6-2.txt, tests-examples/textbook/tables/6-3.txt
+output: tests-examples/textbook/tables/6.out
+const: "5"
+aggrs: "n"
+attrs:
+bools: "<="
+loc: 3
+
+# 5.1.6 optimal solution
+
+inner_join(class, enroll) %>% inner_join(faculty) %>% 
+group_by(F_name) %>% summarise(n = n()) %>% 
+filter (n <= 5) %>% select(F_name)

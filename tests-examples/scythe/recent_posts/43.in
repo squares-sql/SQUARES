@@ -1,0 +1,10 @@
+inputs: 
+output: 
+const: 
+aggrs: 
+attrs:
+loc:
+
+#solution
+
+http://stackoverflow.com/questions/39968561/sql-server-compare-dates-between-rows

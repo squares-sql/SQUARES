@@ -1,0 +1,13 @@
+inputs: tests-examples/cp19/tables/4-1.txt, tests-examples/cp19/tables/4-2.txt, tests-examples/cp19/tables/4-3.txt
+output: tests-examples/cp19/tables/4.out
+const: "2"
+aggrs: "n"
+attrs:
+bools: "=="
+loc: 6
+
+# 5.1.4 optimal solution
+
+inner_join(class,enroll) %>% inner_join(student) %>% 
+group_by(S_name,meets_at) %>% summarize(n = n()) %>% 
+filter(n == 2) %>% select(S_name)

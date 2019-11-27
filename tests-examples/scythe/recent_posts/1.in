@@ -1,0 +1,20 @@
+inputs: tests-examples/scythe/recent_posts/tables/01-1.txt, tests-examples/scythe/recent_posts/tables/01-2.txt
+output: tests-examples/scythe/recent_posts/tables/01.out
+const: "NULL[str]"
+aggrs: 
+attrs: "company"
+loc: 3
+
+#solution
+
+select partner_company , id_demand
+From invitation 
+Where partner_company is not null
+Union All
+select concurrent_company , id_demand
+From invitation 
+Where concurrent_company is not null
+
+select(bind_rows(filter(dat1, company != "NULL[str]"), filter(dat2, company != "NULL[str]")), company,id_demand)
+
+http://stackoverflow.com/questions/40205535/sql-2-columns-in-1-in-result-set

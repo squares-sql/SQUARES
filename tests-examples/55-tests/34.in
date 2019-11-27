@@ -1,0 +1,25 @@
+inputs: tests-examples/55-tests/tables/21-1.txt, tests-examples/55-tests/tables/21-2.txt, tests-examples/55-tests/tables/21-3.txt
+output: tests-examples/55-tests/tables/34.out
+const: "red", "3"
+aggrs: "n"
+attrs: "color"
+bools: "=="
+loc: 6
+
+# 5.2.9 optimal solution
+
+catalog <- read.table("tests-examples/55-tests/tables/21-1.txt", sep =",", header=T)
+catalog
+parts <- read.table("tests-examples/55-tests/tables/21-2.txt", sep =",", header=T)
+parts
+suppliers <- read.table("tests-examples/55-tests/tables/21-3.txt", sep =",", header=T)
+suppliers
+datout <- read.table("tests-examples/55-tests/tables/34.out", sep =",", header=T)
+datout
+
+out <- inner_join(
+inner_join(parts,catalog) %>% inner_join(suppliers) %>%
+filter(color == "red"),
+inner_join(parts,catalog) %>% inner_join(suppliers) %>%
+group_by(P_id) %>% summarise(n = n()) %>%
+filter(n == 3)) %>% select(S_name) %>% distinct()

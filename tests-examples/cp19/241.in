@@ -1,0 +1,15 @@
+inputs: tests-examples/cp19/tables/aircraft.txt, tests-examples/cp19/tables/employees.txt, tests-examples/cp19/tables/certified.txt
+output: tests-examples/cp19/tables/41.out
+const: "100000", "550000000"
+aggrs:
+attrs: "salary", "eid"
+bools: 
+loc: 1
+
+# 5.3.1 modified optimal solution sql 
+
+select(inner_join(
+filter(
+inner_join(dat1, inner_join(dat2, dat0)), salary > 100000), 
+filter(
+inner_join(dat1, inner_join(dat2, dat0)), eid <= 550000000)),ename) %>% distinct()

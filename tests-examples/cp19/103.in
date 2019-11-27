@@ -1,0 +1,16 @@
+inputs: tests-examples/cp19/tables/18-1.txt, tests-examples/cp19/tables/18-3.txt
+output: tests-examples/cp19/tables/18.out
+const:
+aggrs: "max"
+attrs: "cost", "maxcost"
+bools: "=="
+loc: 1
+
+# 5.2.6 optimal solution
+
+df1=inner_join(catalog,suppliers) %>% 
+group_by(P_id) %>% summarise (max = max(cost))
+out <- inner_join(catalog,suppliers) %>%inner_join(df1) %>%
+filter(max == cost) %>%select(P_id, S_name)
+
+NOT USED tests-examples/cp19/tables/18-2.txt,

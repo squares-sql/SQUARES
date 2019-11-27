@@ -1,0 +1,25 @@
+inputs: tests-examples/scythe/recent_posts/tables/13-1.txt, tests-examples/scythe/recent_posts/tables/13-2.txt
+output: tests-examples/scythe/recent_posts/tables/13.out
+const: 
+aggrs: 
+attrs:
+loc:
+
+#solution
+
+select      t1.ID
+           ,t1.Name
+           ,t2.Company_group    as RootName
+           ,t1_b.ID             as RootId
+from                    tbl_1   t1
+            join        tbl_2   t2
+            on          t2.ID   =
+                        t1.ID
+            join        tbl_1   t1_b
+            on          t1_b.Name   =
+                        t2.Company_group
+where       t1.ID <> t1_b.ID;
+
+http://stackoverflow.com/questions/40155258/build-tree-from-database
+
+LEFT OUTER JOIN

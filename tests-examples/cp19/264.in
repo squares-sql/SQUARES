@@ -1,0 +1,24 @@
+inputs: tests-examples/cp19/tables/16-1.txt, tests-examples/cp19/tables/16-2.txt, tests-examples/cp19/tables/16-3.txt
+output: tests-examples/cp19/tables/44.out
+const: "AWS"
+aggrs: "n"
+attrs: "S_name"
+bools: "=="
+loc: 6
+
+# 5.2.4 optimal solution
+
+df1=inner_join(parts,catalog) %>% inner_join(suppliers) %>%  
+	filter(S_name == "AWS")
+df2=inner_join(parts,catalog) %>% inner_join(suppliers) %>% 
+	group_by(P_name) %>% summarise(n = n())
+out <- inner_join(df1,df2) %>% select(P_name) %>% distinct()
+
+catalog <- read.table("tests-examples/cp19/tables/16-1.txt", sep =",", header=T)
+catalog
+parts <- read.table("tests-examples/cp19/tables/16-2.txt", sep =",", header=T)
+parts
+suppliers <- read.table("tests-examples/cp19/tables/16-3.txt", sep =",", header=T)
+suppliers
+datout <- read.table("tests-examples/cp19/tables/16.out", sep =",", header=T)
+datout

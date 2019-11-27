@@ -1,0 +1,32 @@
+inputs: tests-examples/scythe/recent_posts/tables/50-1.txt, tests-examples/scythe/recent_posts/tables/50-2.txt, tests-examples/scythe/recent_posts/tables/50-3.txt
+output: tests-examples/scythe/recent_posts/tables/50.out
+const: "A", "B"
+aggrs:
+attrs: "role_type"
+loc: 5
+
+#solution
+
+Select * From
+(Select t4.role_id,t4.role_type,t4.employee_id,t4.employee_name,t4.joining_date
+   From
+    (input2 Join
+        (Select *
+         From
+          input1
+         Where input1.role_type = A)) As t4
+   Where t4.employee_id = t4.ref_id)
+Union All
+ Select * From
+  (Select t5.role_id,t5.role_type,t5.ref_id,t5.org_name,t5.org_max
+   From
+    ((Select *
+         From
+          input1
+         Where input1.role_type = B) Join
+        input3) As t5
+   Where t5.ref_id = t5.org_id);
+
+select(bind_rows(inner_join(dat3,filter(dat1, role_type == "B")), inner_join(dat2,filter(dat1, role_type == "A"))),role_id,role_type,id,employee_name,joining_date)
+
+http://stackoverflow.com/questions/39954877/merge-tables-based-on-a-column

@@ -1,0 +1,23 @@
+inputs: tests-examples/cp19/tables/aircraft.txt, tests-examples/cp19/tables/certified.txt
+output: tests-examples/cp19/tables/25.out
+const: "3"
+aggrs: "n", "max"
+attrs: "crusingrange"
+bools: ">"
+loc: 3
+
+# 5.3.2 optimal solution sql
+
+SELECT C.eid, MAX(A.crusingrange)
+FROM certified C, aircraft A
+WHERE C.aid = A.aid
+GROUP BY C.eid
+HAVING   COUNT(*) > 3
+
+
+out <- inner_join(
+inner_join(certified, aircraft) %>% 
+group_by(eid) %>% summarise(maxcrusingrange = max(crusingrange)),
+filter(
+inner_join(certified, aircraft) %>% 
+group_by(eid) %>% summarise(n = n()), n >3)) %>% select(eid)

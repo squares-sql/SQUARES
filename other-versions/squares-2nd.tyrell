@@ -1,0 +1,89 @@
+# First, specify the types that will be used
+enum ColInt {
+  "F_name"
+}
+
+enum SmallInt {
+  "faculty1", "JR"
+}
+
+enumset Cols[1] {
+"S_name"
+ #"S_key","C_name","S_name","level","F_key"
+ #"C_name","F_key","F_name"
+ #"C_name","F_name","n"
+}
+#"S_key","C_name","S_name","level","F_key"
+#"C_name","F_key","F_name"
+#"C_name","F_name","n"
+#"S_key","C_name","F_key"
+
+enum Aggr {
+  "n"
+}
+#  "min", "max", "sum"
+
+
+enum BoolFunc {
+  "=="
+}
+#, ">", "<"
+
+value Table {
+  col: int;
+  row: int;
+}
+
+value TableJoin {
+  col: int;
+  row: int;
+}
+
+value TableOut {
+  col: int;
+  row: int;
+}
+
+value Empty;
+
+# Next, specify the input/output of the synthesized program
+#program Squares(Table, Table) -> TableOut;
+program Squares(Table, Table, Table, Table) -> Table;
+
+# Finally, specify the production rules
+func empty: Empty -> Empty;
+
+func inner_join: TableJoin r -> Table a, Table b
+{
+  col(r) <= col(a) + col(b);
+}
+
+func inner_join3: TableJoin r -> Table a, Table b, Table c
+{
+  col(r) <= col(a) + col(b) + col(c);
+}
+
+func inner_join4: TableJoin r -> Table a, Table b, Table c, Table d
+{
+  col(r) <= col(a) + col(b) + col(c) + col(d);
+}
+
+func filter: TableJoin r -> TableJoin a, BoolFunc b, TableJoin c, SmallInt d {
+  row(r) < row(a);
+  col(r) == col(a);
+}
+
+func group_by: TableJoin r -> TableJoin a, Cols b {
+  row(r) == row(a);
+  col(r) == col(a);
+}
+
+func summarise: TableJoin r -> TableJoin a, Aggr b, ColInt c {
+  row(r) < row(a);
+  col(r) <= col(a) + 1;
+}
+
+func select: Table r -> TableJoin a, Cols b {
+  row(r) == row(a);
+  col(r) <= col(a);
+}

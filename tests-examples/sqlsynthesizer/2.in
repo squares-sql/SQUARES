@@ -1,0 +1,12 @@
+inputs: tests-examples/sqlsynthesizer/tables/02-1.txt
+output: tests-examples/sqlsynthesizer/tables/02.out
+const:
+aggrs: "sum"
+attrs: "invoice_amount"
+loc: 1
+
+#solution
+
+Select project_code, Sum(t2.invoice_amount) As sum_invoice_amount
+From input1
+Group By project_code

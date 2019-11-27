@@ -1,0 +1,22 @@
+inputs: tests-examples/cp19/tables/aircraft.txt, tests-examples/cp19/tables/employees.txt, tests-examples/cp19/tables/certified.txt
+output: tests-examples/cp19/tables/26.out
+const: "150000", "550000000"
+aggrs:
+attrs: "salary", "eid"
+bools: 
+loc: 2
+
+# 5.3.1 modified optimal solution sql 
+
+dat0 <- read.table("tests-examples/cp19/tables/aircraft.txt", sep =",", header=T)
+dat0
+dat1 <- read.table("tests-examples/cp19/tables/employees.txt", sep =",", header=T)
+dat1
+dat2 <- read.table("tests-examples/cp19/tables/certified.txt", sep =",", header=T)
+dat2
+datout <- read.table("tests-examples/cp19/tables/26.out", sep =",", header=T)
+datout
+out <- select(anti_join(
+filter(
+inner_join(inner_join(dat1, dat2), dat0), salary > 150000), 
+filter(dat2, eid <= 550000000)),ename, eid) %>% distinct()

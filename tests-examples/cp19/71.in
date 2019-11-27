@@ -1,0 +1,12 @@
+inputs: tests-examples/cp19/tables/12-1.txt
+output: tests-examples/cp19/tables/12.out
+const:
+aggrs: "n", "max(n)"
+attrs: "n"
+bools: "=="
+loc: 5
+
+# 5.1.12 optimal solution
+
+student %>% group_by(age,level) %>% summarise(n = n()) %>% 
+filter(n==max(n)) %>% select(-n)

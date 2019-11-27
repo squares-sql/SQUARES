@@ -1,0 +1,22 @@
+inputs: tests-examples/55-tests/tables/17-1.txt, tests-examples/55-tests/tables/17-2.txt
+output: tests-examples/55-tests/tables/42.out
+const:
+aggrs: "mean", "n"
+attrs: "cost"
+bools: ">"
+loc: 5
+
+# 5.2.5 optimal solution
+
+catalog <- read.table("tests-examples/55-tests/tables/17-1.txt", sep =",", header=T)
+catalog
+parts <- read.table("tests-examples/55-tests/tables/17-2.txt", sep =",", header=T)
+parts
+datout <- read.table("tests-examples/55-tests/tables/42.out", sep =",", header=T)
+datout
+
+out <- select(inner_join(catalog, 
+filter(
+inner_join(inner_join(parts, catalog), 
+catalog %>% group_by(P_id) %>% summarise(meancost = mean(cost))), cost > meancost)) %>% 
+group_by(S_name) %>% summarise(n = n()),S_name, n)

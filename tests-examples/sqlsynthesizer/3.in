@@ -1,0 +1,18 @@
+inputs: tests-examples/sqlsynthesizer/tables/03-1.txt
+output: tests-examples/sqlsynthesizer/tables/03.out
+const: "5"
+aggrs: "n"
+attrs: 
+loc: 2
+
+# solution
+
+Select t3.loginid
+ From
+  (Select
+      t2.loginid, Count(t2.provider) As count_provider
+    From
+      input1 As t2
+    Group By
+      t2.loginid
+    Having count_provider > 5.0) As t3;

@@ -1,0 +1,13 @@
+inputs: tests-examples/textbook/tables/2-1.txt, tests-examples/textbook/tables/2-2.txt, tests-examples/textbook/tables/2-3.txt, tests-examples/textbook/tables/2-4.txt
+output: tests-examples/textbook/tables/2.out
+const: "faculty1", "History"
+aggrs: "max"
+attrs: "F_name", "major", "age"
+bools: "=="
+loc: 3
+
+# 5.1.2 optimal solution
+
+inner_join(class,enroll) %>% inner_join(faculty) %>% inner_join(student) %>% 
+filter (F_name == "faculty1" | major == "History") %>%
+summarize(age = max(age))

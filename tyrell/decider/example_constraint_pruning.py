@@ -51,7 +51,9 @@ class Z3Encoder(GenericVisitor):
         if not isinstance(ty, ValueType):
             raise RuntimeError(
                 'Unexpected program output type: {}'.format(ty))
+        #print(ty.properties)
         for pname, pty in ty.properties:
+            #print(pname, pty)
             actual = self.get_z3_var(node, pname, pty)
             expected_expr = PropertyExpr(pname, pty, ParamExpr(index))
             expected = eval_expr(
@@ -59,6 +61,9 @@ class Z3Encoder(GenericVisitor):
             if expected == -1:
                 expected = self.get_z3_var(node, pname + '_sym', pty)
             self._solver.add(actual == expected)
+            #print(expected_expr)
+            #print(self._interp, self._example.input, self._example.output)
+            #print(actual == expected)
 
     def encode_output_alignment(self, prog: Node):
         out_ty = cast(ValueType, prog.type)
@@ -93,6 +98,7 @@ class Z3Encoder(GenericVisitor):
 
     def add(self, z3_expr: z3.ExprRef):
         self._solver.add(z3_expr)
+        #print(z3_expr)
 
     def is_unsat(self) -> bool:
         return self._solver.check() == z3.unsat
@@ -117,6 +123,8 @@ class PropertyFinder(GenericVisitor):
         self._results = []
 
     def visit_const_expr(self, const_expr: ConstExpr):
+        #print(const_expr)
+        # exit()
         pass
 
     def visit_property_expr(self, prop_expr: PropertyExpr):
@@ -171,7 +179,8 @@ class ConstraintInterpreter(GenericVisitor):
             raise NotImplementedError(
                 'Cannot find the required eval method: {}'.format(method_name))
         method_output = method(apply_node, in_values)
-
+        #print(method_output)
+        #print(in_values)
         # Now that we get more info on the method output, we can use it to refine the constraints
         def encode_property(prop_expr):
             param_expr = cast(ParamExpr, prop_expr.operand)
@@ -191,12 +200,22 @@ class ConstraintInterpreter(GenericVisitor):
                 raise ValueError(
                     'Cannot find the required apply method: {}'.format(method_name))
             property_value = method(value)
+            #print(method_name, value, property_value, z3_var)
+            # #print(method)
+            #print()
             self._z3_encoder.add(z3_var == property_value)
+        
         property_finder = PropertyFinder(encode_property)
+        
         for constraint in apply_node.production.constraints:
+            #print(apply_node, constraint)
             property_finder.visit(constraint)
 
         if self._z3_encoder.is_unsat():
+            #print("unsat", apply_node)
+            #print(self._z3_encoder._solver.unsat_core())
+
+            #print(self._z3_encoder.get_blame_nodes())
             raise PruningException(
                 'Solver returns unsat when evaluating {}'.format(apply_node),
                 apply_node
@@ -243,6 +262,7 @@ class BlameFinder:
                 else:
                     return bad(why=blames)
         except PruningException as e:
+            #print("except")
             node = e.node
             # Blame should include all children of node
             blame_nodes = {child for child in dfs(node)}
@@ -255,11 +275,13 @@ class BlameFinder:
             return bad([[Blame(node, node.production) for node in blame_nodes]])
 
     def process_example(self, example: Example, equal_output: Callable[[Any, Any], bool]):
+        #print("Z3 Encoder")
         z3_encoder = Z3Encoder(self._interp, self._indexer, example)
         z3_encoder.encode_output_alignment(self._prog)
         z3_encoder.visit(self._prog)
 
         if z3_encoder.is_unsat():
+            #print("is unsat")
             # If abstract semantics cannot be satisfiable, perform blame analysis
             blame_nodes = z3_encoder.get_blame_nodes()
             if blame_nodes is not None:
@@ -272,6 +294,8 @@ class BlameFinder:
             # If abstract semantics is satisfiable, start interpretation
             constraint_interpreter = ConstraintInterpreter(self._interp, example.input, z3_encoder)
             interpreter_output = constraint_interpreter.visit(self._prog)
+            #print(interpreter_output)
+            #print("Yeah i'm here")
             return equal_output(interpreter_output, example.output)
 
 

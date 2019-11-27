@@ -1,0 +1,17 @@
+inputs: tests-examples/scythe/recent_posts/tables/11-1.txt
+output: tests-examples/scythe/recent_posts/tables/11.out
+const: 
+aggrs: "concat_grouped"
+attrs: "Value"
+loc: 1
+
+#solution
+
+SELECT *
+FROM (SELECT ID, NAME, Value FROM Product) up
+PIVOT(MAX(Value) FOR NAME IN ([Manufacturer],[Model])) AS pvt
+ORDER BY ID;
+
+http://stackoverflow.com/questions/40164735/how-to-convert-a-flat-sql-output-into-columns-format
+
+GROUP CONCAT

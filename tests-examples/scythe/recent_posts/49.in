@@ -1,0 +1,10 @@
+inputs: 
+output: 
+const: 
+aggrs: 
+attrs:
+loc:
+
+#solution
+
+http://stackoverflow.com/questions/39955394/sql-how-to-get-select-attribute-that-is-array-by-join

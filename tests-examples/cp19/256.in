@@ -1,0 +1,23 @@
+inputs: tests-examples/cp19/tables/18-1.txt, tests-examples/cp19/tables/18-3.txt
+output: tests-examples/cp19/tables/43.out
+const:
+aggrs: "max", "n"
+attrs: "cost"
+bools: "=="
+loc: 4
+
+# 5.2.6 optimal solution modified
+
+catalog <- read.table("tests-examples/cp19/tables/18-1.txt", sep =",", header=T)
+catalog
+parts <- read.table("tests-examples/cp19/tables/18-3.txt", sep =",", header=T)
+parts
+datout <- read.table("tests-examples/cp19/tables/43.out", sep =",", header=T)
+datout
+
+
+df1=inner_join(catalog,suppliers) %>% 
+    group_by(P_id) %>% summarise (max = max(cost))
+out <- inner_join(catalog,suppliers) %>%inner_join(df1) %>%
+    filter(max == cost) %>% 
+    group_by(S_name) %>% summarise(n=n()) %>%select(S_name, n)

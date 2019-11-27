@@ -1,0 +1,6 @@
+id_invitation,id_demand,company
+1,1,facebook
+2,1,linkedin
+3,2,NULL[str]
+4,2,yahoo
+5,3,NULL[str]

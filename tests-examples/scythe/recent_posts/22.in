@@ -1,0 +1,34 @@
+inputs: tests-examples/scythe/recent_posts/tables/22-2.txt
+output: tests-examples/scythe/recent_posts/tables/22.out
+const: "3"
+aggrs: "max", "n"
+attrs: "c1"
+loc: 4
+
+#solution
+
+Select t3.max_c1
+ From
+  (Select t5.c2, t5.count_c2, t1.c2 As c21, t1.max_c1
+  From ((Select *
+       From
+        (Select
+            t6.c2, Count(t6.c2) As count_c2
+          From
+            input2 As t6
+          Group By
+            t6.c2) As t5
+       Where t5.count_c2 = 3.0) Join
+      (Select
+          t4.c2, Max(t4.c1) As max_c1
+        From
+          input2 As t4
+        Group By
+          t4.c2) As t1)) As t3
+ Where t3.c2 = t3.c21;
+
+filter(inner_join(summarise(dat2 %>% group_by(c2), maxc1 = max(c1)),summarise(dat2 %>% group_by(c2), n = n())), n == 3)
+
+http://stackoverflow.com/questions/40074855/sql-query-with-max-value-from-child-table
+
+not used tests-examples/scythe/recent_posts/tables/22-1.txt, 

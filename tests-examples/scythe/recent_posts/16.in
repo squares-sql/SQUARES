@@ -1,0 +1,33 @@
+inputs: tests-examples/scythe/recent_posts/tables/16-2.txt
+output: tests-examples/scythe/recent_posts/tables/16.out
+const: "1", "10192016"
+aggrs: "max", "n"
+attrs: "ReportDt"
+loc: 4
+
+#solution
+
+SELECT C.Id,
+       MAX(RP.PullDt) as LastReportPullDt, 
+       COUNT(*) AS ReportCount
+FROM Customer C
+INNER JOIN ReportPull RP ON C.CustomerId = RP.CustomerId
+GROUP BY C.CustomerId
+HAVING COUNT(*) > 1
+AND MAX(RP.PullDt) >= "10/19/2016"
+
+R solution: 
+
+dat0 <- read.table("tests-examples/scythe/recent_posts/tables/16-1.txt", sep =",", header=T)
+dat1 <- read.table("tests-examples/scythe/recent_posts/tables/16-2.txt", sep =",", header=T)
+datout <- read.table("tests-examples/scythe/recent_posts/tables/16.out", sep =",", header=T)
+out <- select(
+filter(
+inner_join(
+summarise(
+inner_join(dat0,dat1) %>% group_by(CustomerId), n = n()),
+summarise(dat1 %>% group_by(CustomerId), maxReportDt = max(ReportDt))), n > 1 & maxReportDt >= 10192016) %>% ungroup(), CustomerId,maxReportDt,n)
+
+http://stackoverflow.com/questions/40131555/getting-latest-date-with-field-count
+
+tests-examples/scythe/recent_posts/tables/16-1.txt not used

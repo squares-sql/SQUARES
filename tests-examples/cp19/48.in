@@ -1,0 +1,12 @@
+inputs: tests-examples/cp19/tables/8-1.txt
+output: tests-examples/cp19/tables/8.out
+const: "JR"
+aggrs: "mean"
+attrs: "level", "age"
+bools: "!="
+loc: 6
+
+# 5.1.8 optimal solution
+
+student %>% group_by(level) %>% summarize(average=mean(age)) %>% 
+filter(level != "JR")

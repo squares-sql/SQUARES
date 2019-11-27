@@ -1,0 +1,13 @@
+inputs: tests-examples/cp19/tables/14-1.txt, tests-examples/cp19/tables/14-2.txt, tests-examples/cp19/tables/14-3.txt
+output: tests-examples/cp19/tables/14.out
+const:
+aggrs: "n", "max(n)"
+attrs: "n"
+bools: "=="
+loc: 1
+
+# 5.2.2 optimal solution
+
+inner_join(parts,catalog) %>% inner_join(suppliers) %>% 
+group_by(sname) %>% summarise(n=n()) %>% 
+filter(n == max(n)) %>% select(sname)

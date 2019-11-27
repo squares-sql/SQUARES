@@ -1,0 +1,25 @@
+inputs: tests-examples/cp19/tables/19-1.txt, tests-examples/cp19/tables/19-2.txt, tests-examples/cp19/tables/19-3.txt
+output: tests-examples/cp19/tables/32.out
+const: "green", "S4"
+aggrs: "n"
+attrs: "color", "S_key"
+bools: "=="
+loc: 6
+
+# 5.2.7 optimal solution modified
+
+catalog <- read.table("tests-examples/cp19/tables/19-1.txt", sep =",", header=T)
+catalog
+parts <- read.table("tests-examples/cp19/tables/19-2.txt", sep =",", header=T)
+parts
+suppliers <- read.table("tests-examples/cp19/tables/19-3.txt", sep =",", header=T)
+suppliers
+datout <- read.table("tests-examples/cp19/tables/32.out", sep =",", header=T)
+datout
+
+df1=inner_join(catalog,suppliers) %>% inner_join(parts) %>% 
+    filter(color == "green")
+df2=inner_join(catalog,suppliers) %>% inner_join(parts) %>% 
+    filter(S_key != "S4")
+out <- inner_join(df1,df2) %>%
+    group_by(P_id) %>% summarise(n = n())

@@ -83,7 +83,7 @@ class ProgramCollector(Visitor_Recursive):
                            out_type=self._output_ty)
 
 
-class ProductionCollector(Visitor_Recursive):
+class ProductionCollecotr(Visitor_Recursive):
     _type_spec: TypeSpec
     _prod_spec: ProductionSpec
 
@@ -289,7 +289,7 @@ def desugar(parse_tree):
 
         # Process function definitions
         logger.debug('Processing function definitions...')
-        prod_collector = ProductionCollector(type_spec)
+        prod_collector = ProductionCollecotr(type_spec)
         prod_collector.visit(parse_tree)
         prod_spec = prod_collector.collect()
 

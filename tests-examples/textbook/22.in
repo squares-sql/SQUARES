@@ -1,0 +1,25 @@
+inputs: tests-examples/textbook/tables/22-1.txt, tests-examples/textbook/tables/22-2.txt, tests-examples/textbook/tables/22-3.txt
+output: tests-examples/textbook/tables/22.out
+const: "green"
+aggrs: "n"
+attrs: "color"
+bools: "!="
+loc: 7
+
+# 5.2.10 optimal solution
+
+catalog <- read.table("tests-examples/textbook/tables/17-1.txt", sep =",", header=T)
+catalog
+suppliers <- read.table("tests-examples/textbook/tables/17-3.txt", sep =",", header=T)
+suppliers
+datout <- read.table("tests-examples/textbook/tables/22.out", sep =",", header=T)
+datout
+
+input=inner_join(parts,catalog) %>% inner_join(suppliers)
+df1=input %>%
+    filter(color != "green") %>% select(sname)
+df2=input %>% select(sname)
+df3=anti_join(df2,df1)
+df4=input %>% 
+	group_by(sname) %>% summarise(n = n())
+inner_join(df4,df3)

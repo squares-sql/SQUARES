@@ -1,0 +1,12 @@
+S_key,C_name,F_key
+S1,class1,f1
+S2,class1,f1
+S3,class2,f2
+S3,class5,f4
+S4,class2,f2
+S4,class4,f3
+S5,class3,f1
+S6,class3,f1
+S6,class2,f2
+S7,class5,f4
+S8,class4,f3

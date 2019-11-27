@@ -1,0 +1,15 @@
+inputs: tests-examples/cp19/tables/19-1.txt, tests-examples/cp19/tables/19-2.txt, tests-examples/cp19/tables/19-3.txt
+output: tests-examples/cp19/tables/31.out
+const: "green", "S4"
+aggrs: 
+attrs: "color", "S_key"
+bools: "=="
+loc: 4
+
+# 5.2.7 optimal solution modified
+
+df1=inner_join(catalog,suppliers) %>% inner_join(parts) %>% 
+    filter(color == "green")
+df2=inner_join(catalog,suppliers) %>% inner_join(parts) %>% 
+    filter(S_key != "S4")
+inner_join(df1,df2)

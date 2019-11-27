@@ -1,0 +1,14 @@
+inputs: tests-examples/cp19/tables/17-1.txt, tests-examples/cp19/tables/17-3.txt
+output: tests-examples/cp19/tables/48.out
+const: "SN1"
+aggrs: "n"
+attrs: "S_name"
+bools: "!="
+loc: 4
+
+# 5.2.5 optimal solution modified (17)
+
+df1=inner_join(catalog,suppliers) %>%
+    filter(S_name != "SN1") %>%
+    group_by(P_id, S_key) %>% summarise(n = n())
+out <- inner_join(catalog,suppliers) %>% inner_join(df1) %>% select(P_id,S_name) %>% distinct()

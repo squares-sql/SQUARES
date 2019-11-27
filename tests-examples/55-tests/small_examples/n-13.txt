@@ -1,0 +1,5 @@
+F_name,n
+faculty1,2
+faculty2,1
+faculty3,1
+faculty4,1

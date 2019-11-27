@@ -1,0 +1,11 @@
+inputs: tests-examples/cp19/tables/11-1.txt, tests-examples/cp19/tables/11-2.txt
+output: tests-examples/cp19/tables/11.out
+const:
+aggrs:
+attrs:
+bools:
+loc: 6
+
+# 5.1.11 optimal solution
+
+anti_join(student,enrolled) %>% select(S_name)

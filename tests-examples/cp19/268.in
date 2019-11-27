@@ -1,0 +1,17 @@
+inputs: tests-examples/cp19/tables/9-1.txt, tests-examples/cp19/tables/9-2.txt
+output: tests-examples/cp19/tables/45.out
+const: "R128"
+aggrs: "n"
+attrs: "Room"
+bools: "=="
+loc: 4
+
+# 5.1.9 optimal solution
+
+class <- read.table("tests-examples/cp19/tables/9-1.txt", sep =",", header=T)
+faculty <- read.table("tests-examples/cp19/tables/9-2.txt", sep =",", header=T)
+
+df1 <- class %>% filter(Room == "R128") %>% 
+    group_by(ID_class) %>% summarise (n = n())
+df2 <- inner_join(faculty,class)
+out <- inner_join(df1,df2) %>% select(F_name, Room) %>% distinct()

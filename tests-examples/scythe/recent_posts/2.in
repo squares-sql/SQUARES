@@ -1,0 +1,19 @@
+inputs: tests-examples/scythe/recent_posts/tables/02-1.txt
+output: tests-examples/scythe/recent_posts/tables/02.out
+const: "NULL[num]"
+aggrs: 
+attrs: "End"
+loc: 3
+
+#solution
+
+select start, lead(start) over (order by start)
+from ((select t.start as start from likethis t
+      ) union all
+      (select t.end from likethis t
+      )
+     ) t
+where start is not null
+order by start;
+
+http://stackoverflow.com/questions/40204690/complex-self-join

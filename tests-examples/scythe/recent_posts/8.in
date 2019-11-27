@@ -1,0 +1,10 @@
+inputs: 
+output: 
+const: 
+aggrs: 
+attrs:
+loc:
+
+#solution
+
+http://stackoverflow.com/questions/40170119/get-last-2-years-value-and-oldest-year-sql

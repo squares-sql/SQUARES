@@ -1,0 +1,10 @@
+inputs: tests-examples/scythe/recent_posts/tables/37-1.txt
+output: tests-examples/scythe/recent_posts/tables/37.out
+const:
+aggrs: "max", "min"
+attrs: "StartDate", "EndDate"
+loc: 
+
+#solution
+
+http://stackoverflow.com/questions/40001797/sql-2012-compare-dates-across-several-rows

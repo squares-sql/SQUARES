@@ -1,0 +1,18 @@
+inputs: tests-examples/scythe/recent_posts/tables/40-1.txt
+output: tests-examples/scythe/recent_posts/tables/40.out
+const: "2"
+aggrs: "n"
+attrs: "action"
+loc: 
+
+#solution
+
+select p.*
+from person_log p 
+join (select first_name,last_name
+      from person_log
+      group by first_name,last_name
+      having count(*) >=2 and count(distinct action) >= 2) p1
+on p1.first_name=p.first_name and p1.last_name=p.last_name
+
+http://stackoverflow.com/questions/39985550/how-to-sql-select-duplicates-by-one-field-and-differs-by-another

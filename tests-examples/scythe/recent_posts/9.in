@@ -1,0 +1,20 @@
+inputs: tests-examples/scythe/recent_posts/tables/09-1.txt
+output: tests-examples/scythe/recent_posts/tables/09.out
+const: 
+aggrs: "n"
+attrs:
+loc: 1
+
+#solution
+
+SELECT user_id, COUNT(*) AS dup_count
+FROM t_documents
+GROUP BY user_id, text
+
+dat0 <- read.table("tests-examples/scythe/recent_posts/tables/09-1.txt", sep =",", header=T)
+dat0
+datout <- read.table("tests-examples/scythe/recent_posts/tables/09.out", sep =",", header=T)
+datout
+select(summariseGrouped(dat0, n = n(), c2, c4), c2,c4,n, )
+
+http://stackoverflow.com/questions/40168679/using-group-by-and-self-join-to-find-duplicates

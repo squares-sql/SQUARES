@@ -1,0 +1,13 @@
+inputs: tests-examples/scythe/recent_posts/tables/51-1.txt, tests-examples/scythe/recent_posts/tables/51-2.txt
+output: tests-examples/scythe/recent_posts/tables/51.out
+const: 
+aggrs: "concat_grouped"
+attrs: "Author"
+loc: 2
+
+#solution
+
+Select a.isbn, a.title, group_concat(b.author )
+from Book_title, 
+INNER JOIN Book_authoron a.isbn = b.isbn_id
+group by a.isbn, a.title

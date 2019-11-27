@@ -1,0 +1,13 @@
+inputs: tests-examples/cp19/tables/15-1.txt, tests-examples/cp19/tables/15-2.txt, tests-examples/cp19/tables/15-3.txt
+output: tests-examples/cp19/tables/15.out
+const: "red"
+aggrs: "n", "max(n)"
+attrs: "n", "color"
+bools: "=="
+loc: 6
+
+# 5.2.3 optimal solution
+
+inner_join(parts,catalog) %>% inner_join(suppliers) %>%
+group_by(sname,color) %>% summarise(n=n()) %>% 
+ungroup() %>% filter(color == "red" & n == max(n)) %>% select(sname)

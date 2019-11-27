@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+import os
 
 install_dependencies = [
     'Click',
@@ -11,6 +12,7 @@ develop_dependencies = [
     'rpy2',  # for Morpheus. TODO: This should really belong to the client package
     'lark-parser',  # for parsing
     'sphinx',  # for documentation generation
+    'sqlparse',
 ]
 
 setup(
@@ -29,3 +31,5 @@ setup(
         ],
     },
 )
+
+os.system("conda install -c r r-dplyr r-dbplyr r-tidyr r-stringr")

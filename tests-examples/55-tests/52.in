@@ -1,0 +1,14 @@
+inputs: tests-examples/55-tests/tables/aircraft.txt, tests-examples/55-tests/tables/employees.txt, tests-examples/55-tests/tables/certified.txt
+output: tests-examples/55-tests/tables/52.out
+const: "10000"
+aggrs:
+attrs: "salary"
+bools: 
+loc: 4
+
+# 5.3.1 modified optimal solution sql 
+
+inner_join(employees, 
+anti_join(
+filter(employees, salary > 10000), 
+inner_join(certified, aircraft))) %>% select(eid) %>% distinct()

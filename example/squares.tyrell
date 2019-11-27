@@ -1,0 +1,106 @@
+# First, specify the types that will be used
+
+enum Cols {{
+  {cols}
+}}
+
+enum Col {{
+  {col}
+}}
+
+enum SelectCols{{
+  {SelectCols}
+}}
+
+enum Distinct {{
+	"distinct", ""
+}}
+
+{FilterConditions}
+{SummariseConditions}
+{Op}
+
+value Table {{
+  col: int;
+  row: int;
+}}
+
+value TableSelect {{
+  col: int;
+  row: int;
+}}
+
+value Empty;
+
+# Next, specify the input/output of the synthesized program
+program Squares({Tables}) -> TableSelect;
+
+# Finally, specify the production rules
+func empty: Empty -> Empty;
+
+func inner_join: Table r -> Table a, Table b
+{{
+  col(r) <= col(a) + col(b);
+}}
+
+func inner_join3: Table r -> Table a, Table b, Table c
+{{
+  col(r) < col(a) + col(b) + col(c);
+}}
+
+func inner_join4: Table r -> Table a, Table b, Table c, Table d {{
+  col(r) < col(a) + col(b) + col(c) + col(d);
+}}
+
+func anti_join: Table r ->  Table a, Table b, Col c {{
+  #col(r) <= col(a) + col(b);
+  col(r) == 1;
+  row(r) <= row(a);
+}}
+
+func left_join: Table r ->  Table a, Table b{{
+  col(r) <= col(a) + col(b);
+  row(r) == row(a);
+}}
+
+func bind_rows: Table r ->  Table a, Table b{{
+  col(r) <= col(a) + col(b);
+  row(r) == row(a) + row(b);
+}}
+
+func intersect: Table r ->  Table a, Table b, Col c {{
+  #col(r) <= col(a) + col(b);
+  col(r) == 1;
+  row(r) <= row(a);
+}}
+
+func select: TableSelect r -> Table a, SelectCols c, Distinct d{{
+	row(r) <= row(a);
+	col(r) <= col(a);
+}}
+
+{concat}
+
+{filters}
+
+{summarise}
+{filterPred}
+{necessaryConditions}
+predicate is_not_parent(inner_join, inner_join3, 100);
+predicate is_not_parent(inner_join, inner_join4, 100);
+#predicate is_not_parent(inner_join, anti_join, 100);
+predicate is_not_parent(inner_join3, inner_join, 100);
+predicate is_not_parent(inner_join3, inner_join3, 100);
+predicate is_not_parent(inner_join3, inner_join4, 100);
+predicate is_not_parent(inner_join3, anti_join, 100);
+predicate is_not_parent(inner_join4, inner_join, 100);
+predicate is_not_parent(inner_join4, inner_join3, 100);
+predicate is_not_parent(inner_join4, inner_join4, 100);
+#predicate is_not_parent(inner_join4, anti_join, 100);
+predicate is_not_parent(anti_join, anti_join, 100);
+predicate is_not_parent(anti_join, inner_join, 100);
+predicate is_not_parent(anti_join, inner_join4, 100);
+predicate distinct_inputs(inner_join4);
+predicate distinct_inputs(inner_join3);
+predicate distinct_inputs(inner_join);
+predicate distinct_inputs(anti_join);

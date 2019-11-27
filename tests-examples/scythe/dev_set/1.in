@@ -1,0 +1,16 @@
+inputs: tests-examples/scythe/dev_set/tables/01-1.txt
+output: tests-examples/scythe/dev_set/tables/01.out
+const: 
+aggrs: "max"
+attrs: "rev"
+loc: 2
+
+#solution
+
+Select t1.id, t1.rev, t1.content
+From t As t1 Join (
+    Select id, Max(rev) As maxrev
+    From t
+    Group By id
+) As t2
+On t1.id = t2.id And t1.rev = t2.maxrev

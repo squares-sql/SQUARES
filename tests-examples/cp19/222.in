@@ -1,0 +1,14 @@
+inputs: tests-examples/cp19/tables/21-1.txt, tests-examples/cp19/tables/21-2.txt, tests-examples/cp19/tables/21-3.txt
+output: tests-examples/cp19/tables/37.out
+const:
+aggrs: "n"
+attrs:
+bools:
+loc: 6
+
+# 5.2.9 optimal solution
+
+inner_join(
+inner_join(catalog,suppliers),
+inner_join(parts,catalog) %>% inner_join(suppliers) %>%
+group_by(P_id) %>% summarise(n = n())) %>% select(S_name) %>% distinct()

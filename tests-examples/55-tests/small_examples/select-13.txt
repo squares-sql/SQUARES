@@ -1,0 +1,6 @@
+C_name,F_name
+class1,faculty1
+class2,faculty2
+class3,faculty1
+class4,faculty3
+class5,faculty4

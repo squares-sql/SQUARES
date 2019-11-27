@@ -1,0 +1,15 @@
+inputs: tests-examples/scythe/recent_posts/tables/38-1.txt, tests-examples/scythe/recent_posts/tables/38-2.txt
+output: tests-examples/scythe/recent_posts/tables/38.out
+const:
+aggrs: 
+attrs:
+loc:
+
+#solution
+
+SELECT t2.Date,t2.Tapped,t1.sold sold,t2.Tapped
+FROM Table1 t1 
+ RIGHT JOIN Table2  t2 
+   ON t1.Date=t2.Date
+
+http://stackoverflow.com/questions/39992015/joining-data-when-one-table-has-null-value

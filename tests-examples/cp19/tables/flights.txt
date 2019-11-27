@@ -1,0 +1,19 @@
+flno,origin,destination,distance,departs,arrives,price
+2,Los Angeles,Tokyo,5478,2005-04-12,2005-04-13,781
+7,Los Angeles,Sydney,7487,2005-04-12,2005-04-14,1279
+13,Los Angeles,Chicago,1749,2005-04-12,2005-04-12,221
+33,Los Angeles,Honolulu,2551,2005-04-12,2005-04-12,375
+34,Los Angeles,Honolulu,2551,2005-04-12,2005-04-12,426
+68,Chicago,New York,802,2005-04-12,2005-04-12,202
+76,Chicago,Los Angeles,1749,2005-04-12,2005-04-12,221
+99,Los Angeles,Washington D.C.,2308,2005-04-12,2005-04-12,236
+149,Pittsburgh ,New York,303,2005-04-12,2005-04-12,117
+304,Minneapolis,New York,991,2005-04-12,2005-04-12,102
+346,Los Angeles,Dallas,1251,2005-04-12,2005-04-12,225
+387,Los Angeles,Boston,2606,2005-04-12,2005-04-12,262
+701,Detroit,New York,470,2005-04-12,2005-04-12,181
+702,Madison,New York,789,2005-04-12,2005-04-12,202
+2223,Madison,Pittsburgh,517,2005-04-12,2005-04-12,190
+4884,Madison,Chicago,84,2005-04-12,2005-04-12,112
+5694,Madison,Minneapolis,247,2005-04-12,2005-04-12,120
+7789,Madison,Detroit,319,2005-04-12,2005-04-12,120

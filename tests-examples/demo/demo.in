@@ -1,0 +1,9 @@
+inputs: tests-examples/demo/tables/parts.txt, tests-examples/demo/tables/supplier.txt
+output: tests-examples/demo/tables/demo.out
+const:
+aggrs:
+attrs:
+bools:
+loc: 1
+
+# demo optimal solution

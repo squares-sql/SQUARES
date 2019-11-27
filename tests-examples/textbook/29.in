@@ -1,0 +1,11 @@
+inputs: tests-examples/textbook/tables/aircraft.txt, tests-examples/textbook/tables/flights.txt
+output: tests-examples/textbook/tables/29.out
+const: "Chicago", "Los Angeles"
+aggrs: "min"
+attrs: "distance", "crusingrange"
+bools:
+loc: 3
+
+# 5.3.5 optimal solution sql
+
+SELECT A.aid FROM aircraft A WHERE A.crusingrange > ( SELECT MIN (F.distance) FROM flights F WHERE F.from = "Los Angeles" AND F.to = "Chicago");

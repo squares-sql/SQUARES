@@ -1,0 +1,20 @@
+inputs: tests-examples/cp19/tables/17-1.txt, tests-examples/cp19/tables/17-3.txt
+output: tests-examples/cp19/tables/53.out
+const:
+aggrs: "min"
+attrs: "cost"
+bools: "=="
+loc: 3
+
+# 5.2.5 optimal solution
+
+catalog <- read.table("tests-examples/cp19/tables/17-1.txt", sep =",", header=T)
+catalog
+suppliers <- read.table("tests-examples/cp19/tables/17-3.txt", sep =",", header=T)
+suppliers
+
+
+df1=inner_join(catalog,suppliers) %>%
+	group_by(P_id) %>% summarise(mincost = min(cost))
+out <- inner_join(catalog,suppliers) %>% inner_join(df1) %>% 
+filter(cost == mincost) %>% select(P_id,S_name)

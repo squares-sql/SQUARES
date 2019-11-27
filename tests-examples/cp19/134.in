@@ -1,0 +1,11 @@
+inputs: tests-examples/cp19/tables/aircraft.txt, tests-examples/cp19/tables/employees.txt, tests-examples/cp19/tables/certified.txt
+output: tests-examples/cp19/tables/24.out
+const: "80000", "100000"
+aggrs:
+attrs: "salary"
+bools: 
+loc: 2
+
+# 5.3.1 optimal solution sql modified
+
+select_distinct(filters(anti_join(filter(inner_join3(dat0, dat2, dat1), salary >= 80000), filter(dat1, salary <= 100000)), salary > 100000, salary > 100000, |),aname)

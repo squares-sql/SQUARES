@@ -1,0 +1,9 @@
+id,customer,total
+1,Joem,5
+2,Joem,6
+3,Joem,6
+4,Joem,6
+5,Sally,3
+6,Joem,2
+7,Sally,1
+

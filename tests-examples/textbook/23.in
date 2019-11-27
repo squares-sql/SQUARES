@@ -1,0 +1,23 @@
+inputs: tests-examples/textbook/tables/23-1.txt, tests-examples/textbook/tables/23-2.txt, tests-examples/textbook/tables/23-3.txt
+output: tests-examples/textbook/tables/23.out
+const: "green", "red"
+aggrs: "n"
+attrs: "color"
+bools: 
+loc: 9
+
+# 5.2.11 optimal solution
+
+input=inner_join(parts,catalog) %>% inner_join(suppliers)
+
+df1=input %>% 
+    filter(color == "green") %>% select(sname)
+df2=input %>% 
+	filter(color == "red") %>% select(sname)
+df3=intersect(df1,df2)
+# until here is question 5.2.8
+input %>% 
+group_by(sname,pname) %>% summarize(n = max(cost)) %>% 
+filter(n == max(n)) %>%
+# merge the solution from 5.2.8 with 5.2.11
+inner_join(df3)

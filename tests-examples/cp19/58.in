@@ -1,0 +1,13 @@
+inputs: tests-examples/cp19/tables/10-1.txt, tests-examples/cp19/tables/10-2.txt
+output: tests-examples/cp19/tables/10.out
+const:
+aggrs: "n", "max(n)"
+attrs:
+bools: "=="
+loc: 4
+
+# 5.1.10 optimal solution
+
+inner_join(student,enrolled) %>% 
+group_by(sname) %>% summarise (n = n()) %>% 
+filter(n == max(n)) %>% select(sname)

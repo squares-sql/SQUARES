@@ -1,0 +1,24 @@
+inputs: tests-examples/cp19/tables/21-1.txt, tests-examples/cp19/tables/21-2.txt, tests-examples/cp19/tables/21-3.txt
+output: tests-examples/cp19/tables/35.out
+const: "2"
+aggrs: "n"
+attrs:
+bools: "<="
+loc: 1
+
+# 5.2.9 optimal solution
+
+catalog <- read.table("tests-examples/cp19/tables/21-1.txt", sep =",", header=T)
+catalog
+parts <- read.table("tests-examples/cp19/tables/21-2.txt", sep =",", header=T)
+parts
+suppliers <- read.table("tests-examples/cp19/tables/21-3.txt", sep =",", header=T)
+suppliers
+datout <- read.table("tests-examples/cp19/tables/35.out", sep =",", header=T)
+datout
+
+out <- inner_join(
+inner_join(catalog,suppliers),
+inner_join(parts,catalog) %>% inner_join(suppliers) %>%
+group_by(P_id) %>% summarise(n = n()) %>%
+filter(n <= 2)) %>% select(S_name) %>% distinct()

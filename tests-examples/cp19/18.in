@@ -1,0 +1,13 @@
+inputs: tests-examples/cp19/tables/3-1.txt, tests-examples/cp19/tables/3-2.txt
+output: tests-examples/cp19/tables/3.out
+const: "R128", "4"
+aggrs: "n"
+attrs: "Room"
+bools: ">", "=="
+loc: 6
+
+# 5.1.3 optimal solution
+
+inner_join(id_class_5_1_3,id_enroll_5_1_3) %>% 
+group_by(ID_key,Room) %>% summarize(n = n()) %>% 
+filter(Room == "R128" | n > 4) %>% select(ID_key)

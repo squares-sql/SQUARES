@@ -1,0 +1,69 @@
+# First, specify the types that will be used
+
+{colsInt}
+
+{consts}
+
+enum Cols {{
+  {cols}
+}}
+
+{aggrs}
+
+{bools}
+
+value Table {{
+  col: int;
+  row: int;
+}}
+
+value Empty;
+
+# Next, specify the input/output of the synthesized program
+program Squares({Tables}) -> Table;
+
+# Finally, specify the production rules
+func empty: Empty -> Empty;
+
+func inner_join: Table r -> Table a, Table b
+{{
+  col(r) <= col(a) + col(b);
+}}
+
+func inner_join3: Table r -> Table a, Table b, Table c
+{{
+  col(r) < col(a) + col(b) + col(c);
+}}
+
+func inner_join4: Table r -> Table a, Table b, Table c, Table d {{
+  col(r) < col(a) + col(b) + col(c) + col(d);
+}}
+
+func anti_join: Table r ->  Table a, Table b {{
+  col(r) <= col(a) + col(b);
+}}
+
+{filters}
+
+{summarise}
+{filterPred}
+predicate is_not_parent(inner_join, inner_join, 100);
+predicate is_not_parent(inner_join, inner_join3, 100);
+predicate is_not_parent(inner_join, inner_join4, 100);
+predicate is_not_parent(inner_join, anti_join, 100);
+predicate is_not_parent(inner_join3, inner_join, 100);
+predicate is_not_parent(inner_join3, inner_join3, 100);
+predicate is_not_parent(inner_join3, inner_join4, 100);
+predicate is_not_parent(inner_join3, anti_join, 100);
+predicate is_not_parent(inner_join4, inner_join, 100);
+predicate is_not_parent(inner_join4, inner_join3, 100);
+predicate is_not_parent(inner_join4, inner_join4, 100);
+predicate is_not_parent(inner_join4, anti_join, 100);
+predicate is_not_parent(anti_join, anti_join, 100);
+predicate is_not_parent(anti_join, inner_join, 100);
+predicate is_not_parent(anti_join, inner_join3, 100);
+predicate is_not_parent(anti_join, inner_join4, 100);
+predicate distinct_inputs(inner_join4);
+predicate distinct_inputs(inner_join3);
+predicate distinct_inputs(inner_join);
+predicate distinct_inputs(anti_join);

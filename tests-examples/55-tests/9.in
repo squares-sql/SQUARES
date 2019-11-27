@@ -1,0 +1,16 @@
+inputs: tests-examples/55-tests/tables/9-1.txt, tests-examples/55-tests/tables/9-2.txt
+output: tests-examples/55-tests/tables/9.out
+const: "R128"
+aggrs: "n"
+attrs: "Room"
+bools: "=="
+loc: 6
+
+# 5.1.9 optimal solution
+
+df1 <- inner_join(faculty,class) %>% 
+    filter(Room == "R128") %>% 
+    group_by(F_name) %>% summarise (n = n())
+df2 <- inner_join(faculty,class) %>% 
+    group_by(F_name) %>% summarise (n = n())
+out <- inner_join(df1,df2)

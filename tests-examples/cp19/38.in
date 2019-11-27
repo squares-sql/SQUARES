@@ -1,0 +1,11 @@
+inputs: tests-examples/cp19/tables/7-1.txt
+output: tests-examples/cp19/tables/7.out
+const:
+aggrs: "mean"
+attrs: "age"
+bools:
+loc: 2
+
+# 5.1.7 optimal solution
+
+student %>% group_by(level) %>% summarise(average=mean(age))

@@ -5,6 +5,7 @@ from .optimizer import Optimizer
 
 from .. import dsl as D
 from ..logger import get_logger
+import time
 
 logger = get_logger('tyrell.enumerator.smt')
 
@@ -52,11 +53,13 @@ class SmtEnumerator(Enumerator):
             self.variables.append(v)
             # variable range constraints
             solver.add(And(v >= 0, v < self.spec.num_productions()))
+            self.num_constraints += 1
             hname = 'h' + str(x + 1)
             h = Int(hname)
             self.variables_fun.append(h)
             # high variables range constraints
             solver.add(And(h >= 0, h <= 1))
+            self.num_constraints += 1
 
     def createOutputConstraints(self, solver):
         '''The output production matches the output type'''
@@ -68,6 +71,7 @@ class SmtEnumerator(Enumerator):
             else:
                 ctr = Or(ctr, self.variables[0] == p.id)
         solver.add(ctr)
+        self.num_constraints += 1
 
     def createLocConstraints(self, solver):
         '''Exactly k functions are used in the program'''
@@ -76,6 +80,7 @@ class SmtEnumerator(Enumerator):
             ctr += self.variables_fun[x]
         ctr_fun = ctr == self.loc
         solver.add(ctr_fun)
+        self.num_constraints += 1
 
     def createInputConstraints(self, solver):
         '''Each input will appear at least once in the program'''
@@ -88,6 +93,7 @@ class SmtEnumerator(Enumerator):
                 else:
                     ctr = Or(self.variables[y] == input_productions[x].id, ctr)
             solver.add(ctr)
+            self.num_constraints += 1
 
     def createFunctionConstraints(self, solver):
         '''If a function occurs then set the function variable to 1 and 0 otherwise'''
@@ -95,6 +101,7 @@ class SmtEnumerator(Enumerator):
         for x in range(0, len(self.nodes)):
             for p in self.spec.productions():
                 # FIXME: improve empty integration
+                self.num_constraints += 1
                 if p.is_function() and str(p).find('Empty') == -1:
                     ctr = Implies(
                         self.variables[x] == p.id, self.variables_fun[x] == 1)
@@ -113,6 +120,7 @@ class SmtEnumerator(Enumerator):
                     ctr = Or(self.variables[x] ==
                              self.leaf_productions[y].id, ctr)
                 solver.add(ctr)
+                self.num_constraints += 1
 
     def createChildrenConstraints(self, solver):
         for x in range(0, len(self.nodes)):
@@ -133,6 +141,7 @@ class SmtEnumerator(Enumerator):
                                     ctr, self.variables[n.children[y].id - 1] == t.id)
                             ctr = Implies(self.variables[x] == p.id, ctr)
                         solver.add(ctr)
+                        self.num_constraints += 1
 
     def maxChildren(self) -> int:
         '''Finds the maximum number of children in the productions'''
@@ -162,6 +171,7 @@ class SmtEnumerator(Enumerator):
                 current.children.append(c)
                 if c.depth < depth:
                     d.append(c)
+    
         return tree, nodes
 
     @staticmethod
@@ -201,18 +211,70 @@ class SmtEnumerator(Enumerator):
         prod1 = self.spec.get_function_production_or_raise(pred.args[1])
         weight = pred.args[2]
         self.optimizer.mk_is_parent(prod0, prod1, weight)
+    
+    def _resolve_at_most_k_predicate(self, pred):
+        self._check_arg_types(pred, [str, (int, float)])
+        prod0 = self.spec.get_function_production_or_raise(pred.args[0])
+        k = pred.args[1]
+        self.optimizer.mk_at_most_k(prod0, k)
+
+    def _resolve_distinct_inputs_predicate(self, pred):
+        self._check_arg_types(pred, [str])
+        prod0 = self.spec.get_function_production_or_raise(pred.args[0])
+        self.optimizer.mk_distinct_inputs(prod0, self.max_children)
+
+    def _resolve_constant_occurs_predicate(self, pred):
+        conditions = pred.args[0].split(",")
+        # print(conditions)
+        prod = []
+        for c in conditions:
+            for p in self.spec.productions():
+                if p.is_enum() and p.rhs[0] == c:
+                    prod.append(p.id)
+        # print(prod)
+        self.optimizer.mk_constant_occurs(prod)
+
+    def _resolve_happens_before_predicate(self, pred):
+        pos = pre = 0
+        # print(pred.args[0])
+        # print(pred.args[1])
+        for p in self.spec.productions():
+            if p.is_enum() and p.rhs[0] == pred.args[0]:
+                pos = p.id
+            if p.is_enum() and p.rhs[0] == pred.args[1]:
+                # print(p)
+                pre = p.id
+        # print(pos)
+        # print(pre)
+        self.optimizer.mk_happens_before(pos, pre)
 
     def resolve_predicates(self):
         try:
             for pred in self.spec.predicates():
                 if pred.name == 'occurs':
+                    continue
                     self._resolve_occurs_predicate(pred)
                 elif pred.name == 'is_parent':
+                    continue
                     self._resolve_is_parent_predicate(pred)
                 elif pred.name == 'not_occurs':
+                    continue
                     self._resolve_not_occurs_predicate(pred)
                 elif pred.name == 'is_not_parent':
+                    # continue
                     self._resolve_is_not_parent_predicate(pred)
+                elif pred.name == 'at_most_k':
+                    continue
+                    self._resolve_at_most_k_predicate(pred)
+                elif pred.name == 'distinct_inputs':
+                    # continue
+                    self._resolve_distinct_inputs_predicate(pred)
+                elif pred.name == 'constant_occurs':
+                    # continue
+                    self._resolve_constant_occurs_predicate(pred)
+                elif pred.name == 'happens_before':
+                    # continue
+                    self._resolve_happens_before_predicate(pred)
                 else:
                     logger.warning('Predicate not handled: {}'.format(pred))
         except (KeyError, ValueError) as e:
@@ -220,12 +282,8 @@ class SmtEnumerator(Enumerator):
             raise RuntimeError(msg) from None
 
     def __init__(self, spec, depth=None, loc=None):
-        self.z3_solver = Solver()
-        self.leaf_productions = []
-        self.variables = []
-        self.variables_fun = []
-        self.program2tree = {}
         self.spec = spec
+        self.num_constraints = 0
         if depth <= 0:
             raise ValueError(
                 'Depth cannot be non-positive: {}'.format(depth))
@@ -233,10 +291,14 @@ class SmtEnumerator(Enumerator):
         if loc <= 0:
             raise ValueError(
                 'LOC cannot be non-positive: {}'.format(loc))
+        
+        self.start_time = time.time()
         self.loc = loc
         self.max_children = self.maxChildren()
         self.tree, self.nodes = self.buildKTree(self.max_children, self.depth)
+        
         self.model = None
+        logger.info("Creating encoding....")
         self.initLeafProductions()
         self.createVariables(self.z3_solver)
         self.createOutputConstraints(self.z3_solver)
@@ -245,8 +307,12 @@ class SmtEnumerator(Enumerator):
         self.createFunctionConstraints(self.z3_solver)
         self.createLeafConstraints(self.z3_solver)
         self.createChildrenConstraints(self.z3_solver)
+        logger.error('Number of Nodes: {} '.format(len(self.nodes)))
+        logger.error('Number of Variables: {}'.format(len(self.variables_fun + self.variables)))
+        logger.error('Number of Constraints: {}'.format(self.num_constraints))
+        logger.error('Time spent encoding: {}'.format(time.time() - self.start_time))
         self.optimizer = Optimizer(
-            self.z3_solver, spec, self.variables, self.nodes)
+            self.z3_solver, spec, self.variables, self.variables_fun, self.nodes)
         self.resolve_predicates()
 
     def blockModel(self):
@@ -277,6 +343,7 @@ class SmtEnumerator(Enumerator):
             self.blockModel()
 
     def buildProgram(self):
+        # logger.info("Building a program!!!!!")
         result = [0] * len(self.model)
         for x in self.model:
             c = x()
@@ -307,9 +374,37 @@ class SmtEnumerator(Enumerator):
                 self.program2tree[builder_nodes[y]] = self.nodes[y]
 
         assert(builder_nodes[0] is not None)
+        # print(builder_nodes[0])
         return builder_nodes[0]
 
+    # def next(self):
+    #     count = 0
+    #     start_time = time.time()
+    #     res = self.z3_solver.check()
+    #     if res != sat:
+    #         print("UNSAT")
+    #     while True:
+    #         self.model = self.z3_solver.model()
+    #         if self.model is not None:
+    #             count +=1
+    #             # print(self.model)
+    #             # print(count)
+    #             # self.buildProgram()
+    #             self.blockModel()
+    #             res = self.z3_solver.check()
+    #             if res != sat:
+    #                 logger.error(count)
+    #                 logger.error('Total Time: {}'.format(time.time()-start_time))
+    #                 exit()
+    #             if self.loc > 4 or count % 100 == 0 :
+    #                 logger.error(count)
+    #             continue
+    #         else:
+    #             logger.error(count)
+    #             exit()
+
     def next(self):
+        # logger.info("Solving.....")
         while True:
             self.model = self.optimizer.optimize(self.z3_solver)
             if self.model is not None:

@@ -1,0 +1,24 @@
+inputs: tests-examples/scythe/recent_posts/tables/46-1.txt
+output: tests-examples/scythe/recent_posts/tables/46.out
+const: "Z01", "Z09"
+aggrs: 
+attrs: "Type"
+loc: 7
+
+#solution
+
+select *
+from table
+where type = `Z01`
+
+union all
+select *
+
+from table
+where type = `Z09`
+and not exists (
+    select 1
+    from table
+    where id = t.id and type = 'Z01')
+
+http://stackoverflow.com/questions/39960569/picking-one-row-over-another

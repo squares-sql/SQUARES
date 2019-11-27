@@ -1,0 +1,14 @@
+inputs: tests-examples/55-tests/tables/aircraft.txt, tests-examples/55-tests/tables/employees.txt, tests-examples/55-tests/tables/certified.txt
+output: tests-examples/55-tests/tables/46.out
+const: "1000"
+aggrs: "n", "max(n)"
+attrs: "crusingrange"
+bools: 
+loc: 4
+
+# 5.3.4 optimal solution sql MODIFIED
+
+inner_join(inner_join(aircraft, certified), employees) %>%
+    filter(crusingrange > 1000) %>%
+    group_by(eid) %>% summarise(n = n())
+%>% filter(n == max(n))

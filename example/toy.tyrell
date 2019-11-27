@@ -1,12 +1,14 @@
 # First, specify the types that will be used
 enum SmallInt {
-  "-1", "-2", "0", "1", "2"
+  "0", "1", "2", "3"
 }
-
+enumset SmallSet[3] {
+	"a", "b", "c", "d"
+}
 value Int {
 	is_positive: bool;
+	test: int;
 }
-value Empty;
 
 # Next, specify the input/output of the synthesized program
 program Toy(Int, Int) -> Int;
@@ -16,7 +18,11 @@ func const: Int -> SmallInt;
 func plus: Int -> Int, Int;
 func minus: Int -> Int, Int;
 func mult: Int r -> Int a, Int b {
+  test(r) == test(a);
 	is_positive(a) && is_positive(b) ==> is_positive(r);
 	!is_positive(a) && !is_positive(b) ==> !is_positive(r);
 }
-func empty: Empty -> Empty;
+
+# These free-form global predicates will be interpreted by client synthesizers
+predicate occurs(plus, 0.5);
+predicate is_parent_of(minus, const, 0.6);

@@ -1,0 +1,20 @@
+inputs: tests-examples/scythe/recent_posts/tables/47-1.txt
+output: tests-examples/scythe/recent_posts/tables/47.out
+const:
+aggrs: "max"
+attrs: "Time"
+loc: 3
+
+#solution
+
+select id, payment_type, time
+from (select id, payment_type, time, count(*) as cnt,
+             row_number() over (partition by id order by time desc, cnt desc) as seqnum
+      from t
+      group by id, payment_type, time
+     ) ipt
+where seqnum = 1;
+
+select(filter(inner_join(summarise(dat1 %>% group_by(ID), maxTime = max(Time)), dat1), maxTime == Time), ID, Payment_type) %>% distinct()
+
+http://stackoverflow.com/questions/39957816/get-unique-values-in-table-by-multiple-criteria

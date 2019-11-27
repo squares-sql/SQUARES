@@ -1,0 +1,13 @@
+inputs: tests-examples/cp19/tables/5-1.txt, tests-examples/cp19/tables/5-2.txt
+output: tests-examples/cp19/tables/5.out
+const:
+aggrs: "n", "max(n)"
+attrs:
+bools: "=="
+loc: 5
+
+# 5.1.5 optimal solution
+
+inner_join(class,faculty) %>% 
+group_by(F_name) %>% summarise(n = n()) %>% 
+filter(n == max(n)) %>% select(F_name)

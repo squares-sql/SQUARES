@@ -1,0 +1,26 @@
+inputs: tests-examples/cp19/tables/aircraft.txt, tests-examples/cp19/tables/employees.txt, tests-examples/cp19/tables/certified.txt
+output: tests-examples/cp19/tables/47.out
+const: "1000", "250000"
+aggrs: "mean"
+attrs: "salary", "crusingrange"
+bools: ">"
+loc: 6
+
+# 5.3.4 optimal solution sql
+
+SELECT Temp.name, Temp.AvgSalary
+FROM (SELECT A.aid, A.aname AS name, AVG(E.salary) AS AvgSalary 
+	FROM aircraft A, certified C, employees E 
+	WHERE A.aid = C.aid AND C.eid = E.eid AND A.crusingrange > 1000
+	GROUP BY A.aid, A.aname) AS Temp
+
+
+certified <- read.table("tests-examples/cp19/tables/certified.txt", sep =",", header=T)
+aircraft <- read.table("tests-examples/cp19/tables/aircraft.txt", sep =",", header=T)
+employees <- read.table("tests-examples/cp19/tables/employees.txt", sep =",", header=T)
+datout <- read.table("tests-examples/cp19/tables/47.out", sep =",", header=T)
+
+out <- inner_join(inner_join(aircraft, certified), employees) %>%
+    filter(crusingrange > 1000) %>%
+    group_by(aid, aname) %>% summarise(meansalary = mean(salary)) %>% 
+    filter(meansalary > 250000) %>% select(aid, aname)

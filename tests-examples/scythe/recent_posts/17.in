@@ -1,0 +1,19 @@
+inputs: tests-examples/scythe/recent_posts/tables/17-1.txt
+output: tests-examples/scythe/recent_posts/tables/17.out
+const: "HMCPR"
+aggrs: "min"
+attrs: "emp_sal", "emp_grp"
+loc: 3
+
+#solution
+
+select emp_id,emp_sal,emp_grp 
+from (
+select e.*, 
+row_number() over(partition by emp_id 
+                  order by case when emp_grp = 'HMCPR' then 0 else 1 end,emp_sal) as rn
+from db_wrk.emp_sin e
+) t
+where rn = 1;
+
+http://stackoverflow.com/questions/40118180/retrieve-table-data-based-on-specific-condition-in-teradata

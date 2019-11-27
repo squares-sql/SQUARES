@@ -1,0 +1,20 @@
+inputs: tests-examples/scythe/recent_posts/tables/12-1.txt
+output: tests-examples/scythe/recent_posts/tables/12.out
+const: 
+aggrs: "concat_grouped"
+attrs: "variants", "variants_value"
+loc: 3
+
+#solution
+
+SELECT xx.code, GROUP_CONCAT(concat(xx.variants,':',xx.variants_value)) AS variants_and_values, xx.product_name, xx.product_variants_id
+FROM products_table xx
+GROUP BY xx.product_variants_id, xx.product_name, xx.code
+
+http://stackoverflow.com/questions/40164534/relation-bw-group-concated-columns-in-mysql
+
+GROUP CONCAT
+
+inner_join(
+dat1 %>% group_by(product_variants_id, product_name) %>% summarise(variants = paste(variants, collapse=":")), 
+dat1 %>% group_by(product_variants_id, product_name)  %>% summarise(variants_value = paste(variants_value, collapse=":")))

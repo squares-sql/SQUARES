@@ -1,0 +1,26 @@
+inputs: tests-examples/scythe/recent_posts/tables/31-1.txt, tests-examples/scythe/recent_posts/tables/31-2.txt
+output: tests-examples/scythe/recent_posts/tables/31.out
+const: "public", "Dave"
+aggrs: 
+attrs: "type", "accountID"
+loc: 3
+
+#solution
+
+SELECT (stuff)
+FROM ChatChannels CC
+WHERE CC.type = 'Public'
+  AND CC.channelID NOT IN 
+  (SELECT channelID FROM ChatChannelMembers WHERE AccountID = 'Dave')
+
+dat0 <- read.table("tests-examples/scythe/recent_posts/tables/31-1.txt", sep =",", header=T)
+dat0
+dat1 <- read.table("tests-examples/scythe/recent_posts/tables/31-2.txt", sep =",", header=T)
+dat1
+datout <- read.table("tests-examples/scythe/recent_posts/tables/31.out", sep =",", header=T)
+datout
+select(filters(inner_join(dat0, filter(dat1, type == public)), type == public, accountID == Dave, &), channelID,accountID,role, )
+
+
+http://stackoverflow.com/questions/40028319/sql-check-if-value-exists-in-group
+

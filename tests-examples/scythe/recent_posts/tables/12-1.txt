@@ -1,0 +1,6 @@
+ID,code,product_variants_id,product_name,variants,variants_value
+1,1,123451,beercake,color,blue
+2,1,123451,beercake,temperature,cold
+3,1,123451,beercake,weight,"0.5"
+4,2,123453,adwrap,color,green
+5,2,123453,adwrap,weight,"1"

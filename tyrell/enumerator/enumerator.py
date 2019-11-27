@@ -23,3 +23,6 @@ class Enumerator(ABC):
         By default, it does nothing.
         '''
         pass
+
+    def closeLattices(self):
+        pass

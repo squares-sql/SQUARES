@@ -1,0 +1,35 @@
+# First, specify the types that will be used
+
+enumset TableName[2] {
+	"class", "faculty"
+}
+#, "student", "enrolled" 
+
+enumset SelectType[1] {
+	"select distinct", "select"
+}
+
+enumset TableColumn[3] {
+  "fid", "fname", "deptid", "name", "meets_at", "room"
+}
+
+#value Table {
+#	col: int;
+#	row: int;
+#}
+
+enum BoolFunc {
+  "==", ">", "<"
+}
+
+value Table;
+
+value Empty;
+
+# Next, specify the input/output of the synthesized program
+program Squares() -> Table;
+
+# Finally, specify the production rules
+func empty: Empty -> Empty;
+
+func select: Table r -> SelectType s, TableName a, TableColumn b;

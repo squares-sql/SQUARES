@@ -1,0 +1,20 @@
+inputs: tests-examples/scythe/recent_posts/tables/34-1.txt
+output: tests-examples/scythe/recent_posts/tables/34.out
+const:
+aggrs: "max"
+attrs: "DISCO_DATE", "DATE_UPDATE"
+loc: 3
+
+#solution
+
+ SELECT MATERIAL,
+        MAX(DISCO_DATE) AS DISCO_DATE,
+        MAX(DATE_UPDATE) AS DATE_UPDATE
+ FROM Test.dbo.Tbl_Disco_Dates
+ GROUP BY MATERIAL;
+
+inner_join(
+summarise(dat1 %>% group_by(MATERIAL), maxDISCO_DATE = max(DISCO_DATE)), 
+summarise(dat1 %>% group_by(MATERIAL), maxDATE_UPDATE = max(DATE_UPDATE)))
+
+http://stackoverflow.com/questions/40011392/select-max-date-from-multiple-dates

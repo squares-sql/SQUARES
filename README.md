@@ -15,7 +15,6 @@ Dev Environment Setup
 - Make an editable install with `pip`. This would automatically handles package dependencies. One of our dependency, `z3-solver`, takes a long time to build. Please be patient.
 ```
     $ pip install -e ".[dev]"
-    $ python setup.py sdist  # for package
 ```
 - Test whether the installation is successful
 ```
@@ -36,8 +35,50 @@ Dev Environment Setup
     $ make html
 ```
   Documentations will be available at `docs/_build/html/index.html`
-    
+
 References
 - Yu Feng, Ruben Martins, Osbert Bastani, Isil Dillig. Program Synthesis using Conflict-Driven Learning. PLDI'18.
 - Yu Feng, Ruben Martins, Jacob Van Geffen, Isil Dillig, Swarat Chaudhuri. Component-based Synthesis of Table Consolidation and Transformation Tasks from Examples. PLDI'17
 - Yu Feng, Ruben Martins, Yuepeng Wang, Isil Dillig, Thomas W. Reps. Component-Based Synthesis for Complex APIs. POPL'17
+
+# SQUARES - A SQL Synthesizer Using Query Reverse Engineering
+
+Given a set of input-output examples (tables), SQUARES returns the desired query in R and in SQL.
+
+- How to use:
+
+```
+python3 squares-enumerator.py [tree|lines] [flags -h, ...] input.in
+```
+
+- Flags:
+ + -h : help
+ + -on : computing symmetries online
+ + -off : computing symmetries offline
+ + -d : debug info
+
+Default: lines enumerator and without symmetry breaking
+
+- Input Files (.in): Some examples can be found in tests-examples folder
+
+- Files required to integrate SQUARES in Trinity:
+ + tyrell/enumerator/lines.py
+ + tyrell/enumerator/lattices
+ + tyrell/enumerator/gen_lattices.py
+ + squares-enumerator.py
+ + setup.py (modified)
+
+
+- Python packages:
+ + sqlparse
+
+
+- R packages:
+ + dplyr
+ + dbplyr
+ + tidyr
+ + stringr
+
+References
+
+ + Pedro Orvalho, Miguel Terra-Neves, Miguel Ventura, Ruben Martins and Vasco Manquinho. Encodings for Enumeration-Based Program Synthesis. CP'19

@@ -1,0 +1,22 @@
+inputs: tests-examples/scythe/recent_posts/tables/21-1.txt
+output: tests-examples/scythe/recent_posts/tables/21.out
+const: "22"
+aggrs: "n"
+attrs: "product_id"
+loc: 1
+
+#solution
+
+select od.product_id, count(od2.id_order) as NumTimesWith2
+from ps_order_detail od left join
+     ps_order_detail od2
+     on od.id_order = od2.id_order and
+        od2.product_id = 22
+where od.product_id <> 22
+group by od.product_id
+order by count(od2.id_order) desc;
+                    
+
+http://stackoverflow.com/questions/40075342/get-most-sold-products-with-a-specified-one
+
+LEFT JOIN

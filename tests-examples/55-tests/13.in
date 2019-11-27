@@ -1,0 +1,11 @@
+inputs: tests-examples/55-tests/tables/13-1.txt, tests-examples/55-tests/tables/13-2.txt
+output: tests-examples/55-tests/tables/13.out
+const:
+aggrs: 
+attrs: 
+bools: 
+loc: 1
+
+# 5.2.1 optimal solution
+
+inner_join(parts,catalog) %>% select(part_name)

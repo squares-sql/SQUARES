@@ -1,0 +1,14 @@
+inputs: tests-examples/cp19/tables/aircraft.txt, tests-examples/cp19/tables/certified.txt
+output: tests-examples/cp19/tables/54.out
+const: "3"
+aggrs: "n"
+attrs: 
+bools: ">"
+loc: 1
+
+# 5.3.2 optimal solution sql
+
+out <- inner_join(
+     inner_join(certified, aircraft), 
+     certified %>% group_by(eid) %>% summarise(n = n()) %>%
+     filter(n < 3)) %>% select(eid) %>% distinct()

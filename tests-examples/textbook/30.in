@@ -1,0 +1,20 @@
+inputs: tests-examples/textbook/tables/aircraft.txt, tests-examples/textbook/tables/flights.txt, tests-examples/textbook/tables/certified.txt, tests-examples/textbook/tables/employees.txt
+output: tests-examples/textbook/tables/30.out
+const: "100000"
+aggrs:
+attrs: "distance", "crusingrange", "salary"
+bools:
+loc: 5
+
+# 5.3.5 optimal solution sql
+
+SELECT DISTINCT F.origin, F.destination
+FROM flights F
+WHERE NOT EXISTS ( SELECT *
+FROM employees E WHERE E.salary > 100000
+AND
+NOT EXISTS ( SELECT *
+FROM aircraft A, certified C WHERE A.crusingrange > F.distance AND 
+E.eid = C.eid AND A.aid = C.aid) )
+
+NO SOLUTION

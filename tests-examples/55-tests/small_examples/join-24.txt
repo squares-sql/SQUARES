@@ -1,0 +1,12 @@
+S_key,C_name,S_name,level
+S1,class1,stu1,JR
+S2,class1,stu2,SR
+S3,class2,stu3,JR
+S3,class5,stu3,JR
+S4,class2,stu4,SR
+S4,class4,stu4,SR
+S5,class3,stu5,JR
+S6,class3,stu6,SR
+S6,class2,stu6,SR
+S7,class5,stu7,JR
+S8,class4,stu8,JR

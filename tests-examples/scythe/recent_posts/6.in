@@ -1,0 +1,23 @@
+inputs: tests-examples/scythe/recent_posts/tables/06-1.txt
+output: tests-examples/scythe/recent_posts/tables/06.out
+const: ":hot"
+aggrs: "like", "concat"
+attrs: "variants", "variants_value"
+loc: 2
+
+#solution
+
+SELECT T.*
+FROM(
+SELECT xx.code, GROUP_CONCAT(concat(xx.variants,':',xx.variants_value)) 
+AS variants_and_values, xx.product_name, xx.product_variants_id
+FROM products_table xx
+GROUP BY xx.product_variants_id, xx.product_name, xx.code
+) T
+WHERE T.variants_and_values LIKE '%:hot' OR T.variants_and_values LIKE '%:hot,'
+
+select(filter(unite(dat1,variants,which(colnames(dat1)=="variants"),variants_value,which(colnames(dat1)=="variants_value"),sep=":"), str_detect(variants,":hot")),code,product_variants_id,product_name,variants)
+
+
+http://stackoverflow.com/questions/40183507/mysql-search-in-concated-columns
+

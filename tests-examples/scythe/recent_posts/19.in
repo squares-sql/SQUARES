@@ -1,0 +1,23 @@
+inputs: tests-examples/scythe/recent_posts/tables/19-1.txt
+output: tests-examples/scythe/recent_posts/tables/19.out
+const: "0"
+aggrs: "max"
+attrs: "Balance", "Date"
+loc: 4
+
+#solution
+
+select *
+from tablename
+where date > (select max(date) from tablename where balance > 0)
+
+select *
+from tablename t1
+where not exists (select * from tablename t2
+                  where t2.Balance > 0
+                    and t2.date > t1.date)
+                    
+
+http://stackoverflow.com/questions/40086753/select-all-records-after-a-certain-column-condition-is-true-in-sql
+
+WHERE WITH VALUE

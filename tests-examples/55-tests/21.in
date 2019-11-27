@@ -1,0 +1,12 @@
+inputs: tests-examples/55-tests/tables/21-1.txt, tests-examples/55-tests/tables/21-2.txt, tests-examples/55-tests/tables/21-3.txt
+output: tests-examples/55-tests/tables/21.out
+const: "red", "green"
+aggrs:
+attrs: "color"
+bools: "=="
+loc: 2
+
+# 5.2.9 optimal solution
+
+inner_join(parts,catalog) %>% inner_join(suppliers) %>%
+filter(color == "red" | color == "green") %>% select(sname) %>% distinct()

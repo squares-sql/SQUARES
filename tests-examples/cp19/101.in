@@ -1,0 +1,22 @@
+inputs: tests-examples/cp19/tables/17-1.txt, tests-examples/cp19/tables/17-3.txt
+output: tests-examples/cp19/tables/17.out
+const:
+aggrs: "mean"
+attrs: "cost"
+bools: ">"
+loc: 5
+
+# 5.2.5 optimal solution
+
+catalog <- read.table("tests-examples/cp19/tables/17-1.txt", sep =",", header=T)
+catalog
+suppliers <- read.table("tests-examples/cp19/tables/17-3.txt", sep =",", header=T)
+suppliers
+
+
+df1=inner_join(catalog,suppliers) %>%
+	group_by(part_key) %>% summarise(mean = mean(cost))
+inner_join(catalog,suppliers) %>% inner_join(df1) %>% 
+filter(cost > mean) %>% select(part_key,sname)
+
+# not used tests-examples/cp19/tables/17-2.txt,

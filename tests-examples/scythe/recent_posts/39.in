@@ -1,0 +1,29 @@
+inputs: tests-examples/scythe/recent_posts/tables/39-1.txt
+output: tests-examples/scythe/recent_posts/tables/39.out
+const:
+aggrs: "sum", "n"
+attrs: "size"
+loc: 
+
+#solution
+
+select zoom, point, size
+FROM (
+  SELECT zoom::text as zoom,
+         zoom as zoom_value,
+         count(*) AS point,
+         SUM(size) AS size, 
+         1 as sort_order
+  FROM total
+  GROUP BY zoom
+  UNION ALL
+  SELECT 'Total', 
+         null,
+         count(*) AS point,
+         SUM(size) AS size, 
+         2 as sort_order
+  FROM total
+) t
+order by sort_order, zoom_value;
+
+http://stackoverflow.com/questions/39986009/how-can-i-get-sum-total-of-each-column

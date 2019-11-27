@@ -1,0 +1,15 @@
+inputs: tests-examples/scythe/recent_posts/tables/36-1.txt, tests-examples/scythe/recent_posts/tables/36-2.txt
+output: tests-examples/scythe/recent_posts/tables/36.out
+const:
+aggrs: 
+attrs:
+loc:
+
+#solution
+
+SELECT m.Account, k.Name FROM Table_1 m 
+INNER JOIN Table_2 k ON k.ID = m.Sen1 OR k.ID = m.Sen2;
+
+http://stackoverflow.com/questions/40003578/create-a-query-using-2-tables-with-3-columns-and-key-id
+
+Join between different columns

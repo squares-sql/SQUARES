@@ -1,0 +1,25 @@
+inputs: tests-examples/55-tests/tables/19-1.txt, tests-examples/55-tests/tables/19-2.txt, tests-examples/55-tests/tables/19-3.txt
+output: tests-examples/55-tests/tables/19.out
+const: "red"
+aggrs:
+attrs: "color"
+bools: "==", "!="
+loc: 5
+
+# 5.2.7 optimal solution
+
+df1=inner_join(catalog,suppliers) %>% inner_join(parts) %>% 
+	filter(color == "red")
+df2=inner_join(catalog,suppliers) %>% inner_join(parts) %>% 
+	filter(color != "red")
+anti_join(df1,df2)
+
+
+catalog <- read.table("tests-examples/55-tests/tables/19-1.txt", sep =",", header=T)
+catalog
+parts <- read.table("tests-examples/55-tests/tables/19-2.txt", sep =",", header=T)
+parts
+suppliers <- read.table("tests-examples/55-tests/tables/19-3.txt", sep =",", header=T)
+suppliers
+datout <- read.table("tests-examples/55-tests/tables/19.out", sep =",", header=T)
+datout
