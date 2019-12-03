@@ -1,7 +1,11 @@
+output.err
+users/tables/*
+users/files/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+jupyter-notebooks/.ipynb_checkpoints
 
 # Distribution / packaging
 .Python
