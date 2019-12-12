@@ -779,7 +779,7 @@ class Squares(object):
 		super(Squares, self).__init__()
 		self.template = "inputs: {inputs}\noutput: {output}\nconst: {const}\naggrs: {aggrs}\nattrs: {attrs}\nbools:\nloc: {loc}\n"
 
-	def synthesize(self, inputs, output_ex, const, aggrs, attrs, loc):
+	def synthesize(self, inputs, output_ex, const="", aggrs="", attrs="", loc=0):
 		"""docstring for Squares."""
 		global argv, dir
 		dir = "../"
