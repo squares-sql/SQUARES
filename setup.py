@@ -5,7 +5,9 @@ install_dependencies = [
     'Click',
     'colorama',
     'sexpdata',
-    'z3-solver'
+    'z3-solver',
+    "rpy2",
+    'sqlparse',
 ]
 develop_dependencies = [
     'mypy',  # for type checking
