@@ -786,22 +786,26 @@ class Squares(object):
 		ins = list([])
 		temp = self.template
 
-		path, dirs, files = next(os.walk("../users/files"))
+		try:
+			path, dirs, files = next(os.walk("../users/files"))
+		except:
+			path, dirs, files = next(os.walk("users/files"))
+			dir+"./"
 		file_count = str(len(files) +1)
 
 		i_c = 0
 		for i in inputs:
-			input = open("../users/tables/"+"i"+str(file_count)+str(i_c),"w+")
+			input = open(dir+"users/tables/"+"i"+str(file_count)+str(i_c),"w+")
 			input.write(i)
 			input.close()
-			ins.append("../users/tables/"+"i"+str(file_count)+str(i_c))
+			ins.append(dir+"users/tables/"+"i"+str(file_count)+str(i_c))
 			i_c += 1
-		output = open("../users/tables/"+"o"+str(file_count),"w+")
+		output = open(dir+"users/tables/"+"o"+str(file_count),"w+")
 		output.write(output_ex)
 		output.close()
-		output = "../users/tables/o"+str(file_count)
+		output = dir+"users/tables/o"+str(file_count)
 
-		input_file_name = "../users/files/"+"f"+str(file_count)
+		input_file_name = dir+"users/files/"+"f"+str(file_count)
 		input_file = open(input_file_name, "w+")
 		inputs=str(ins).replace("\'","").replace("]","").replace("[","")
 		input_file.write(temp.format(inputs=inputs,output=output, const="\""+const.replace(",","\",\"").replace(" ","")+"\"", aggrs="\""+aggrs.replace(",","\",\"").replace(" ","")+"\"", attrs="\""+attrs.replace(",","\",\"").replace(" ","")+"\"", loc=str(loc)).replace("\"\"",""))
