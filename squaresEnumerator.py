@@ -790,7 +790,7 @@ class Squares(object):
 			path, dirs, files = next(os.walk("../users/files"))
 		except:
 			path, dirs, files = next(os.walk("users/files"))
-			dir+"./"
+			dir="./"
 		file_count = str(len(files) +1)
 
 		i_c = 0
