@@ -679,6 +679,7 @@ def main(seed=None):
 	global getProgram, final_program
 	if not debug:
 		sys.stderr = open(dir+'output.err', 'w+')
+
 	# os.close(sys.stderr.fileno())
 	warnings.filterwarnings("ignore", category=RRuntimeWarning)
 	warnings.filterwarnings('ignore')

@@ -1,0 +1,5 @@
+install.packages("dplyr",repos = "http://cran.us.r-project.org")
+install.packages("dbplyr",repos = "http://cran.us.r-project.org")
+install.packages("tidyr",repos = "http://cran.us.r-project.org")
+install.packages("stringr",repos = "http://cran.us.r-project.org")
+install.packages("RSQLite",repos = "http://cran.us.r-project.org")

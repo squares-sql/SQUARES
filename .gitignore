@@ -1,6 +1,5 @@
 output.err
-users/tables/*
-users/files/*
+users/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
