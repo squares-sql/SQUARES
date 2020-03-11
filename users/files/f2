@@ -1,7 +1,0 @@
-inputs: ../users/tables/i20, ../users/tables/i21, ../users/tables/i22, ../users/tables/i23
-output: ../users/tables/o2
-const: "faculty1","JR"
-aggrs: 
-attrs: "level","F_name"
-bools:
-loc: 3

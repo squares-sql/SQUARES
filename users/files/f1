@@ -1,7 +1,0 @@
-inputs: ../users/tables/i10, ../users/tables/i11
-output: ../users/tables/o1
-const: 
-aggrs: 
-attrs: 
-bools:
-loc: 2
