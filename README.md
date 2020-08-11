@@ -16,7 +16,7 @@ How to use:
 + using [Google Colab](https://colab.research.google.com/drive/1wPwP1iWBLqmNTk9ffxNPR0mj3GbbUZr2):
     - save the google colab doc to your account and run it.
 
-+ using terminal:
++ using python3 directly: 
 ```
 python3 squaresEnumerator.py [tree|lines] [flags -h, ...] input.in
 ```
@@ -77,11 +77,10 @@ or
 
 
 References
-
- - Pedro Orvalho, Miguel Terra-Neves, Miguel Ventura, Ruben Martins and Vasco Manquinho. Encodings for Enumeration-Based Program Synthesis. CP'19
+ - Pedro Orvalho, Miguel Terra-Neves, Miguel Ventura, Ruben Martins and Vasco Manquinho. SQUARES : A SQL Synthesizer Using Query Reverse Engineering. VLDB 2020.
+ - Pedro Orvalho, Miguel Terra-Neves, Miguel Ventura, Ruben Martins and Vasco Manquinho. Encodings for Enumeration-Based Program Synthesis. CP 2019.
  - Pedro Orvalho. SQUARES : A SQL Synthesizer Using Query Reverse Engineering. MSc Thesis. Instituto Superior Técnico - Universidade de Lisboa. 2019.
- - Ruben Martins, Jia Chen, Yanju Chen, Yu Feng, Isil Dillig. Trinity: An Extensible Synthesis Framework for Data Science. VLDB'19
-- Yu Feng, Ruben Martins, Osbert Bastani, Isil Dillig. Program Synthesis using Conflict-Driven Learning. PLDI'18.
- - Yu Feng, Ruben Martins, Jacob Van Geffen, Isil Dillig, Swarat Chaudhuri. Component-based Synthesis of Table Consolidation and Transformation Tasks from Examples. PLDI'17
+ - Ruben Martins, Jia Chen, Yanju Chen, Yu Feng, Isil Dillig. Trinity: An Extensible Synthesis Framework for Data Science. VLDB 2019.
+- Yu Feng, Ruben Martins, Osbert Bastani, Isil Dillig. Program Synthesis using Conflict-Driven Learning. PLDI 2018.
 
 
